@@ -48,18 +48,19 @@ Questa todolist traccia tutte le attività necessarie per completare il progetto
 
 ## 2. Acquisizione e preparazione dei dati
 
-- [✅] Scaricare il dataset FakeNewsNet (14/04/2025) - *sostituito con PHEME Dataset*
-  - [✅] Creare lo script `src/data/download.py` (14/04/2025)
-  - [✅] Scaricare la versione minimalista del dataset dal repository GitHub (14/04/2025)
+- [✅] Sostituire FakeNewsNet con il dataset PHEME (14/04/2025)
+  - [✅] Identificare un dataset più adatto con commenti (14/04/2025)
+  - [✅] Selezionare PHEME dataset con thread di conversazioni Twitter (14/04/2025)
 
-- [ ] Scaricare il dataset PHEME
-  - [ ] Aggiornare lo script `src/data/download.py` per il dataset PHEME
-  - [ ] Scaricare il dataset PHEME completo con conversazioni Twitter
-  - [ ] Verificare l'integrità del dataset scaricato
+- [✅] Scaricare il dataset PHEME (14/04/2025)
+  - [✅] Aggiornare lo script `src/data/download.py` per il dataset PHEME (14/04/2025)
+  - [✅] Scaricare il dataset PHEME completo con conversazioni Twitter (14/04/2025)
+  - [✅] Verificare l'integrità del dataset scaricato (14/04/2025)
+  - [✅] Estrarre correttamente il formato .tar.bz2 (14/04/2025)
   
-- [ ] Implementare `src/data/preprocess.py`
-  - [✅] Creare lo script di preprocessing (14/04/2025)
-  - [ ] Adattare lo script per il preprocessing del dataset PHEME
+- [ ] Implementare il preprocessing del dataset PHEME
+  - [✅] Creare lo script dedicato `src/data/preprocess_pheme.py` (14/04/2025)
+  - [✅] Adattare lo script per la struttura specifica del dataset PHEME (14/04/2025)
   - [ ] Eseguire il preprocessing sui dati scaricati
 
 - [ ] Creare lo script `src/data/download.py`

@@ -1,0 +1,56 @@
+# Ambiente virtuale Python
+hds_env/
+venv/
+env/
+.env
+
+# File di cache Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Dati e file di grandi dimensioni
+data/raw/**/*.zip
+data/raw/**/*.tar.bz2
+data/raw/**/*.json
+data/raw/pheme/
+
+# File di log
+*.log
+logs/
+download.log
+preprocess.log
+
+# File di output e risultati temporanei
+results/figures/*
+results/tables/*
+!results/figures/.gitkeep
+!results/tables/.gitkeep
+
+# Notebook Jupyter
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+
+# File di sistema operativo
+.DS_Store
+Thumbs.db
+.Spotlight-V100
+.Trashes
+
+# File di configurazione IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# File generati durante il processamento
+data/processed/*.csv
+data/processed/*.json
+data/processed/*.pkl
+
+# Mantenere cartelle vuote con .gitkeep
+!data/raw/.gitkeep
+!data/processed/.gitkeep
