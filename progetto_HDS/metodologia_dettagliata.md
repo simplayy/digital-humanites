@@ -16,7 +16,7 @@ Il framework metodologico si basa sui principi del **metodo scientifico**, segue
 2. **Definizione delle ipotesi**: 
    - **Ipotesi nulla (H₀)**: Non esiste una differenza statisticamente significativa nei pattern di sentiment dei commenti tra notizie vere e fake.
    - **Ipotesi alternativa (H₁)**: Esiste una differenza statisticamente significativa nei pattern di sentiment dei commenti tra notizie vere e fake.
-3. **Raccolta dati**: Acquisizione del dataset Fakeddit con commenti annotati.
+3. **Raccolta dati**: Acquisizione del dataset FakeNewsNet con notizie verificate e relativi commenti di social media.
 4. **Analisi dei dati**: Applicazione di test statistici e analisi multivariata.
 5. **Valutazione delle ipotesi**: Determinazione se rifiutare o meno l'ipotesi nulla.
 6. **Interpretazione dei risultati**: Discussione delle implicazioni delle analisi statistiche.
@@ -24,11 +24,12 @@ Il framework metodologico si basa sui principi del **metodo scientifico**, segue
 ## 2. Dataset e Campionamento
 
 ### 2.1 Scelta del Dataset
-Il dataset principale sarà **Fakeddit**, selezionato per le seguenti caratteristiche:
-- Focus specifico sui commenti degli utenti
-- Classificazione delle notizie come vere o false
-- Disponibilità di metadata sui commenti (engagement, timestamp, etc.)
-- Volume di dati sufficiente per analisi statistiche robuste
+Il dataset principale sarà **FakeNewsNet**, selezionato per le seguenti caratteristiche:
+- Notizie verificate da fact-checker professionali (PolitiFact e GossipCop)
+- Doppio dominio di analisi: politico (PolitiFact) e intrattenimento (GossipCop)
+- Contenuto completo degli articoli e relativi commenti/reazioni dai social media (principalmente Twitter)
+- Ricchi metadati sulle interazioni social e sulla diffusione delle notizie
+- Timestamp delle interazioni che permettono analisi temporali dell'evoluzione del sentiment
 
 ### 2.2 Strategie di Campionamento
 Per garantire la validità statistica dello studio, adotteremo le seguenti strategie:

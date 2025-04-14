@@ -119,9 +119,9 @@ import os
 import urllib.request
 import zipfile
 
-def download_fakeddit(destination_folder="data/raw"):
+def download_fakenewsnet(destination_folder="data/raw"):
     """
-    Download del dataset Fakeddit da GitHub o altra fonte.
+    Download del dataset FakeNewsNet utilizzando il repository ufficiale.
     
     Parameters:
     -----------
@@ -131,17 +131,49 @@ def download_fakeddit(destination_folder="data/raw"):
     # Crea la cartella se non esiste
     os.makedirs(destination_folder, exist_ok=True)
     
-    # URL del dataset (questo è un esempio, l'URL reale potrebbe essere diverso)
-    dataset_url = "https://github.com/entitize/Fakeddit/releases/download/v1.0/all_submissions.csv"
-    comments_url = "https://github.com/entitize/Fakeddit/releases/download/v1.0/all_comments.csv"
+    print("Inizializzazione del download di FakeNewsNet...")
+    print("Nota: Il download completo di FakeNewsNet richiede credenziali Twitter API e può richiedere diverse ore.")
     
-    # Download dei file
-    urllib.request.urlretrieve(dataset_url, os.path.join(destination_folder, "all_submissions.csv"))
-    urllib.request.urlretrieve(comments_url, os.path.join(destination_folder, "all_comments.csv"))
+    # Il processo di download completo richiede la clonazione del repository e configurazione
+    # Qui forniamo le istruzioni per un setup manuale più robusto
     
-    print("Dataset scaricato con successo in", destination_folder)
+    # Step 1: Clone the repository if it doesn't exist
+    repo_path = os.path.join(destination_folder, "FakeNewsNet")
+    if not os.path.exists(repo_path):
+        import subprocess
+        subprocess.run(["git", "clone", "https://github.com/KaiDMML/FakeNewsNet.git", repo_path])
     
-    return os.path.join(destination_folder, "all_submissions.csv"), os.path.join(destination_folder, "all_comments.csv")
+    # Path dei file principali dopo il download (verranno creati dall'utente)
+    politifact_path = os.path.join(destination_folder, "FakeNewsNet/dataset/politifact")
+    gossipcop_path = os.path.join(destination_folder, "FakeNewsNet/dataset/gossipcop")
+    
+    # Verifica se i dati sono già stati scaricati
+    if os.path.exists(politifact_path) and os.path.exists(gossipcop_path):
+        print("Dataset FakeNewsNet già presente in", destination_folder)
+    else:
+        print("""
+Per completare il download del dataset FakeNewsNet, segui questi passaggi:
+
+1. Ottieni le credenziali API di Twitter:
+   - Vai su https://developer.twitter.com/ e crea un'applicazione
+   - Ottieni consumer key, consumer secret, access token e access token secret
+
+2. Crea un file config.json nella directory FakeNewsNet con le tue credenziali:
+   {
+       "consumer_key": "TUA_CONSUMER_KEY",
+       "consumer_secret": "TUO_CONSUMER_SECRET", 
+       "access_token": "TUO_ACCESS_TOKEN",
+       "access_token_secret": "TUO_ACCESS_TOKEN_SECRET"
+   }
+
+3. Esegui lo script di download:
+   cd {repo_path}
+   python code/main.py --news_source politifact gossipcop --dataset_type complete
+   
+Nota: Il download completo può richiedere diverse ore.
+""")
+    
+    return politifact_path, gossipcop_path
 ```
 
 ### 2.2 Preprocessing dei Dati
@@ -152,6 +184,8 @@ def download_fakeddit(destination_folder="data/raw"):
 import pandas as pd
 import numpy as np
 import re
+import os
+import json
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 
@@ -185,53 +219,187 @@ def clean_text(text):
         return text
     return ""
 
-def preprocess_comments(comments_file, submissions_file, output_file="data/processed/processed_data.csv"):
+def load_fakenewsnet_data(politifact_dir, gossipcop_dir):
     """
-    Preprocessa i commenti e li unisce alle informazioni sulle notizie.
+    Carica i dati di FakeNewsNet dalla struttura di directory.
     
     Parameters:
     -----------
-    comments_file : str
-        Path al file CSV dei commenti
-    submissions_file : str
-        Path al file CSV delle notizie
-    output_file : str
-        Path dove salvare i dati preprocessati
-    
+    politifact_dir : str
+        Path alla directory dei dati di PolitiFact
+    gossipcop_dir : str
+        Path alla directory dei dati di GossipCop
+        
     Returns:
     --------
     pd.DataFrame
-        DataFrame con i dati preprocessati
+        DataFrame con i dati delle notizie
     """
-    # Carica i dati
-    comments_df = pd.read_csv(comments_file)
-    submissions_df = pd.read_csv(submissions_file)
+    news_data = []
+    sources = {'politifact': politifact_dir, 'gossipcop': gossipcop_dir}
+    categories = ['fake', 'real']
     
-    # Preprocessing base
-    comments_df['body_clean'] = comments_df['body'].apply(clean_text)
-    submissions_df['title_clean'] = submissions_df['title'].apply(clean_text)
+    for source_name, source_dir in sources.items():
+        for category in categories:
+            path = os.path.join(source_dir, category)
+            if not os.path.exists(path):
+                print(f"Directory non trovata: {path}")
+                continue
+                
+            for news_dir in os.listdir(path):
+                news_path = os.path.join(path, news_dir)
+                
+                # Carica i dati dell'articolo
+                content_path = os.path.join(news_path, "news content.json")
+                if os.path.exists(content_path):
+                    try:
+                        with open(content_path, "r", encoding="utf-8") as f:
+                            content = json.load(f)
+                    except:
+                        content = {}
+                else:
+                    content = {}
+                
+                # Aggiungi alla lista
+                news_data.append({
+                    'id': news_dir,
+                    'source': source_name,
+                    'label': category,
+                    'title': content.get('title', ''),
+                    'text': content.get('text', ''),
+                    'published_date': content.get('publish_date', '')
+                })
     
-    # Rimuovi commenti vuoti o troppo corti (< 5 caratteri)
-    comments_df = comments_df[comments_df['body_clean'].str.len() > 5]
+    return pd.DataFrame(news_data)
+
+def extract_comments_from_tweets(news_df, base_dir):
+    """
+    Estrae i commenti dai tweet relativi alle notizie.
     
-    # Join tra commenti e notizie
-    merged_df = pd.merge(
-        comments_df,
-        submissions_df[['id', 'title_clean', 'label', 'created_utc']],
-        left_on='submission_id',
-        right_on='id',
-        how='inner'
-    )
+    Parameters:
+    -----------
+    news_df : pd.DataFrame
+        DataFrame con le notizie
+    base_dir : str
+        Path base per le directory dei dati
+        
+    Returns:
+    --------
+    pd.DataFrame
+        DataFrame con i commenti estratti
+    """
+    comments_data = []
+    
+    for _, news in news_df.iterrows():
+        news_id = news['id']
+        source = news['source']
+        label = news['label']
+        
+        # Path alla directory dei tweet
+        tweets_dir = os.path.join(base_dir, source, label, news_id, "tweets")
+        
+        if not os.path.exists(tweets_dir):
+            continue
+            
+        # Scansiona i file dei tweet
+        for tweet_file in os.listdir(tweets_dir):
+            if not tweet_file.endswith('.json'):
+                continue
+                
+            tweet_path = os.path.join(tweets_dir, tweet_file)
+            try:
+                with open(tweet_path, "r", encoding="utf-8") as f:
+                    tweet = json.load(f)
+                
+                # Estrai testo del tweet principale
+                if 'text' in tweet:
+                    comments_data.append({
+                        'news_id': news_id,
+                        'source': source,
+                        'label': label,
+                        'user_id': tweet.get('user', {}).get('id_str', ''),
+                        'comment_text': tweet.get('text', ''),
+                        'created_at': tweet.get('created_at', ''),
+                        'retweet_count': tweet.get('retweet_count', 0),
+                        'favorite_count': tweet.get('favorite_count', 0),
+                        'is_quote': 'quoted_status' in tweet,
+                        'is_reply': tweet.get('in_reply_to_status_id', None) is not None
+                    })
+                
+                # Estrai eventuali quote tweets
+                if 'quoted_status' in tweet and 'text' in tweet['quoted_status']:
+                    comments_data.append({
+                        'news_id': news_id,
+                        'source': source,
+                        'label': label,
+                        'user_id': tweet['quoted_status'].get('user', {}).get('id_str', ''),
+                        'comment_text': tweet['quoted_status'].get('text', ''),
+                        'created_at': tweet['quoted_status'].get('created_at', ''),
+                        'retweet_count': tweet['quoted_status'].get('retweet_count', 0),
+                        'favorite_count': tweet['quoted_status'].get('favorite_count', 0),
+                        'is_quote': True,
+                        'is_reply': False
+                    })
+            except:
+                continue
+    
+    return pd.DataFrame(comments_data)
+
+def preprocess_fakenewsnet(politifact_dir, gossipcop_dir, output_file="data/processed/processed_data.csv"):
+    """
+    Preprocessa i dati di FakeNewsNet.
+    
+    Parameters:
+    -----------
+    politifact_dir : str
+        Path alla directory dei dati di PolitiFact
+    gossipcop_dir : str
+        Path alla directory dei dati di GossipCop
+    output_file : str
+        Path dove salvare i dati preprocessati
+        
+    Returns:
+    --------
+    tuple
+        (DataFrame delle notizie, DataFrame dei commenti)
+    """
+    # Carica i dati delle notizie
+    print("Caricamento delle notizie...")
+    news_df = load_fakenewsnet_data(politifact_dir, gossipcop_dir)
+    
+    # Applica pulizia al testo
+    news_df['title_clean'] = news_df['title'].apply(clean_text)
+    news_df['text_clean'] = news_df['text'].apply(clean_text)
+    
+    # Estrai commenti dai tweet
+    print("Estrazione dei commenti dai tweet...")
+    base_dirs = {
+        'politifact': os.path.dirname(politifact_dir),
+        'gossipcop': os.path.dirname(gossipcop_dir)
+    }
+    comments_df = extract_comments_from_tweets(news_df, os.path.dirname(politifact_dir))
+    
+    # Pulisci il testo dei commenti
+    comments_df['comment_text_clean'] = comments_df['comment_text'].apply(clean_text)
+    
+    # Elimina commenti vuoti o troppo corti
+    comments_df = comments_df[comments_df['comment_text_clean'].str.len() > 5]
     
     # Crea cartella output se non esiste
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     
-    # Salva il dataset preprocessato
-    merged_df.to_csv(output_file, index=False)
+    # Salva dataset preprocessato
+    combined_data = comments_df.merge(
+        news_df[['id', 'source', 'label', 'title_clean', 'text_clean']],
+        on=['id', 'source', 'label'],
+        how='left'
+    )
+    combined_data.to_csv(output_file, index=False)
     
-    print(f"Preprocessing completato. Dataset salvato in {output_file}")
+    print(f"Preprocessing completato. Trovate {len(news_df)} notizie e {len(comments_df)} commenti.")
+    print(f"Dataset combinato salvato in {output_file}")
     
-    return merged_df
+    return news_df, comments_df
 ```
 
 ## 3. Estrazione delle Feature
