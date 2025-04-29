@@ -1,7 +1,7 @@
-# Todolist del Progetto: Studio sulla Relazione tra Sentiment Analysis dei Commenti e Fake News
+# Todolist del Progetto: Studio sulla Relazione tra Sentiment nei Commenti e Veridicità delle Notizie
 
 ## Panoramica
-Questa todolist traccia tutte le attività necessarie per completare il progetto di Human Data Science sull'analisi statistica della relazione tra sentiment nei commenti e veridicità delle notizie.
+Questa todolist semplificata traccia le attività principali per completare il progetto di Human Data Science, focalizzandosi sul mantenere un solido approccio scientifico.
 
 ## Stato di avanzamento
 - 🔲 Non iniziato
@@ -84,79 +84,43 @@ Questa todolist traccia tutte le attività necessarie per completare il progetto
 ## 3. Estrazione delle feature
 
 - [ ] Implementare `src/features/sentiment.py`
-  - [ ] Funzione per analisi del sentiment base (positività/negatività)
-  - [ ] Calcolo della polarità e dell'intensità del sentiment
+  - [ ] Analisi del sentiment (positività/negatività) usando una libreria standard
+  - [ ] Calcolo semplice della polarità del sentiment
 
-- [ ] Implementare `src/features/emotions.py`
-  - [ ] Analisi delle emozioni fondamentali (rabbia, paura, gioia, tristezza, ecc.)
-  - [ ] Calcolo dell'intensità delle emozioni
-  - [ ] Analisi della variabilità emotiva nei commenti
+- [ ] Implementare `src/features/stance.py`
+  - [ ] Identificare se i commenti sono favorevoli o contrari alla notizia principale 
+  - [ ] Classificare le reazioni per atteggiamento verso la veridicità della notizia
 
-- [ ] Implementare il rilevamento del sarcasmo
-  - [ ] Funzione per rilevare la presenza di sarcasmo
-  - [ ] Calcolo del grado di certezza nella detection del sarcasmo
+- [ ] Creare una matrice di feature
+  - [ ] Combinare le feature di sentiment e stance
+  - [ ] Standardizzare i valori numerici
 
-- [ ] Implementare funzioni per la stance detection
-  - [ ] Identificazione della posizione rispetto alla notizia (favorevole/contrario)
-  - [ ] Calcolo del grado di certezza nella stance
-
-- [ ] Implementare `src/features/readability.py`
-  - [ ] Calcolo degli indici di Flesch Reading Ease
-  - [ ] Calcolo di Flesch-Kincaid Grade Level
-  - [ ] Calcolo di SMOG Index e Gunning Fog
-
-- [ ] Implementare funzioni per misurare la diversità lessicale
-  - [ ] Calcolo del Type-Token Ratio
-  - [ ] Analisi della ricchezza del vocabolario
-
-- [ ] Creare una matrice di feature completa
-  - [ ] Aggregazione di tutte le feature estratte
-  - [ ] Normalizzazione/standardizzazione delle feature numeriche
-
-- [ ] Documentare tutte le feature estratte in `feature_description.md`
-  - [ ] Descrizione di ogni feature
-  - [ ] Interpretazione e significato nel contesto del progetto
+- [ ] Documentare le feature in `feature_description.md`
+  - [ ] Spiegare il significato di ogni feature estratta
+  - [ ] Descrivere gli algoritmi utilizzati
 
 ## 4. Analisi statistica
 
 - [ ] Implementare `src/analysis/descriptive.py`
-  - [ ] Calcolo delle statistiche descrittive per ogni feature
-  - [ ] Visualizzazione delle distribuzioni
-  - [ ] Identificazione di outlier
+  - [ ] Calcolare statistiche descrittive (media, mediana, deviazione standard)
+  - [ ] Visualizzare distribuzioni principali
+  - [ ] Identificare e gestire outlier
 
-- [ ] Implementare `src/analysis/hypothesis_tests.py`
-  - [ ] Test t di Student per confrontare medie di sentiment
-  - [ ] Test ANOVA per confronti multipli
-  - [ ] Test chi-quadro per variabili categoriche
-  - [ ] Test non parametrici (Mann-Whitney U, Kruskal-Wallis) quando necessario
+- [ ] Implementare test statistici essenziali in `src/analysis/hypothesis_tests.py`
+  - [ ] Test per confrontare il sentiment tra notizie vere e false
+  - [ ] Test per analizzare la correlazione tra sentiment e veridicità
 
-- [ ] Implementare `src/analysis/correlation.py`
-  - [ ] Calcolo del coefficiente di correlazione di Pearson
-  - [ ] Calcolo del coefficiente di correlazione di Spearman
-  - [ ] Creazione della matrice di correlazione
+- [ ] Implementare analisi di correlazione
+  - [ ] Calcolare coefficienti di correlazione tra le variabili principali
+  - [ ] Creare matrice di correlazione
 
-- [ ] Implementare `src/analysis/regression.py`
-  - [ ] Modelli di regressione logistica
-  - [ ] Calcolo dell'R² e analisi della varianza spiegata
-  - [ ] Calcolo degli odds ratio e intervalli di confidenza
+- [ ] Calcolare la significatività statistica
+  - [ ] Documentare p-value e dimensione dell'effetto
+  - [ ] Interpretare i risultati nel contesto del progetto
 
-- [ ] Applicare correzioni per test multipli
-  - [ ] Implementare la correzione di Bonferroni
-  - [ ] Implementare la procedura di Benjamini-Hochberg (FDR)
-  - [ ] Implementare la correzione di Holm-Bonferroni
-
-- [ ] Calcolare e interpretare p-value ed effect size
-  - [ ] Documentare ogni test con i relativi risultati
-  - [ ] Interpretare la significatività statistica in contesto
-
-- [ ] Eseguire validazione incrociata
-  - [ ] Implementare k-fold cross validation
-  - [ ] Verificare la stabilità dei risultati
-
-- [ ] Condurre analisi di sensibilità
-  - [ ] Variare i parametri dei test
-  - [ ] Rimuovere outlier e ripetere le analisi
-  - [ ] Eseguire subsampling per verificare la consistenza
+- [ ] Validare i risultati
+  - [ ] Utilizzare tecniche di validazione incrociata
+  - [ ] Verificare la robustezza dei risultati
 
 ## 5. Visualizzazione e interpretazione dei risultati
 
@@ -166,91 +130,61 @@ Questa todolist traccia tutte le attività necessarie per completare il progetto
   - [✅] Funzioni per visualizzare distribuzioni delle reazioni (29/04/2025)
   
 - [ ] Implementare `src/visualization/sentiment_plots.py`  
-  - [ ] Funzioni per visualizzare distribuzioni del sentiment
-  - [ ] Funzioni per visualizzare correlazioni
-  - [ ] Funzioni per visualizzare effect size e intervalli di confidenza
+  - [ ] Visualizzare distribuzioni del sentiment per notizie vere vs false
+  - [ ] Visualizzare correlazioni principali
 
-- [ ] Creare visualizzazioni delle distribuzioni del sentiment
-  - [ ] Boxplot e violinplot per confrontare gruppi
-  - [ ] Istogrammi e density plot per visualizzare distribuzioni
-
-- [ ] Generare grafici per le correlazioni significative
+- [ ] Creare grafici essenziali
+  - [ ] Grafici comparativi per le variabili chiave
   - [ ] Heatmap della matrice di correlazione
-  - [ ] Scatter plot per relazioni bivariate importanti
 
-- [ ] Visualizzare gli effect size e intervalli di confidenza
-  - [ ] Forest plot per odds ratio
-  - [ ] Grafici ad errore per intervalli di confidenza
+- [ ] Preparare tabelle riassuntive
+  - [ ] Tabella con risultati statistici principali
+  - [ ] Tabella di confronto tra notizie vere e false
 
-- [ ] Preparare tabelle riassuntive dei risultati statistici
-  - [ ] Tabella con p-value, effect size e significatività
-  - [ ] Tabella di confronto tra feature diverse
-
-- [ ] Interpretare i risultati in relazione alle ipotesi iniziali
+- [ ] Interpretare i risultati
   - [ ] Documentare le interpretazioni in reports/analysis_results.md
 
 ## 6. Documentazione e reporting
 
-- [ ] Preparare un report metodologico dettagliato
-  - [ ] Descrivere tutti i test statistici eseguiti
-  - [ ] Giustificare la scelta di ciascun test
-  - [ ] Presentare i risultati con interpretazioni
+- [ ] Preparare un report scientifico
+  - [ ] Riassumere la metodologia utilizzata
+  - [ ] Presentare i risultati principali con interpretazioni
+  - [ ] Discutere la significatività statistica
 
-- [ ] Documentare il protocollo di analisi completo
-  - [ ] Procedure di estrazione delle feature
-  - [ ] Pipeline di analisi statistica
-  - [ ] Criteri di decisione per l'accettazione/rifiuto delle ipotesi
+- [ ] Documentare il protocollo di analisi
+  - [ ] Descrivere chiaramente ipotesi e metodi
+  - [ ] Specificare criteri di accettazione/rifiuto delle ipotesi
 
-- [ ] Creare una presentazione dei risultati principali
-  - [ ] Slide con risultati chiave
-  - [ ] Visualizzazioni efficaci
-  - [ ] Conclusioni principali
-
-- [ ] Documentare limitazioni e considerazioni etiche
-  - [ ] Limitazioni metodologiche
-  - [ ] Considerazioni sulla privacy e sui bias
-  - [ ] Riflessioni sulle implicazioni sociali
+- [ ] Discutere limitazioni e implicazioni
+  - [ ] Identificare limiti metodologici
+  - [ ] Considerare le possibili generalizzazioni dei risultati
 
 - [ ] Preparare materiale per la riproducibilità
-  - [ ] README dettagliato
-  - [ ] Istruzioni per riprodurre lo studio
-  - [ ] Codice ben commentato
+  - [ ] Documentare le procedure di analisi
+  - [ ] Assicurare che il codice sia commentato e comprensibile
 
-## 7. Test e validazione
+## 7. Validazione e verifica
 
-- [ ] Implementare `tests/test_features.py`
-  - [ ] Test unitari per le funzioni di estrazione delle feature
-  - [ ] Verifiche di output per input noti
+- [ ] Verificare i risultati
+  - [ ] Controllare la correttezza dell'implementazione
+  - [ ] Validare le conclusioni statistiche
 
-- [ ] Implementare `tests/test_analysis.py`
-  - [ ] Test per le procedure di analisi statistica
-  - [ ] Controlli di correttezza dei calcoli
+- [ ] Valutare la validità dello studio
+  - [ ] Esaminare la validità interna
+  - [ ] Considerare la validità esterna
 
-- [ ] Verificare la correttezza dei risultati statistici
-  - [ ] Confrontare con implementazioni alternative
-  - [ ] Verificare i risultati con casi di test noti
+## 8. Conclusione
 
-- [ ] Eseguire controlli sulla validità
-  - [ ] Valutare la validità interna dello studio
-  - [ ] Considerare la validità esterna e la generalizzabilità
+- [ ] Finalizzare il progetto
+  - [ ] Controllare la coerenza complessiva
+  - [ ] Verificare che le conclusioni siano supportate dai dati
 
-## 8. Passi finali
+- [ ] Preparare la presentazione
+  - [ ] Creare slide focalizzate sui risultati chiave
+  - [ ] Evidenziare le implicazioni principali
 
-- [ ] Revisionare l'intero progetto
-  - [ ] Controllare la coerenza tra le diverse parti
-  - [ ] Verificare la completezza dell'analisi
-
-- [ ] Preparare una presentazione finale
-  - [ ] Creare slide riassuntive
-  - [ ] Preparare demo o esempi significativi
-
-- [ ] Condividere i risultati in formato accessibile
-  - [ ] Generare report PDF
-  - [ ] Preparare abstract e punti chiave
-
-- [ ] Considerare possibili estensioni future
-  - [ ] Documentare idee per miglioramenti
-  - [ ] Identificare direzioni per ricerche future
+- [ ] Riflettere sulle direzioni future
+  - [ ] Identificare possibili estensioni della ricerca
 
 ## Note e osservazioni
 
