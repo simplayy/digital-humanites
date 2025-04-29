@@ -35,10 +35,10 @@ Questa todolist traccia tutte le attività necessarie per completare il progetto
 - [✅] Creare la struttura delle cartelle del progetto (14/04/2025)
   ```bash
   mkdir -p data/{raw,processed}
-  mkdir -p notebooks
   mkdir -p src/{data,features,analysis,visualization}
   mkdir -p tests
   mkdir -p results/{figures,tables}
+  mkdir -p reports/figures
   touch src/__init__.py
   touch src/data/__init__.py
   touch src/features/__init__.py
@@ -58,32 +58,30 @@ Questa todolist traccia tutte le attività necessarie per completare il progetto
   - [✅] Verificare l'integrità del dataset scaricato (14/04/2025)
   - [✅] Estrarre correttamente il formato .tar.bz2 (14/04/2025)
   
-- [ ] Implementare il preprocessing del dataset PHEME
+- [✅] Implementare il preprocessing del dataset PHEME
   - [✅] Creare lo script dedicato `src/data/preprocess_pheme.py` (14/04/2025)
   - [✅] Adattare lo script per la struttura specifica del dataset PHEME (14/04/2025)
-  - [ ] Eseguire il preprocessing sui dati scaricati
+  - [✅] Eseguire il preprocessing sui dati scaricati (29/04/2025)
 
-- [ ] Creare lo script `src/data/download.py`
-  - [ ] Implementare funzioni per scaricare i dati
-  - [ ] Implementare funzioni per organizzare i dati scaricati
+- [✅] Creare lo script `src/data/download.py` (14/04/2025)
+  - [✅] Implementare funzioni per scaricare i dati (14/04/2025)
+  - [✅] Implementare funzioni per organizzare i dati scaricati (14/04/2025)
 
-- [ ] Implementare `src/data/preprocess.py`
-  - [ ] Funzioni per pulizia dei dati (rimozione duplicati, gestione valori mancanti)
-  - [ ] Normalizzazione dei testi dei commenti
-  - [ ] Tokenizzazione e preparazione per analisi NLP
+- [✅] Implementare il preprocessing 
+  - [✅] Funzioni per pulizia dei dati (rimozione duplicati, gestione valori mancanti) (29/04/2025)
+  - [✅] Normalizzazione dei testi dei commenti (29/04/2025)
+  - [✅] Preparazione per analisi del sentiment (29/04/2025)
 
-- [ ] Creare e completare il notebook `notebooks/1_exploratory.ipynb`
-  - [ ] Caricamento dati
-  - [ ] Statistiche descrittive iniziali
-  - [ ] Visualizzazione della distribuzione dei dati
-  - [ ] Identificazione di anomalie o pattern interessanti
+- [✅] Visualizzazione esplorativa dei dati
+  - [✅] Implementazione dello script `src/visualization/plot_pheme_stats.py` (29/04/2025)
+  - [✅] Generazione statistiche descrittive iniziali (29/04/2025)
+  - [✅] Creazione visualizzazioni della distribuzione dei dati (29/04/2025)
+  - [✅] Identificazione pattern principali nella distribuzione degli eventi e veridicità (29/04/2025)
 
-- [ ] Documentare la struttura e le caratteristiche del dataset
-  - [ ] Creare un file `data_dictionary.md` con dettagli su tutte le variabili
+- [✅] Documentare la struttura e le caratteristiche del dataset (29/04/2025)
+  - [✅] Generare statistiche descrittive complete sul dataset processato (29/04/2025)
 
 ## 3. Estrazione delle feature
-
-- [ ] Creare il notebook `notebooks/2_feature_extraction.ipynb`
 
 - [ ] Implementare `src/features/sentiment.py`
   - [ ] Funzione per analisi del sentiment base (positività/negatività)
@@ -127,8 +125,6 @@ Questa todolist traccia tutte le attività necessarie per completare il progetto
 
 ## 4. Analisi statistica
 
-- [ ] Creare il notebook `notebooks/3_statistical_analysis.ipynb`
-
 - [ ] Implementare `src/analysis/descriptive.py`
   - [ ] Calcolo delle statistiche descrittive per ogni feature
   - [ ] Visualizzazione delle distribuzioni
@@ -170,9 +166,12 @@ Questa todolist traccia tutte le attività necessarie per completare il progetto
 
 ## 5. Visualizzazione e interpretazione dei risultati
 
-- [ ] Creare il notebook `notebooks/4_visualization.ipynb`
-
-- [ ] Implementare `src/visualization/plots.py`
+- [✅] Implementare `src/visualization/plot_pheme_stats.py` (29/04/2025)
+  - [✅] Funzioni per visualizzare distribuzioni degli eventi nel dataset (29/04/2025)
+  - [✅] Funzioni per visualizzare distribuzione della veridicità (29/04/2025)
+  - [✅] Funzioni per visualizzare distribuzioni delle reazioni (29/04/2025)
+  
+- [ ] Implementare `src/visualization/sentiment_plots.py`  
   - [ ] Funzioni per visualizzare distribuzioni del sentiment
   - [ ] Funzioni per visualizzare correlazioni
   - [ ] Funzioni per visualizzare effect size e intervalli di confidenza
@@ -194,7 +193,7 @@ Questa todolist traccia tutte le attività necessarie per completare il progetto
   - [ ] Tabella di confronto tra feature diverse
 
 - [ ] Interpretare i risultati in relazione alle ipotesi iniziali
-  - [ ] Documentare le interpretazioni nel notebook
+  - [ ] Documentare le interpretazioni in reports/analysis_results.md
 
 ## 6. Documentazione e reporting
 
