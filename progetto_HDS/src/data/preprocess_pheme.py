@@ -66,8 +66,8 @@ def load_tweet_thread(thread_dir):
         return None
     
     try:
-        # Carica il tweet principale (source-tweet)
-        source_tweet_file = thread_dir / "source-tweet" / f"{thread_dir.name}.json"
+        # Carica il tweet principale (source-tweets) - notare il plurale nel nome della directory
+        source_tweet_file = thread_dir / "source-tweets" / f"{thread_dir.name}.json"
         
         if not source_tweet_file.exists():
             logger.warning(f"File source-tweet non trovato: {source_tweet_file}")
@@ -99,18 +99,17 @@ def load_tweet_thread(thread_dir):
         return None
 
 
-def load_veracity_annotation(event_dir, thread_name):
+def load_veracity_annotation(thread_dir):
     """
     Carica l'annotazione di veridicità per un thread specifico
     
     Args:
-        event_dir (Path): Directory dell'evento
-        thread_name (str): Nome del thread
+        thread_dir (Path): Directory del thread
     
     Returns:
         str: Etichetta di veridicità ('true', 'false', 'unverified') o None se non trovata
     """
-    annotation_file = event_dir / "en" / f"{thread_name}.json"
+    annotation_file = thread_dir / "annotation.json"
     
     if not annotation_file.exists():
         logger.warning(f"File di annotazione non trovato: {annotation_file}")
@@ -119,7 +118,22 @@ def load_veracity_annotation(event_dir, thread_name):
     try:
         with open(annotation_file, 'r', encoding='utf-8') as f:
             annotation = json.load(f)
-            return annotation.get("veracity")
+            
+            # Determinare la veridicità basandosi sui campi disponibili
+            if "veracity" in annotation:
+                return annotation.get("veracity")
+            elif "true" in annotation:
+                # Formato alternativo dove c'è un campo "true" con 0/1
+                true_value = annotation.get("true")
+                if true_value == "1" or true_value == 1 or true_value == True:
+                    return "true"
+                elif "misinformation" in annotation and (annotation["misinformation"] == "1" or annotation["misinformation"] == 1):
+                    return "false"
+                else:
+                    return "unverified"
+            else:
+                logger.warning(f"Formato di annotazione sconosciuto: {annotation}")
+                return None
     except (json.JSONDecodeError, UnicodeDecodeError) as e:
         logger.warning(f"Errore nel parsing del file di annotazione {annotation_file}: {e}")
         return None
@@ -251,7 +265,7 @@ def process_event(event):
     Processa tutti i thread per un evento specifico
     
     Args:
-        event (str): Nome dell'evento (es. 'charliehebdo', 'ferguson', ecc.)
+        event (str): Nome dell'evento (es. 'charliehebdo-all-rnr-threads', 'ferguson-all-rnr-threads', ecc.)
         
     Returns:
         list: Lista di thread processati
@@ -272,12 +286,14 @@ def process_event(event):
             if thread_dir.is_dir():
                 # Carica il thread e l'annotazione di veridicità
                 thread_data = load_tweet_thread(thread_dir)
-                veracity = load_veracity_annotation(event_dir, thread_dir.name)
+                veracity = load_veracity_annotation(thread_dir)
                 
                 if thread_data and veracity:
                     processed_thread = process_thread(thread_data, veracity)
                     if processed_thread:
-                        processed_thread["event"] = event
+                        # Rimuovo il suffisso -all-rnr-threads per ottenere il nome dell'evento originale
+                        event_name = event.replace('-all-rnr-threads', '')
+                        processed_thread["event"] = event_name
                         processed_thread["thread_id"] = thread_dir.name
                         processed_thread["is_rumour"] = True
                         processed_threads.append(processed_thread)
@@ -293,7 +309,9 @@ def process_event(event):
                 if thread_data:
                     processed_thread = process_thread(thread_data, "true")
                     if processed_thread:
-                        processed_thread["event"] = event
+                        # Rimuovo il suffisso -all-rnr-threads per ottenere il nome dell'evento originale
+                        event_name = event.replace('-all-rnr-threads', '')
+                        processed_thread["event"] = event_name
                         processed_thread["thread_id"] = thread_dir.name
                         processed_thread["is_rumour"] = False
                         processed_threads.append(processed_thread)
