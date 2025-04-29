@@ -83,17 +83,23 @@ Questa todolist semplificata traccia le attività principali per completare il p
 
 ## 3. Estrazione delle feature
 
-- [ ] Implementare `src/features/sentiment.py`
-  - [ ] Analisi del sentiment (positività/negatività) usando una libreria standard
-  - [ ] Calcolo semplice della polarità del sentiment
+- [✅] Implementare `src/features/sentiment.py` (29/04/2025)
+  - [✅] Analisi del sentiment (positività/negatività) usando TextBlob (29/04/2025)
+  - [✅] Calcolo della polarità e soggettività del sentiment (29/04/2025)
 
-- [ ] Implementare `src/features/stance.py`
-  - [ ] Identificare se i commenti sono favorevoli o contrari alla notizia principale 
-  - [ ] Classificare le reazioni per atteggiamento verso la veridicità della notizia
+- [✅] Implementare `src/features/stance.py` (29/04/2025)
+  - [✅] Identificare se i commenti sono favorevoli o contrari alla notizia principale (29/04/2025)
+  - [✅] Classificare le reazioni per atteggiamento verso la veridicità della notizia (29/04/2025)
 
-- [ ] Creare una matrice di feature
-  - [ ] Combinare le feature di sentiment e stance
-  - [ ] Standardizzare i valori numerici
+- [✅] Implementare `src/features/readability.py` (29/04/2025)
+  - [✅] Calcolo di indici di leggibilità (Flesch, Gunning Fog, SMOG) (29/04/2025)
+  - [✅] Misura del livello di acculturazione nei commenti (29/04/2025)
+  - [✅] Analisi della complessità lessicale e ricchezza del vocabolario (29/04/2025)
+  - [✅] Rilevamento del linguaggio formale vs informale (29/04/2025)
+
+- [ ] Creare una matrice di feature integrata
+  - [ ] Combinare le feature di sentiment, stance e leggibilità
+  - [ ] Standardizzare i valori numerici per l'analisi
 
 - [ ] Documentare le feature in `feature_description.md`
   - [ ] Spiegare il significato di ogni feature estratta
@@ -109,6 +115,7 @@ Questa todolist semplificata traccia le attività principali per completare il p
 - [ ] Implementare test statistici essenziali in `src/analysis/hypothesis_tests.py`
   - [ ] Test per confrontare il sentiment tra notizie vere e false
   - [ ] Test per analizzare la correlazione tra sentiment e veridicità
+  - [ ] Test per valutare la relazione tra livello di acculturazione e propensione alla disinformazione
 
 - [ ] Implementare analisi di correlazione
   - [ ] Calcolare coefficienti di correlazione tra le variabili principali
