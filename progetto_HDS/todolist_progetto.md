@@ -109,12 +109,6 @@ Questa todolist traccia tutte le attività necessarie per completare il progetto
   - [ ] Calcolo del Type-Token Ratio
   - [ ] Analisi della ricchezza del vocabolario
 
-- [ ] Implementare `src/features/metadata.py`
-  - [ ] Estrazione del volume di interazione (numero di commenti)
-  - [ ] Analisi dell'engagement (like, risposte, profondità delle discussioni)
-  - [ ] Analisi dei pattern temporali nei commenti
-  - [ ] Calcolo delle statistiche utente
-
 - [ ] Creare una matrice di feature completa
   - [ ] Aggregazione di tutte le feature estratte
   - [ ] Normalizzazione/standardizzazione delle feature numeriche
