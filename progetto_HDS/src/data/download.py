@@ -204,9 +204,12 @@ def verify_pheme_dataset(pheme_dir):
     # Verifica che tutti gli eventi siano presenti
     all_events_exist = True
     for event in PHEME_EVENTS:
+        # Controlla sia il formato diretto che il formato con il suffisso -all-rnr-threads
         event_dir = veracity_dir / "all-rnr-annotated-threads" / event
-        if not event_dir.exists() or not event_dir.is_dir():
-            logger.error(f"Directory dell'evento {event} non trovata: {event_dir}")
+        event_dir_suffixed = veracity_dir / "all-rnr-annotated-threads" / f"{event}-all-rnr-threads"
+        
+        if not (event_dir.exists() or event_dir_suffixed.exists()):
+            logger.error(f"Directory dell'evento {event} non trovata: né {event_dir} né {event_dir_suffixed}")
             all_events_exist = False
     
     if not all_events_exist:
@@ -217,20 +220,43 @@ def verify_pheme_dataset(pheme_dir):
     
     for event in PHEME_EVENTS:
         event_dir = veracity_dir / "all-rnr-annotated-threads" / event
+        event_dir_suffixed = veracity_dir / "all-rnr-annotated-threads" / f"{event}-all-rnr-threads"
+        
+        # Determina quale directory utilizzare
+        actual_dir = event_dir if event_dir.exists() else event_dir_suffixed if event_dir_suffixed.exists() else None
+        
+        if actual_dir is None:
+            continue  # Skip this event
+            
         for veracity in ["rumours", "non-rumours"]:
-            if (event_dir / veracity).exists():
-                for thread in (event_dir / veracity).iterdir():
+            if (actual_dir / veracity).exists():
+                for thread in (actual_dir / veracity).iterdir():
                     if thread.is_dir():
                         # Il thread è un rumour, quindi cerchiamo l'annotazione di veracity
                         if veracity == "rumours":
                             # Verifica l'etichetta di veridicità nel file di annotazione
-                            annotation_file = event_dir / "en" / f"{thread.name}.json"
+                            annotation_file = thread / "annotation.json"
                             if annotation_file.exists():
                                 with open(annotation_file, 'r') as f:
                                     try:
                                         annotation = json.load(f)
-                                        if "veracity" in annotation:
-                                            counts[annotation["veracity"]] += 1
+                                        # Il PHEME dataset usa vari formati per indicare la veridicità
+                                        if "true" in annotation:
+                                            # Per gestire sia il formato stringa che numerico
+                                            true_value = annotation["true"]
+                                            if true_value == "1" or true_value == 1:
+                                                counts["true"] += 1
+                                            elif true_value == "0" or true_value == 0:
+                                                # Controlliamo anche il campo misinformation per migliorare l'etichettatura
+                                                if "misinformation" in annotation and (annotation["misinformation"] == "1" or annotation["misinformation"] == 1):
+                                                    counts["false"] += 1
+                                                else:
+                                                    counts["unverified"] += 1
+                                            else:
+                                                counts["unverified"] += 1
+                                        elif "misinformation" in annotation and (annotation["misinformation"] == "1" or annotation["misinformation"] == 1):
+                                            # Se manca il campo "true" ma c'è il campo "misinformation" con valore 1
+                                            counts["false"] += 1
                                     except json.JSONDecodeError:
                                         logger.warning(f"Errore nel parsing del file {annotation_file}")
                         else:
