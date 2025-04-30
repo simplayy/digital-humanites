@@ -108,27 +108,40 @@ Questa todolist semplificata traccia le attività principali per completare il p
 
 ## 4. Analisi statistica
 
+- [ ] Definire la tipologia di studio e le ipotesi
+  - [ ] Specificare se lo studio è osservazionale, descrittivo, analitico, ecc.
+  - [ ] Formulare le ipotesi statistiche principali
+
 - [ ] Implementare `src/analysis/descriptive.py`
   - [ ] Calcolare statistiche descrittive (media, mediana, deviazione standard)
   - [ ] Visualizzare distribuzioni principali
   - [ ] Identificare e gestire outlier
+  - [ ] Verificare la normalità delle distribuzioni (Shapiro-Wilk, QQ-plot)
 
 - [ ] Implementare test statistici essenziali in `src/analysis/hypothesis_tests.py`
   - [ ] Test per confrontare il sentiment tra notizie vere e false
   - [ ] Test per analizzare la correlazione tra sentiment e veridicità
   - [ ] Test per valutare la relazione tra livello di acculturazione e propensione alla disinformazione
+  - [ ] Correzione per test multipli (Bonferroni, FDR)
 
 - [ ] Implementare analisi di correlazione
-  - [ ] Calcolare coefficienti di correlazione tra le variabili principali
+  - [ ] Calcolare coefficienti di correlazione tra le variabili principali (Pearson, Spearman)
   - [ ] Creare matrice di correlazione
 
 - [ ] Calcolare la significatività statistica
-  - [ ] Documentare p-value e dimensione dell'effetto
+  - [ ] Documentare p-value, intervalli di confidenza ed effect size
   - [ ] Interpretare i risultati nel contesto del progetto
+
+- [ ] Analizzare bias e limiti
+  - [ ] Identificare possibili bias nei dati e nella metodologia
+  - [ ] Discutere la validità interna, esterna e la generalizzabilità
 
 - [ ] Validare i risultati
   - [ ] Utilizzare tecniche di validazione incrociata
   - [ ] Verificare la robustezza dei risultati
+
+- [ ] Considerazioni etiche e privacy
+  - [ ] Riflettere sulle implicazioni etiche e sulla privacy nell'analisi dei dati social
 
 ## 5. Visualizzazione e interpretazione dei risultati
 
