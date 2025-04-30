@@ -97,13 +97,14 @@ Questa todolist semplificata traccia le attività principali per completare il p
   - [✅] Analisi della complessità lessicale e ricchezza del vocabolario (29/04/2025)
   - [✅] Rilevamento del linguaggio formale vs informale (29/04/2025)
 
-- [ ] Creare una matrice di feature integrata
-  - [ ] Combinare le feature di sentiment, stance e leggibilità
-  - [ ] Standardizzare i valori numerici per l'analisi
+- [✅] Creare una matrice di feature integrata (30/04/2025)
+  - [✅] Combinare le feature di sentiment, stance e leggibilità (30/04/2025)
+  - [✅] Standardizzare i valori numerici per l'analisi (30/04/2025)
+  - [✅] Generare matrice di correlazione tra feature (30/04/2025)
 
-- [ ] Documentare le feature in `feature_description.md`
-  - [ ] Spiegare il significato di ogni feature estratta
-  - [ ] Descrivere gli algoritmi utilizzati
+- [✅] Documentare le feature in `feature_description.md` (30/04/2025)
+  - [✅] Spiegare il significato di ogni feature estratta (30/04/2025)
+  - [✅] Descrivere gli algoritmi utilizzati (30/04/2025)
 
 ## 4. Analisi statistica
 
