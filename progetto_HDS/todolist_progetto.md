@@ -167,18 +167,16 @@ Questa todolist semplificata traccia le attività principali per completare il p
 
 ## 6. Documentazione e reporting
 
-- [ ] Preparare un report scientifico
-  - [ ] Riassumere la metodologia utilizzata
-  - [ ] Presentare i risultati principali con interpretazioni
-  - [ ] Discutere la significatività statistica
-
-- [ ] Documentare il protocollo di analisi
-  - [ ] Descrivere chiaramente ipotesi e metodi
-  - [ ] Specificare criteri di accettazione/rifiuto delle ipotesi
-
-- [ ] Discutere limitazioni e implicazioni
-  - [ ] Identificare limiti metodologici
-  - [ ] Considerare le possibili generalizzazioni dei risultati
+- [ ] Redigere il report scientifico finale
+  - [ ] Introduzione: contesto, motivazione, obiettivi e ipotesi
+  - [ ] Background e stato dell’arte: letteratura e definizioni chiave
+  - [ ] Dati e metodologia: descrizione dataset, pipeline, scelte metodologiche
+  - [ ] Analisi statistica: statistiche descrittive, test di normalità, test di ipotesi, correlazioni, p-value, effect size
+  - [ ] Risultati: presentazione tabelle/grafici, interpretazione rispetto alle ipotesi
+  - [ ] Discussione critica: bias, limiti, validità, confronto con la letteratura
+  - [ ] Considerazioni etiche e privacy
+  - [ ] Conclusioni e sviluppi futuri
+  - [ ] Materiali supplementari e riproducibilità (link a codice, dati, istruzioni)
 
 - [ ] Preparare materiale per la riproducibilità
   - [ ] Documentare le procedure di analisi
