@@ -1,0 +1,7 @@
+,,sentiment_polarity,sentiment_polarity,sentiment_polarity,sentiment_subjectivity,sentiment_subjectivity,sentiment_category
+,,mean,std,count,mean,std,<lambda>
+veracity,is_rumour,,,,,,
+false,True,0.0035773780828410014,0.27544536194683883,5436,0.2992353751128257,0.33953417609168635,"{'neutral': 2978, 'positive': 1289, 'negative': 1169}"
+true,False,0.028503799071859265,0.2914031127000158,72229,0.3315452444132387,0.3412009017363995,"{'neutral': 35959, 'positive': 21142, 'negative': 15128}"
+true,True,0.010356510962820292,0.2865825731275026,15275,0.3238416346225757,0.34173047636181997,"{'neutral': 7596, 'positive': 4142, 'negative': 3537}"
+unverified,True,0.013365919043528705,0.2590176880085858,10806,0.30418529600039873,0.3276120463831474,"{'neutral': 5614, 'positive': 2798, 'negative': 2394}"

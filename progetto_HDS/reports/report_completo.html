@@ -1,0 +1,3847 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Simone" />
+  <title>Relazione tra Sentiment nei Commenti e Veridicità delle Notizie: Analisi del Dataset PHEME</title>
+  <style>
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: blue;
+    }
+    a:visited {
+      color: blue;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {  background-color: #f8f8f8; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ef2929; } /* Alert */
+    code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #204a87; } /* Attribute */
+    code span.bn { color: #0000cf; } /* BaseN */
+    code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4e9a06; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #8f5902; font-style: italic; } /* Comment */
+    code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+    code span.dt { color: #204a87; } /* DataType */
+    code span.dv { color: #0000cf; } /* DecVal */
+    code span.er { color: #a40000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #0000cf; } /* Float */
+    code span.fu { color: #204a87; font-weight: bold; } /* Function */
+    code span.im { } /* Import */
+    code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+    code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+    code span.ot { color: #8f5902; } /* Other */
+    code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+    code span.sc { color: #ce5c00; font-weight: bold; } /* SpecialChar */
+    code span.ss { color: #4e9a06; } /* SpecialString */
+    code span.st { color: #4e9a06; } /* String */
+    code span.va { color: #000000; } /* Variable */
+    code span.vs { color: #4e9a06; } /* VerbatimString */
+    code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Relazione tra Sentiment nei Commenti e Veridicità
+delle Notizie: Analisi del Dataset PHEME</h1>
+<p class="author">Simone</p>
+<p class="date">3 maggio 2025</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#sommario-esecutivo" id="toc-sommario-esecutivo">Sommario
+Esecutivo</a>
+<ul>
+<li><a
+href="#studio-sulla-relazione-tra-sentiment-nei-commenti-e-veridicità-delle-notizie"
+id="toc-studio-sulla-relazione-tra-sentiment-nei-commenti-e-veridicità-delle-notizie">Studio
+sulla Relazione tra Sentiment nei Commenti e Veridicità delle
+Notizie</a>
+<ul>
+<li><a href="#panoramica" id="toc-panoramica">Panoramica</a></li>
+<li><a href="#metodologia" id="toc-metodologia">Metodologia</a></li>
+<li><a href="#principali-risultati"
+id="toc-principali-risultati">Principali Risultati</a></li>
+<li><a href="#implicazioni" id="toc-implicazioni">Implicazioni</a></li>
+<li><a href="#limitazioni" id="toc-limitazioni">Limitazioni</a></li>
+<li><a href="#conclusione" id="toc-conclusione">Conclusione</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#introduzione" id="toc-introduzione">1. Introduzione</a>
+<ul>
+<li><a href="#contesto-e-motivazione"
+id="toc-contesto-e-motivazione">Contesto e Motivazione</a></li>
+<li><a href="#il-problema-della-disinformazione-online"
+id="toc-il-problema-della-disinformazione-online">Il Problema della
+Disinformazione Online</a>
+<ul>
+<li><a href="#gap-nella-letteratura" id="toc-gap-nella-letteratura">Gap
+nella Letteratura</a></li>
+</ul></li>
+<li><a href="#obiettivi-dello-studio"
+id="toc-obiettivi-dello-studio">Obiettivi dello Studio</a></li>
+<li><a href="#ipotesi-di-ricerca" id="toc-ipotesi-di-ricerca">Ipotesi di
+Ricerca</a></li>
+</ul></li>
+<li><a href="#dataset-e-metodologia" id="toc-dataset-e-metodologia">2.
+Dataset e Metodologia</a>
+<ul>
+<li><a href="#dataset-pheme" id="toc-dataset-pheme">Dataset PHEME</a>
+<ul>
+<li><a href="#origine-e-struttura" id="toc-origine-e-struttura">Origine
+e Struttura</a></li>
+<li><a href="#distribuzione-del-target"
+id="toc-distribuzione-del-target">Distribuzione del Target</a></li>
+<li><a href="#eventi-coperti" id="toc-eventi-coperti">Eventi
+Coperti</a></li>
+<li><a href="#caratteristiche-dei-thread-conversazionali"
+id="toc-caratteristiche-dei-thread-conversazionali">Caratteristiche dei
+Thread Conversazionali</a></li>
+</ul></li>
+<li><a href="#metodologia-1" id="toc-metodologia-1">Metodologia</a>
+<ul>
+<li><a href="#approccio-generale" id="toc-approccio-generale">Approccio
+Generale</a></li>
+<li><a href="#preprocessing-dei-dati"
+id="toc-preprocessing-dei-dati">Preprocessing dei Dati</a></li>
+<li><a href="#estrazione-delle-feature"
+id="toc-estrazione-delle-feature">Estrazione delle Feature</a></li>
+<li><a href="#metodi-di-analisi" id="toc-metodi-di-analisi">Metodi di
+Analisi</a></li>
+<li><a href="#riproducibilità-e-trasparenza"
+id="toc-riproducibilità-e-trasparenza">Riproducibilità e
+Trasparenza</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#analisi-esplorativa-1" id="toc-analisi-esplorativa-1">3.
+Analisi Esplorativa</a>
+<ul>
+<li><a href="#statistiche-descrittive-del-dataset"
+id="toc-statistiche-descrittive-del-dataset">Statistiche Descrittive del
+Dataset</a>
+<ul>
+<li><a href="#dimensione-e-composizione"
+id="toc-dimensione-e-composizione">Dimensione e Composizione</a></li>
+<li><a href="#distribuzione-per-evento"
+id="toc-distribuzione-per-evento">Distribuzione per Evento</a></li>
+<li><a href="#statistiche-dei-thread"
+id="toc-statistiche-dei-thread">Statistiche dei Thread</a></li>
+</ul></li>
+<li><a href="#analisi-delle-distribuzioni"
+id="toc-analisi-delle-distribuzioni">Analisi delle Distribuzioni</a>
+<ul>
+<li><a href="#feature-di-sentiment"
+id="toc-feature-di-sentiment">Feature di Sentiment</a></li>
+<li><a href="#feature-di-stance" id="toc-feature-di-stance">Feature di
+Stance</a></li>
+<li><a href="#feature-di-leggibilità-e-acculturazione-1"
+id="toc-feature-di-leggibilità-e-acculturazione-1">Feature di
+Leggibilità e Acculturazione</a></li>
+</ul></li>
+<li><a href="#analisi-delle-relazioni-tra-feature"
+id="toc-analisi-delle-relazioni-tra-feature">Analisi delle Relazioni tra
+Feature</a>
+<ul>
+<li><a href="#matrice-di-correlazione"
+id="toc-matrice-di-correlazione">Matrice di Correlazione</a></li>
+<li><a href="#rete-di-correlazioni" id="toc-rete-di-correlazioni">Rete
+di Correlazioni</a></li>
+</ul></li>
+<li><a href="#analisi-temporale-e-posizionale"
+id="toc-analisi-temporale-e-posizionale">Analisi Temporale e
+Posizionale</a>
+<ul>
+<li><a href="#evoluzione-del-sentiment-nel-thread"
+id="toc-evoluzione-del-sentiment-nel-thread">Evoluzione del Sentiment
+nel Thread</a></li>
+<li><a href="#distribuzione-temporale"
+id="toc-distribuzione-temporale">Distribuzione Temporale</a></li>
+</ul></li>
+<li><a href="#pattern-preliminari-identificati"
+id="toc-pattern-preliminari-identificati">Pattern Preliminari
+Identificati</a></li>
+</ul></li>
+<li><a href="#analisi-statistica" id="toc-analisi-statistica">4. Analisi
+Statistica</a>
+<ul>
+<li><a href="#test-di-ipotesi" id="toc-test-di-ipotesi">Test di
+Ipotesi</a>
+<ul>
+<li><a href="#risultati-dei-test-di-mann-whitney-u"
+id="toc-risultati-dei-test-di-mann-whitney-u">Risultati dei Test di
+Mann-Whitney U</a></li>
+<li><a href="#interpretazione-dei-risultati-dei-test"
+id="toc-interpretazione-dei-risultati-dei-test">Interpretazione dei
+Risultati dei Test</a></li>
+</ul></li>
+<li><a href="#analisi-delle-correlazioni-1"
+id="toc-analisi-delle-correlazioni-1">Analisi delle Correlazioni</a>
+<ul>
+<li><a href="#correlazioni-con-la-veridicità"
+id="toc-correlazioni-con-la-veridicità">Correlazioni con la
+Veridicità</a></li>
+<li><a href="#interpretazione-delle-correlazioni"
+id="toc-interpretazione-delle-correlazioni">Interpretazione delle
+Correlazioni</a></li>
+</ul></li>
+<li><a href="#analisi-multivariata"
+id="toc-analisi-multivariata">Analisi Multivariata</a>
+<ul>
+<li><a href="#regressione-logistica"
+id="toc-regressione-logistica">Regressione Logistica</a></li>
+</ul></li>
+<li><a href="#verifica-delle-ipotesi-di-ricerca"
+id="toc-verifica-delle-ipotesi-di-ricerca">Verifica delle Ipotesi di
+Ricerca</a>
+<ul>
+<li><a href="#ipotesi-1-differenze-nel-sentiment"
+id="toc-ipotesi-1-differenze-nel-sentiment">Ipotesi 1: Differenze nel
+Sentiment</a></li>
+<li><a href="#ipotesi-2-differenze-nella-stance"
+id="toc-ipotesi-2-differenze-nella-stance">Ipotesi 2: Differenze nella
+Stance</a></li>
+<li><a
+href="#ipotesi-3-differenze-nelle-misure-di-leggibilità-e-acculturazione"
+id="toc-ipotesi-3-differenze-nelle-misure-di-leggibilità-e-acculturazione">Ipotesi
+3: Differenze nelle Misure di Leggibilità e Acculturazione</a></li>
+</ul></li>
+<li><a href="#implicazioni-per-la-modellazione-predittiva"
+id="toc-implicazioni-per-la-modellazione-predittiva">Implicazioni per la
+Modellazione Predittiva</a></li>
+</ul></li>
+<li><a href="#modelli-predittivi-1" id="toc-modelli-predittivi-1">5.
+Modelli Predittivi</a>
+<ul>
+<li><a href="#approccio-metodologico"
+id="toc-approccio-metodologico">Approccio Metodologico</a></li>
+<li><a href="#regressione-logistica-1"
+id="toc-regressione-logistica-1">Regressione Logistica</a>
+<ul>
+<li><a href="#implementazione"
+id="toc-implementazione">Implementazione</a></li>
+<li><a href="#risultati" id="toc-risultati">Risultati</a></li>
+<li><a href="#analisi-dei-coefficienti"
+id="toc-analisi-dei-coefficienti">Analisi dei Coefficienti</a></li>
+<li><a href="#interpretazione"
+id="toc-interpretazione">Interpretazione</a></li>
+</ul></li>
+<li><a href="#random-forest" id="toc-random-forest">Random Forest</a>
+<ul>
+<li><a href="#implementazione-1"
+id="toc-implementazione-1">Implementazione</a></li>
+<li><a href="#risultati-1" id="toc-risultati-1">Risultati</a></li>
+<li><a href="#importanza-delle-feature"
+id="toc-importanza-delle-feature">Importanza delle Feature</a></li>
+<li><a href="#interpretazione-1"
+id="toc-interpretazione-1">Interpretazione</a></li>
+</ul></li>
+<li><a href="#confronto-tra-modelli"
+id="toc-confronto-tra-modelli">Confronto tra Modelli</a></li>
+<li><a href="#valutazione-delloverfitting"
+id="toc-valutazione-delloverfitting">Valutazione
+dell’Overfitting</a></li>
+<li><a href="#confronto-tra-set-di-feature-1"
+id="toc-confronto-tra-set-di-feature-1">Confronto tra Set di
+Feature</a></li>
+<li><a href="#feature-engineering-incrementale"
+id="toc-feature-engineering-incrementale">Feature Engineering
+Incrementale</a></li>
+<li><a href="#conclusioni-sullanalisi-predittiva"
+id="toc-conclusioni-sullanalisi-predittiva">Conclusioni sull’Analisi
+Predittiva</a></li>
+</ul></li>
+<li><a href="#risultati-e-discussione"
+id="toc-risultati-e-discussione">6. Risultati e Discussione</a>
+<ul>
+<li><a href="#sintesi-dei-risultati-principali"
+id="toc-sintesi-dei-risultati-principali">Sintesi dei Risultati
+Principali</a>
+<ul>
+<li><a href="#differenze-statistiche-ma-con-effect-size-limitato"
+id="toc-differenze-statistiche-ma-con-effect-size-limitato">1.
+Differenze Statistiche ma con Effect Size Limitato</a></li>
+<li><a href="#correlazioni-deboli-ma-significative"
+id="toc-correlazioni-deboli-ma-significative">2. Correlazioni Deboli ma
+Significative</a></li>
+<li><a href="#superiorità-dei-modelli-non-lineari"
+id="toc-superiorità-dei-modelli-non-lineari">3. Superiorità dei Modelli
+Non Lineari</a></li>
+<li><a href="#importanza-delle-feature-di-leggibilità-e-acculturazione"
+id="toc-importanza-delle-feature-di-leggibilità-e-acculturazione">4.
+Importanza delle Feature di Leggibilità e Acculturazione</a></li>
+<li><a href="#rischio-di-overfitting" id="toc-rischio-di-overfitting">5.
+Rischio di Overfitting</a></li>
+</ul></li>
+<li><a href="#interpretazione-nel-contesto-della-ricerca"
+id="toc-interpretazione-nel-contesto-della-ricerca">Interpretazione nel
+Contesto della Ricerca</a>
+<ul>
+<li><a href="#rilevanza-teorica" id="toc-rilevanza-teorica">Rilevanza
+Teorica</a></li>
+<li><a href="#implicazioni-metodologiche"
+id="toc-implicazioni-metodologiche">Implicazioni Metodologiche</a></li>
+</ul></li>
+<li><a href="#il-ruolo-del-culture-score"
+id="toc-il-ruolo-del-culture-score">Il Ruolo del Culture Score</a>
+<ul>
+<li><a href="#composizione-e-significato"
+id="toc-composizione-e-significato">Composizione e Significato</a></li>
+<li><a href="#interpretazione-teorica"
+id="toc-interpretazione-teorica">Interpretazione Teorica</a></li>
+</ul></li>
+<li><a href="#relazioni-non-lineari"
+id="toc-relazioni-non-lineari">Relazioni Non Lineari</a></li>
+<li><a href="#rilevanza-pratica" id="toc-rilevanza-pratica">Rilevanza
+Pratica</a>
+<ul>
+<li><a href="#implicazioni-per-sistemi-di-fact-checking"
+id="toc-implicazioni-per-sistemi-di-fact-checking">Implicazioni per
+Sistemi di Fact-checking</a></li>
+<li><a href="#implicazioni-per-leducazione-ai-media"
+id="toc-implicazioni-per-leducazione-ai-media">Implicazioni per
+l’Educazione ai Media</a></li>
+<li><a href="#implicazioni-per-le-piattaforme-social"
+id="toc-implicazioni-per-le-piattaforme-social">Implicazioni per le
+Piattaforme Social</a></li>
+</ul></li>
+<li><a href="#riflessioni-sul-metodo-scientifico"
+id="toc-riflessioni-sul-metodo-scientifico">Riflessioni sul Metodo
+Scientifico</a></li>
+<li><a href="#integrazioni-con-la-letteratura-esistente"
+id="toc-integrazioni-con-la-letteratura-esistente">Integrazioni con la
+Letteratura Esistente</a>
+<ul>
+<li><a href="#studi-sul-rilevamento-di-fake-news"
+id="toc-studi-sul-rilevamento-di-fake-news">Studi sul Rilevamento di
+Fake News</a></li>
+<li><a href="#ricerca-sullalfabetizzazione-mediatica"
+id="toc-ricerca-sullalfabetizzazione-mediatica">Ricerca
+sull’Alfabetizzazione Mediatica</a></li>
+<li><a href="#studi-sulla-polarizzazione-online"
+id="toc-studi-sulla-polarizzazione-online">Studi sulla Polarizzazione
+Online</a></li>
+</ul></li>
+<li><a href="#riflessioni-critiche-sullinterpretazione"
+id="toc-riflessioni-critiche-sullinterpretazione">Riflessioni Critiche
+sull’Interpretazione</a></li>
+</ul></li>
+<li><a href="#limitazioni-e-validazione"
+id="toc-limitazioni-e-validazione">7. Limitazioni e Validazione</a>
+<ul>
+<li><a href="#limitazioni-metodologiche"
+id="toc-limitazioni-metodologiche">Limitazioni Metodologiche</a>
+<ul>
+<li><a href="#dataset-sbilanciato" id="toc-dataset-sbilanciato">1.
+Dataset Sbilanciato</a></li>
+<li><a href="#rischio-di-overfitting-1"
+id="toc-rischio-di-overfitting-1">2. Rischio di Overfitting</a></li>
+<li><a href="#analisi-statica" id="toc-analisi-statica">3. Analisi
+Statica</a></li>
+<li><a href="#limitata-diversità-contestuale"
+id="toc-limitata-diversità-contestuale">4. Limitata Diversità
+Contestuale</a></li>
+<li><a href="#limitazioni-dellanalisi-del-sentiment"
+id="toc-limitazioni-dellanalisi-del-sentiment">5. Limitazioni
+dell’Analisi del Sentiment</a></li>
+</ul></li>
+<li><a href="#procedure-di-validazione"
+id="toc-procedure-di-validazione">Procedure di Validazione</a>
+<ul>
+<li><a href="#cross-validation" id="toc-cross-validation">1.
+Cross-Validation</a></li>
+<li><a href="#controllo-delloversampling"
+id="toc-controllo-delloversampling">2. Controllo
+dell’Oversampling</a></li>
+<li><a href="#test-di-robustezza-alle-feature"
+id="toc-test-di-robustezza-alle-feature">3. Test di Robustezza alle
+Feature</a></li>
+<li><a href="#test-di-generalizzabilità-per-evento"
+id="toc-test-di-generalizzabilità-per-evento">4. Test di
+Generalizzabilità per Evento</a></li>
+<li><a href="#concordanza-tra-diversi-strumenti-di-sentiment-analysis"
+id="toc-concordanza-tra-diversi-strumenti-di-sentiment-analysis">5.
+Concordanza tra Diversi Strumenti di Sentiment Analysis</a></li>
+</ul></li>
+<li><a href="#considerazioni-sulla-validità"
+id="toc-considerazioni-sulla-validità">Considerazioni sulla Validità</a>
+<ul>
+<li><a href="#validità-interna" id="toc-validità-interna">Validità
+Interna</a></li>
+<li><a href="#validità-esterna" id="toc-validità-esterna">Validità
+Esterna</a></li>
+</ul></li>
+<li><a href="#trasparenza-e-riproducibilità"
+id="toc-trasparenza-e-riproducibilità">Trasparenza e
+Riproducibilità</a></li>
+<li><a href="#bilanciamento-tra-sensibilità-e-specificità"
+id="toc-bilanciamento-tra-sensibilità-e-specificità">Bilanciamento tra
+Sensibilità e Specificità</a></li>
+<li><a href="#riflessioni-finali-sulla-validità"
+id="toc-riflessioni-finali-sulla-validità">Riflessioni Finali sulla
+Validità</a></li>
+</ul></li>
+<li><a href="#conclusioni" id="toc-conclusioni">8. Conclusioni</a>
+<ul>
+<li><a href="#sintesi-generale-dei-risultati"
+id="toc-sintesi-generale-dei-risultati">Sintesi Generale dei
+Risultati</a>
+<ul>
+<li><a
+href="#differenze-statisticamente-significative-ma-con-effect-size-limitato"
+id="toc-differenze-statisticamente-significative-ma-con-effect-size-limitato">1.
+Differenze Statisticamente Significative ma con Effect Size
+Limitato</a></li>
+<li><a href="#superiorità-dei-modelli-non-lineari-1"
+id="toc-superiorità-dei-modelli-non-lineari-1">2. Superiorità dei
+Modelli Non Lineari</a></li>
+<li><a
+href="#importanza-delle-feature-di-leggibilità-e-acculturazione-1"
+id="toc-importanza-delle-feature-di-leggibilità-e-acculturazione-1">3.
+Importanza delle Feature di Leggibilità e Acculturazione</a></li>
+<li><a href="#potenziali-problemi-di-generalizzabilità"
+id="toc-potenziali-problemi-di-generalizzabilità">4. Potenziali Problemi
+di Generalizzabilità</a></li>
+<li><a
+href="#importanza-dellintegrazione-di-diverse-dimensioni-linguistiche"
+id="toc-importanza-dellintegrazione-di-diverse-dimensioni-linguistiche">5.
+Importanza dell’Integrazione di Diverse Dimensioni Linguistiche</a></li>
+</ul></li>
+<li><a href="#risposta-alle-domande-di-ricerca"
+id="toc-risposta-alle-domande-di-ricerca">Risposta alle Domande di
+Ricerca</a>
+<ul>
+<li><a
+href="#q1-esistono-differenze-significative-nei-pattern-di-sentiment-tra-commenti-a-notizie-vere-e-false"
+id="toc-q1-esistono-differenze-significative-nei-pattern-di-sentiment-tra-commenti-a-notizie-vere-e-false">Q1:
+Esistono differenze significative nei pattern di sentiment tra commenti
+a notizie vere e false?</a></li>
+<li><a
+href="#q2-esistono-differenze-significative-nella-stance-tra-commenti-a-notizie-vere-e-false"
+id="toc-q2-esistono-differenze-significative-nella-stance-tra-commenti-a-notizie-vere-e-false">Q2:
+Esistono differenze significative nella stance tra commenti a notizie
+vere e false?</a></li>
+<li><a
+href="#q3-esistono-differenze-significative-nelle-misure-di-leggibilità-e-acculturazione-tra-commenti-a-notizie-vere-e-false"
+id="toc-q3-esistono-differenze-significative-nelle-misure-di-leggibilità-e-acculturazione-tra-commenti-a-notizie-vere-e-false">Q3:
+Esistono differenze significative nelle misure di leggibilità e
+acculturazione tra commenti a notizie vere e false?</a></li>
+<li><a
+href="#q4-le-feature-di-leggibilità-e-acculturazione-hanno-un-maggior-potere-predittivo-sulla-veridicità-rispetto-alle-pure-feature-di-sentiment"
+id="toc-q4-le-feature-di-leggibilità-e-acculturazione-hanno-un-maggior-potere-predittivo-sulla-veridicità-rispetto-alle-pure-feature-di-sentiment">Q4:
+Le feature di leggibilità e acculturazione hanno un maggior potere
+predittivo sulla veridicità rispetto alle pure feature di
+sentiment?</a></li>
+<li><a
+href="#q5-i-modelli-non-lineari-catturano-relazioni-più-forti-tra-feature-linguistiche-e-veridicità-rispetto-ai-modelli-lineari"
+id="toc-q5-i-modelli-non-lineari-catturano-relazioni-più-forti-tra-feature-linguistiche-e-veridicità-rispetto-ai-modelli-lineari">Q5:
+I modelli non lineari catturano relazioni più forti tra feature
+linguistiche e veridicità rispetto ai modelli lineari?</a></li>
+</ul></li>
+<li><a href="#contributo-alla-letteratura"
+id="toc-contributo-alla-letteratura">Contributo alla Letteratura</a>
+<ul>
+<li><a href="#focus-sulle-reazioni-anziché-sul-contenuto-originale"
+id="toc-focus-sulle-reazioni-anziché-sul-contenuto-originale">1. Focus
+sulle Reazioni Anziché sul Contenuto Originale</a></li>
+<li><a href="#integrazione-di-diverse-dimensioni-linguistiche"
+id="toc-integrazione-di-diverse-dimensioni-linguistiche">2. Integrazione
+di Diverse Dimensioni Linguistiche</a></li>
+<li><a
+href="#identificazione-dellimportanza-della-complessità-linguistica"
+id="toc-identificazione-dellimportanza-della-complessità-linguistica">3.
+Identificazione dell’Importanza della Complessità Linguistica</a></li>
+<li><a href="#dimostrazione-dellimportanza-dei-modelli-non-lineari"
+id="toc-dimostrazione-dellimportanza-dei-modelli-non-lineari">4.
+Dimostrazione dell’Importanza dei Modelli Non Lineari</a></li>
+<li><a href="#valutazione-critica-delloverfitting"
+id="toc-valutazione-critica-delloverfitting">5. Valutazione Critica
+dell’Overfitting</a></li>
+</ul></li>
+<li><a href="#implicazioni-teoriche"
+id="toc-implicazioni-teoriche">Implicazioni Teoriche</a>
+<ul>
+<li><a href="#complessità-delle-relazioni-tra-sentiment-e-veridicità"
+id="toc-complessità-delle-relazioni-tra-sentiment-e-veridicità">1.
+Complessità delle Relazioni tra Sentiment e Veridicità</a></li>
+<li><a href="#importanza-della-dimensione-cognitiva"
+id="toc-importanza-della-dimensione-cognitiva">2. Importanza della
+Dimensione Cognitiva</a></li>
+<li><a href="#non-linearità-dei-fenomeni-informativi-sociali"
+id="toc-non-linearità-dei-fenomeni-informativi-sociali">3. Non Linearità
+dei Fenomeni Informativi Sociali</a></li>
+<li><a href="#integrazione-di-multiple-dimensioni"
+id="toc-integrazione-di-multiple-dimensioni">4. Integrazione di Multiple
+Dimensioni</a></li>
+</ul></li>
+<li><a href="#implicazioni-pratiche"
+id="toc-implicazioni-pratiche">Implicazioni Pratiche</a>
+<ul>
+<li><a href="#per-sistemi-di-fact-checking"
+id="toc-per-sistemi-di-fact-checking">Per Sistemi di
+Fact-checking</a></li>
+<li><a href="#per-leducazione-ai-media"
+id="toc-per-leducazione-ai-media">Per l’Educazione ai Media</a></li>
+<li><a href="#per-le-piattaforme-social"
+id="toc-per-le-piattaforme-social">Per le Piattaforme Social</a></li>
+</ul></li>
+<li><a href="#direzioni-future" id="toc-direzioni-future">Direzioni
+Future</a>
+<ul>
+<li><a href="#analisi-di-pattern-temporali"
+id="toc-analisi-di-pattern-temporali">1. Analisi di Pattern
+Temporali</a></li>
+<li><a href="#stratificazione-contestuale"
+id="toc-stratificazione-contestuale">2. Stratificazione
+Contestuale</a></li>
+<li><a href="#feature-engineering-avanzato"
+id="toc-feature-engineering-avanzato">3. Feature Engineering
+Avanzato</a></li>
+<li><a href="#approcci-integrati" id="toc-approcci-integrati">4.
+Approcci Integrati</a></li>
+<li><a href="#validazione-cross-dataset"
+id="toc-validazione-cross-dataset">5. Validazione Cross-Dataset</a></li>
+</ul></li>
+<li><a href="#riflessione-finale"
+id="toc-riflessione-finale">Riflessione Finale</a></li>
+</ul></li>
+<li><a href="#bibliografia" id="toc-bibliografia">9. Bibliografia</a>
+<ul>
+<li><a href="#articoli-e-paper-accademici"
+id="toc-articoli-e-paper-accademici">Articoli e Paper
+Accademici</a></li>
+<li><a href="#libri-e-monografie" id="toc-libri-e-monografie">Libri e
+Monografie</a></li>
+<li><a href="#risorse-tecniche-e-software"
+id="toc-risorse-tecniche-e-software">Risorse Tecniche e
+Software</a></li>
+<li><a href="#dataset-e-risorse-di-dati"
+id="toc-dataset-e-risorse-di-dati">Dataset e Risorse di Dati</a></li>
+<li><a href="#articoli-metodologici-e-di-review"
+id="toc-articoli-metodologici-e-di-review">Articoli Metodologici e di
+Review</a></li>
+<li><a href="#reports-e-white-papers"
+id="toc-reports-e-white-papers">Reports e White Papers</a></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="sommario-esecutivo">Sommario Esecutivo</h1>
+<h2
+id="studio-sulla-relazione-tra-sentiment-nei-commenti-e-veridicità-delle-notizie">Studio
+sulla Relazione tra Sentiment nei Commenti e Veridicità delle
+Notizie</h2>
+<h3 id="panoramica">Panoramica</h3>
+<p>Questo studio ha esplorato la relazione tra i pattern linguistici
+presenti nei commenti sui social media e la veridicità delle notizie
+originali, utilizzando il dataset PHEME di conversazioni Twitter.
+L’obiettivo era determinare se esistano differenze sistematiche nelle
+reazioni linguistiche e affettive alle notizie vere rispetto a quelle
+false, e se queste differenze possano essere sfruttate per identificare
+la disinformazione.</p>
+<h3 id="metodologia">Metodologia</h3>
+<p>La ricerca ha adottato un approccio multi-metodologico:</p>
+<ol type="1">
+<li><p><strong>Estrazione di feature linguistiche</strong> dai
+commenti:</p>
+<ul>
+<li>Feature di sentiment (polarità, soggettività)</li>
+<li>Feature di stance (atteggiamento verso il contenuto originale)</li>
+<li>Feature di leggibilità e acculturazione (tra cui il
+culture_score)</li>
+</ul></li>
+<li><p><strong>Analisi statistica</strong> per identificare differenze
+significative tra i gruppi</p></li>
+<li><p><strong>Modellazione predittiva</strong> con approcci lineari e
+non lineari:</p>
+<ul>
+<li>Regressione logistica (modello lineare)</li>
+<li>Random Forest (modello non lineare)</li>
+</ul></li>
+<li><p><strong>Confronto tra set di feature</strong> per valutare il
+contributo di diverse categorie linguistiche</p></li>
+</ol>
+<h3 id="principali-risultati">Principali Risultati</h3>
+<ol type="1">
+<li><strong>Differenze statisticamente significative ma con effect size
+limitato</strong>
+<ul>
+<li>Differenze significative in polarità del sentiment, soggettività,
+stance e culture_score</li>
+<li>Tutti gli effect size trascurabili (&lt;0.1), indicando limitata
+rilevanza pratica di singole feature</li>
+</ul></li>
+<li><strong>Superiorità marcata dei modelli non lineari</strong>
+<ul>
+<li>Random Forest: AUC 0.932</li>
+<li>Regressione logistica: AUC 0.542</li>
+<li>Incremento: +0.390, suggerendo relazioni prevalentemente non
+lineari</li>
+</ul></li>
+<li><strong>Maggiore rilevanza delle feature di leggibilità</strong>
+<ul>
+<li>Set di feature di leggibilità (AUC 0.571) superiore a sentiment (AUC
+0.559)</li>
+<li>Culture_score emerso come la feature linguistica più importante</li>
+</ul></li>
+<li><strong>Rischio di overfitting</strong>
+<ul>
+<li>Alta importanza degli identificatori nei modelli suggerisce
+potenziale specificità al dataset</li>
+<li>Calo significativo di performance escludendo ID (da AUC 0.932 a
+0.682)</li>
+</ul></li>
+<li><strong>Valore dell’integrazione di diverse dimensioni</strong>
+<ul>
+<li>Performance ottimale con combinazione di feature di sentiment,
+stance e leggibilità</li>
+<li>Approccio multidimensionale essenziale per catturare la complessità
+del fenomeno</li>
+</ul></li>
+</ol>
+<h3 id="implicazioni">Implicazioni</h3>
+<ol type="1">
+<li><strong>Per la ricerca sulla disinformazione</strong>
+<ul>
+<li>Necessità di approcci non lineari per catturare relazioni
+complesse</li>
+<li>Importanza della dimensione cognitiva (complessità linguistica,
+acculturazione) oltre alla dimensione emotiva</li>
+<li>Valore di prospettive multidimensionali che integrino diverse
+caratteristiche linguistiche</li>
+</ul></li>
+<li><strong>Per sistemi di fact-checking</strong>
+<ul>
+<li>Integrare indicatori di complessità linguistica e acculturazione
+oltre all’analisi del sentiment</li>
+<li>Utilizzare modelli non lineari capaci di catturare pattern
+complessi</li>
+<li>Considerare il contesto conversazionale e posizionale dei
+commenti</li>
+</ul></li>
+<li><strong>Per l’educazione ai media</strong>
+<ul>
+<li>Enfatizzare lo sviluppo del pensiero critico e della complessità
+argomentativa</li>
+<li>Sensibilizzare alla qualità del linguaggio come possibile indicatore
+di affidabilità</li>
+<li>Educare sul ruolo delle emozioni nella diffusione della
+disinformazione</li>
+</ul></li>
+</ol>
+<h3 id="limitazioni">Limitazioni</h3>
+<ol type="1">
+<li><strong>Dataset sbilanciato</strong> (93% notizie vere vs 7%
+false)</li>
+<li><strong>Rischio di overfitting</strong> sui dati specifici</li>
+<li><strong>Analisi prevalentemente statica</strong> che non considera
+pienamente dinamiche temporali</li>
+<li><strong>Specificità contestuale</strong> a Twitter e agli eventi
+coperti</li>
+<li><strong>Limitazioni nelle tecniche di analisi del
+sentiment</strong></li>
+</ol>
+<h3 id="conclusione">Conclusione</h3>
+<p>Questo studio dimostra che esistono differenze sistematiche nei
+pattern linguistici delle reazioni a notizie vere e false, ma queste
+differenze sono meglio catturate da modelli non lineari e approcci
+multidimensionali. Il livello di acculturazione e complessità
+linguistica nei commenti emerge come un indicatore potenzialmente più
+informativo della veridicità rispetto alle pure reazioni emotive.</p>
+<p>I risultati suggeriscono che l’analisi dei commenti può fornire
+segnali diagnostici utili per l’identificazione della disinformazione,
+ma richiede approcci sofisticati che considerino simultaneamente diverse
+dimensioni linguistiche e le loro complesse interazioni. Questo apre
+nuove prospettive sia per la ricerca sulla disinformazione sia per lo
+sviluppo di strumenti pratici di fact-checking basati sull’analisi delle
+conversazioni online.</p>
+<h1 id="introduzione">1. Introduzione</h1>
+<h2 id="contesto-e-motivazione">Contesto e Motivazione</h2>
+<p>Nell’era della comunicazione digitale, la disinformazione rappresenta
+una delle sfide più significative per la società contemporanea. La
+rapidità e l’ampiezza con cui le informazioni false possono diffondersi
+attraverso le piattaforme social hanno implicazioni profonde sul
+dibattito pubblico, sui processi democratici e sulla coesione sociale.
+Comprendere i meccanismi che facilitano o ostacolano la propagazione
+della disinformazione è dunque diventato un obiettivo di ricerca
+prioritario in diverse discipline, dalle scienze dell’informazione alla
+psicologia sociale, dalle scienze politiche all’informatica.</p>
+<p>Il presente studio si inserisce in questo filone di ricerca,
+adottando un approccio innovativo che sposta il focus dalle
+caratteristiche intrinseche delle fake news ai pattern di risposta che
+queste generano negli utenti. L’ipotesi di partenza è che le notizie
+false possano suscitare reazioni linguistiche e affettive diverse
+rispetto alle notizie vere, e che queste differenze possano essere
+rilevate attraverso l’analisi computazionale del linguaggio.</p>
+<h2 id="il-problema-della-disinformazione-online">Il Problema della
+Disinformazione Online</h2>
+<p>La disinformazione online si è evoluta significativamente negli
+ultimi anni, diventando sempre più sofisticata nei contenuti e nelle
+strategie di diffusione. Come evidenziato da Vosoughi et al. (2018) in
+uno studio pubblicato su Science, le notizie false si diffondono più
+velocemente, più ampiamente e più in profondità rispetto alle notizie
+vere, grazie a meccanismi di engagement che sfruttano bias cognitivi e
+trigger emotivi.</p>
+<p><img src="./images/figures/sentiment_veracity_summary.png"
+alt="Diffusione di notizie sui social media" /> <em>Figura 1.1:
+Rappresentazione della relazione tra sentiment e veridicità delle
+notizie nel dataset PHEME.</em></p>
+<p>Tradizionalmente, l’identificazione delle fake news si è basata
+su:</p>
+<ol type="1">
+<li><strong>Approcci basati sul contenuto</strong>: analisi del testo
+della notizia, del suo stile linguistico, della sua struttura</li>
+<li><strong>Approcci basati sulla fonte</strong>: valutazione
+dell’affidabilità della fonte, storia di pubblicazioni precedenti</li>
+<li><strong>Approcci basati sulla diffusione</strong>: pattern di
+propagazione attraverso le reti sociali</li>
+</ol>
+<p>Tuttavia, questi approcci presentano limitazioni significative. I
+metodi basati sul contenuto possono essere aggirabili attraverso
+tecniche di scrittura sempre più sofisticate; quelli basati sulla fonte
+possono fallire di fronte a nuovi siti o account creati ad hoc; quelli
+basati sulla diffusione richiedono dati longitudinali non sempre
+disponibili.</p>
+<h3 id="gap-nella-letteratura">Gap nella Letteratura</h3>
+<p>Una dimensione meno esplorata, ma potenzialmente rivelatrice,
+riguarda i pattern di risposta che le notizie false generano negli
+utenti dei social media. Mentre diversi studi hanno analizzato come le
+fake news si diffondono attraverso le reti sociali (Vosoughi et al.,
+2018), meno attenzione è stata dedicata alle caratteristiche
+linguistiche delle reazioni degli utenti.</p>
+<p>Gonzalez-Bailon et al. (2021) hanno suggerito che le reazioni emotive
+alle fake news tendono ad essere più intense e polarizzate, ma queste
+osservazioni non sono state sistematicamente testate su dataset
+diversificati. Inoltre, pochi studi hanno analizzato come la complessità
+linguistica e il livello di acculturazione nei commenti possano
+correlarsi con la veridicità dell’informazione originale.</p>
+<p>Zubiaga et al. (2016), nello studio che ha portato alla creazione del
+dataset PHEME, hanno analizzato le conversazioni su Twitter relative a
+diversi eventi di attualità, focalizzandosi però principalmente sui
+pattern di diffusione piuttosto che sulle caratteristiche linguistiche
+delle reazioni. Il nostro studio intende colmare questa lacuna,
+esplorando sistematicamente come il sentiment, la stance e le
+caratteristiche di leggibilità dei commenti possano differire tra
+notizie vere e false.</p>
+<h2 id="obiettivi-dello-studio">Obiettivi dello Studio</h2>
+<p>Il presente studio si propone di:</p>
+<ol type="1">
+<li><strong>Verificare l’esistenza di differenze significative</strong>
+nei pattern di sentiment tra i commenti alle notizie vere e quelli alle
+notizie false</li>
+<li><strong>Quantificare la forza delle associazioni</strong> tra
+caratteristiche linguistiche dei commenti e veridicità delle
+notizie</li>
+<li><strong>Confrontare modelli predittivi lineari e non
+lineari</strong> per determinare la natura delle relazioni tra feature
+linguistiche e veridicità</li>
+<li><strong>Identificare le feature linguistiche più rilevanti</strong>
+per distinguere tra reazioni a notizie vere e false</li>
+<li><strong>Valutare il potenziale predittivo</strong> di diversi set di
+feature, con particolare attenzione al confronto tra feature di
+sentiment e di leggibilità/acculturazione</li>
+</ol>
+<p>Questi obiettivi non sono solo di interesse teorico, ma hanno anche
+importanti implicazioni pratiche. Comprendere come gli utenti reagiscono
+linguisticamente a notizie vere e false potrebbe contribuire a:</p>
+<ul>
+<li>Sviluppare sistemi più accurati per l’identificazione automatica
+delle fake news</li>
+<li>Creare strumenti di fact-checking che considerino non solo il
+contenuto originale ma anche le reazioni che genera</li>
+<li>Progettare interventi educativi mirati per aumentare la resilienza
+degli utenti alla disinformazione</li>
+<li>Approfondire la conoscenza dei meccanismi cognitivi e sociali
+coinvolti nella diffusione della disinformazione</li>
+</ul>
+<h2 id="ipotesi-di-ricerca">Ipotesi di Ricerca</h2>
+<p><img src="./images/narrative/02_hypothesis_summary.png"
+alt="Riepilogo delle ipotesi" /> <em>Figura 1.2: Riepilogo delle
+principali ipotesi testate nello studio.</em></p>
+<p>Il nostro studio è guidato da cinque ipotesi principali:</p>
+<ol type="1">
+<li><strong>Ipotesi 1</strong>: Esistono differenze statisticamente
+significative nel sentiment (polarità e soggettività) dei commenti alle
+notizie vere rispetto a quelli alle notizie false.
+<ul>
+<li><strong>H0</strong>: Non c’è differenza significativa nel sentiment
+tra i due gruppi</li>
+<li><strong>H1</strong>: Il sentiment differisce significativamente tra
+i due gruppi</li>
+</ul></li>
+<li><strong>Ipotesi 2</strong>: Esistono differenze statisticamente
+significative nella stance (atteggiamento) dei commenti rispetto alla
+notizia originale tra thread di notizie vere e false.
+<ul>
+<li><strong>H0</strong>: Non c’è differenza significativa nella stance
+tra i due gruppi</li>
+<li><strong>H1</strong>: La stance differisce significativamente tra i
+due gruppi</li>
+</ul></li>
+<li><strong>Ipotesi 3</strong>: Esistono differenze statisticamente
+significative nelle misure di leggibilità e acculturazione (in
+particolare nel <code>culture_score</code>) dei commenti tra notizie
+vere e false.
+<ul>
+<li><strong>H0</strong>: Non c’è differenza significativa nelle misure
+di leggibilità tra i due gruppi</li>
+<li><strong>H1</strong>: Le misure di leggibilità differiscono
+significativamente tra i due gruppi</li>
+</ul></li>
+<li><strong>Ipotesi 4</strong>: Le feature di leggibilità e
+acculturazione hanno un maggior potere predittivo sulla veridicità
+rispetto alle pure feature di sentiment.
+<ul>
+<li><strong>H0</strong>: Le feature di leggibilità non sono più
+predittive delle feature di sentiment</li>
+<li><strong>H1</strong>: Le feature di leggibilità sono più predittive
+delle feature di sentiment</li>
+</ul></li>
+<li><strong>Ipotesi 5</strong>: Modelli non lineari catturano relazioni
+significativamente più forti tra feature linguistiche e veridicità
+rispetto ai modelli lineari.
+<ul>
+<li><strong>H0</strong>: Non c’è differenza significativa nella
+performance tra modelli lineari e non lineari</li>
+<li><strong>H1</strong>: I modelli non lineari hanno una performance
+significativamente migliore</li>
+</ul></li>
+</ol>
+<p>Queste ipotesi sono state formulate sulla base di studi precedenti
+che suggeriscono che le reazioni alle fake news possono essere
+caratterizzate da maggiore emotività, minor complessità linguistica e
+minor riflessione critica (Pennycook &amp; Rand, 2019). Tuttavia, queste
+osservazioni non sono state sistematicamente testate in contesti di
+social media e conversazioni online.</p>
+<p>Nel capitolo successivo, descriveremo in dettaglio il dataset
+utilizzato e la metodologia adottata per testare queste ipotesi.</p>
+<h1 id="dataset-e-metodologia">2. Dataset e Metodologia</h1>
+<h2 id="dataset-pheme">Dataset PHEME</h2>
+<h3 id="origine-e-struttura">Origine e Struttura</h3>
+<p>Il PHEME dataset (Zubiaga et al., 2016) è una risorsa sviluppata
+specificamente per lo studio della diffusione di rumour sui social
+media. Contiene conversazioni Twitter relative a diversi eventi di
+attualità, con annotazioni sulla veridicità delle affermazioni e sulla
+struttura conversazionale dei thread.</p>
+<p>Il dataset prende il nome dal personaggio mitologico greco Pheme,
+personificazione delle voci e dei rumour, una scelta simbolica che
+riflette l’obiettivo del progetto di studiare la diffusione di
+informazioni non verificate online.</p>
+<p><strong>Caratteristiche principali</strong>: - 6.425 thread di
+conversazione - 105.354 tweet totali - Copertura di eventi diversi
+(Charlie Hebdo, Ferguson, Germanwings crash, ecc.) - Annotazioni manuali
+di veridicità (true, false, unverified) - Metadati conversazionali
+(relazioni di risposta, posizione nel thread)</p>
+<h3 id="distribuzione-del-target">Distribuzione del Target</h3>
+<p>Una caratteristica importante del dataset è lo sbilanciamento
+significativo tra le classi di veridicità:</p>
+<pre><code>Vere: 93% (5.973 thread)
+False: 7% (452 thread)</code></pre>
+<p>Questo sbilanciamento riflette la realtà dei social media, dove le
+notizie verificate tendono ad essere più numerose, ma rappresenta anche
+una sfida metodologica che richiede tecniche specifiche per garantire
+risultati affidabili.</p>
+<h3 id="eventi-coperti">Eventi Coperti</h3>
+<p>Il dataset include tweet relativi a cinque eventi principali:</p>
+<ol type="1">
+<li><strong>Charlie Hebdo</strong>: l’attacco terroristico alla sede del
+settimanale satirico francese nel gennaio 2015</li>
+<li><strong>Sydney Siege</strong>: la crisi degli ostaggi a Sydney nel
+dicembre 2014</li>
+<li><strong>Ferguson</strong>: le proteste seguite all’uccisione di
+Michael Brown in Missouri nel 2014</li>
+<li><strong>Ottawa Shooting</strong>: la sparatoria al Parlamento
+canadese nell’ottobre 2014</li>
+<li><strong>Germanwings Crash</strong>: l’incidente aereo sulle Alpi
+francesi nel marzo 2015</li>
+</ol>
+<p>Questa diversità di eventi permette di analizzare le reazioni a
+diverse tipologie di notizie (terrorismo, proteste sociali, incidenti)
+in contesti culturali e geografici diversi.</p>
+<h3 id="caratteristiche-dei-thread-conversazionali">Caratteristiche dei
+Thread Conversazionali</h3>
+<p>I thread nel dataset PHEME sono strutturati gerarchicamente: -
+<strong>Tweet sorgente</strong>: il post originale che contiene la
+notizia - <strong>Reazioni dirette</strong>: risposte immediate al tweet
+sorgente - <strong>Reazioni indirette</strong>: risposte alle risposte,
+che formano conversazioni ramificate</p>
+<p>Questa struttura conversazionale è stata preservata nell’analisi
+attraverso feature come <code>reaction_index</code>, che indica la
+posizione del commento nella catena di risposte.</p>
+<h2 id="metodologia-1">Metodologia</h2>
+<h3 id="approccio-generale">Approccio Generale</h3>
+<p>La nostra metodologia segue un approccio rigoroso basato sui principi
+del metodo scientifico:</p>
+<ol type="1">
+<li><strong>Formulazione delle ipotesi</strong>: definizione chiara
+delle domande di ricerca e delle ipotesi da testare</li>
+<li><strong>Acquisizione e preparazione dei dati</strong>: download,
+pulizia e strutturazione del dataset PHEME</li>
+<li><strong>Estrazione delle feature</strong>: calcolo di metriche
+linguistiche, di sentiment e di leggibilità</li>
+<li><strong>Analisi esplorativa</strong>: esame delle distribuzioni e
+identificazione di pattern preliminari</li>
+<li><strong>Test statistici</strong>: verifica formale delle ipotesi
+tramite test appropriati</li>
+<li><strong>Modellazione predittiva</strong>: sviluppo e confronto di
+modelli lineari e non lineari</li>
+<li><strong>Interpretazione</strong>: analisi critica dei risultati nel
+contesto della letteratura esistente</li>
+<li><strong>Validazione</strong>: verifica della robustezza dei
+risultati attraverso tecniche di cross-validation</li>
+</ol>
+<p>Tutte le analisi sono state condotte utilizzando Python 3.10 e
+librerie specializzate per l’analisi dei dati e il natural language
+processing (pandas, scikit-learn, nltk, TextBlob, textstat).</p>
+<h3 id="preprocessing-dei-dati">Preprocessing dei Dati</h3>
+<p>La preparazione dei dati è stata una fase critica per garantire
+risultati affidabili. Il processo ha incluso:</p>
+<h4 id="pulizia-dei-testi">1. Pulizia dei testi</h4>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> clean_text(text):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Pulisce e normalizza il testo del tweet.&quot;&quot;&quot;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> text <span class="kw">or</span> pd.isna(text):</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Rimozione URL</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> re.sub(<span class="vs">r&#39;https</span><span class="op">?</span><span class="vs">://</span><span class="dv">\S</span><span class="op">+</span><span class="cf">|</span><span class="vs">www</span><span class="ch">\.</span><span class="dv">\S</span><span class="op">+</span><span class="vs">&#39;</span>, <span class="st">&#39;&#39;</span>, text)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Rimozione menzioni e hashtag</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> re.sub(<span class="vs">r&#39;@</span><span class="dv">\w</span><span class="op">+</span><span class="vs">&#39;</span>, <span class="st">&#39;&#39;</span>, text)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> re.sub(<span class="vs">r&#39;#</span><span class="kw">(</span><span class="dv">\w</span><span class="op">+</span><span class="kw">)</span><span class="vs">&#39;</span>, <span class="vs">r&#39;</span><span class="ch">\1</span><span class="vs">&#39;</span>, text)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Normalizzazione</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> text.lower()</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Rimozione caratteri speciali</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> re.sub(<span class="vs">r&#39;</span><span class="pp">[^</span><span class="dv">\w\s</span><span class="pp">]</span><span class="vs">&#39;</span>, <span class="st">&#39;&#39;</span>, text)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Rimozione spazi multipli</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> re.sub(<span class="vs">r&#39;</span><span class="dv">\s</span><span class="op">+</span><span class="vs">&#39;</span>, <span class="st">&#39; &#39;</span>, text).strip()</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> text</span></code></pre></div>
+<p>Le operazioni di pulizia hanno incluso: - Rimozione di URL e link
+tramite espressioni regolari - Rimozione di menzioni (<span
+class="citation" data-cites="username">@username</span>) e hashtag -
+Normalizzazione di emoji e caratteri speciali - Correzione di errori
+comuni di ortografia</p>
+<h4 id="normalizzazione-linguistica">2. Normalizzazione linguistica</h4>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> normalize_text(text, remove_stopwords<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Normalizza il testo: tokenizzazione, rimozione stopwords, lemmatizzazione.&quot;&quot;&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> text <span class="kw">or</span> <span class="bu">len</span>(text) <span class="op">&lt;</span> <span class="dv">3</span>:</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Tokenizzazione</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    tokens <span class="op">=</span> word_tokenize(text)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Rimozione stopwords</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> remove_stopwords:</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        stop_words <span class="op">=</span> <span class="bu">set</span>(stopwords.words(<span class="st">&#39;english&#39;</span>))</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        tokens <span class="op">=</span> [token <span class="cf">for</span> token <span class="kw">in</span> tokens <span class="cf">if</span> token <span class="kw">not</span> <span class="kw">in</span> stop_words]</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Lemmatizzazione</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    lemmatizer <span class="op">=</span> WordNetLemmatizer()</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    tokens <span class="op">=</span> [lemmatizer.lemmatize(token) <span class="cf">for</span> token <span class="kw">in</span> tokens]</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="st">&#39; &#39;</span>.join(tokens)</span></code></pre></div>
+<p>Il processo di normalizzazione ha compreso: - Conversione a minuscolo
+- Rimozione di stop words - Lemmatizzazione per ridurre le parole alla
+forma base - Tokenizzazione per analisi a livello di parola</p>
+<h4 id="gestione-dei-valori-mancanti">3. Gestione dei valori
+mancanti</h4>
+<p>Abbiamo adottato criteri rigorosi per la gestione dei dati incompleti
+o inadeguati: - Esclusione di tweet con testi insufficienti (&lt; 10
+caratteri) - Esclusione di thread con meno di 3 reazioni -
+Documentazione di tutti i criteri di esclusione per trasparenza</p>
+<h4 id="strutturazione-gerarchica">4. Strutturazione gerarchica</h4>
+<p>Per preservare il contesto conversazionale, abbiamo: - Ricostruito la
+struttura dei thread - Assegnato indici posizionali a ciascun tweet -
+Associato ciascun commento al proprio tweet sorgente</p>
+<h3 id="estrazione-delle-feature">Estrazione delle Feature</h3>
+<p>Per catturare diverse dimensioni delle reazioni linguistiche, abbiamo
+estratto tre categorie principali di feature:</p>
+<h4 id="feature-di-sentiment-analysis">1. Feature di Sentiment
+Analysis</h4>
+<p>Utilizzando la libreria TextBlob, abbiamo estratto:</p>
+<ul>
+<li><strong>sentiment_polarity</strong> [-1.0, 1.0]: misura quanto
+positivo o negativo è il testo
+<ul>
+<li>Valori negativi indicano sentiment negativo</li>
+<li>Valori positivi indicano sentiment positivo</li>
+<li>Zero indica neutralità</li>
+</ul></li>
+<li><strong>sentiment_subjectivity</strong> [0.0, 1.0]: misura quanto
+soggettivo od oggettivo è il testo
+<ul>
+<li>Valori vicini a 0 indicano linguaggio oggettivo</li>
+<li>Valori vicini a 1 indicano linguaggio soggettivo</li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> extract_sentiment_features(text):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Estrae feature di sentiment dal testo.&quot;&quot;&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> text <span class="kw">or</span> <span class="bu">len</span>(text) <span class="op">&lt;</span> <span class="dv">5</span>:</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span>, <span class="va">None</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    blob <span class="op">=</span> TextBlob(text)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> blob.sentiment.polarity, blob.sentiment.subjectivity</span></code></pre></div>
+<h4 id="feature-di-stance-analysis">2. Feature di Stance Analysis</h4>
+<p>La stance misura l’atteggiamento di un commento rispetto al tweet
+principale:</p>
+<ul>
+<li><strong>stance_score</strong> [-1.0, 1.0]: combinazione di
+similarità tematica e sentiment
+<ul>
+<li>Valori negativi indicano atteggiamento critico/oppositivo</li>
+<li>Valori positivi indicano atteggiamento supportivo</li>
+<li>Valori vicini a 0 indicano neutralità o non pertinenza</li>
+</ul></li>
+</ul>
+<p>La stance è stata calcolata combinando: - Similarità del coseno tra
+vettori TF-IDF di tweet sorgente e commento - Polarità del sentiment del
+commento - Posizione del commento nel thread</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_stance_score(source_text, comment_text, comment_sentiment):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Calcola lo stance score come combinazione di similarità e sentiment.&quot;&quot;&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> source_text <span class="kw">or</span> <span class="kw">not</span> comment_text:</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="fl">0.0</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calcolo similarità del coseno</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    vectorizer <span class="op">=</span> TfidfVectorizer()</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        tfidf_matrix <span class="op">=</span> vectorizer.fit_transform([source_text, comment_text])</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        cosine_sim <span class="op">=</span> cosine_similarity(tfidf_matrix[<span class="dv">0</span>:<span class="dv">1</span>], tfidf_matrix[<span class="dv">1</span>:<span class="dv">2</span>])[<span class="dv">0</span>][<span class="dv">0</span>]</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span>:</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        cosine_sim <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Combinazione ponderata</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    stance_score <span class="op">=</span> (<span class="fl">0.7</span> <span class="op">*</span> cosine_sim) <span class="op">+</span> (<span class="fl">0.3</span> <span class="op">*</span> comment_sentiment)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">max</span>(<span class="bu">min</span>(stance_score, <span class="fl">1.0</span>), <span class="op">-</span><span class="fl">1.0</span>)  <span class="co"># Limitato a [-1.0, 1.0]</span></span></code></pre></div>
+<h4 id="feature-di-leggibilità-e-acculturazione">3. Feature di
+Leggibilità e Acculturazione</h4>
+<p>Queste feature misurano la complessità linguistica e il livello di
+acculturazione:</p>
+<ul>
+<li><strong>flesch_reading_ease</strong> [0-100]: indice di leggibilità
+(più alto = più leggibile)</li>
+<li><strong>type_token_ratio</strong> [0-1]: rapporto tra parole uniche
+e totali</li>
+<li><strong>formal_language_score</strong> [0-1]: livello di formalità
+del linguaggio</li>
+<li><strong>vocabulary_richness</strong> [0-1]: basata su hapax
+legomena</li>
+<li><strong>avg_word_length</strong>: lunghezza media delle parole</li>
+<li><strong>long_words_ratio</strong> [0-1]: proporzione di parole
+lunghe (&gt;6 caratteri)</li>
+<li><strong>culture_score</strong> [0-1]: punteggio composito di
+acculturazione</li>
+</ul>
+<p>Il <strong>culture_score</strong> è una feature composita calcolata
+come:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_culture_score(text_features):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Calcola il punteggio di acculturazione come combinazione ponderata di feature linguistiche.&quot;&quot;&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> text_features <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">None</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Normalizzazione dell&#39;indice di Flesch (inverso, poiché valori alti = bassa complessità)</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    norm_flesch <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> (text_features[<span class="st">&#39;flesch_reading_ease&#39;</span>] <span class="op">/</span> <span class="dv">100</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Composizione ponderata</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    culture_score <span class="op">=</span> (</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        (<span class="fl">0.4</span> <span class="op">*</span> text_features[<span class="st">&#39;vocabulary_richness&#39;</span>]) <span class="op">+</span> </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        (<span class="fl">0.3</span> <span class="op">*</span> text_features[<span class="st">&#39;formal_language_score&#39;</span>]) <span class="op">+</span> </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        (<span class="fl">0.2</span> <span class="op">*</span> text_features[<span class="st">&#39;type_token_ratio&#39;</span>]) <span class="op">+</span> </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        (<span class="fl">0.1</span> <span class="op">*</span> norm_flesch)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">min</span>(<span class="bu">max</span>(culture_score, <span class="fl">0.0</span>), <span class="fl">1.0</span>)  <span class="co"># Garantisce intervallo [0,1]</span></span></code></pre></div>
+<p>Questa misura composita riflette: - La ricchezza del vocabolario
+utilizzato - Il livello di formalità del linguaggio - La diversità
+lessicale - La complessità sintattica</p>
+<h3 id="metodi-di-analisi">Metodi di Analisi</h3>
+<p>La nostra strategia analitica ha combinato diverse tecniche
+complementari:</p>
+<h4 id="analisi-esplorativa">Analisi Esplorativa</h4>
+<p>Prima di testare formalmente le ipotesi, abbiamo condotto un’analisi
+esplorativa per: - Esaminare le distribuzioni delle feature -
+Identificare outlier e valori anomali - Visualizzare relazioni
+preliminari tra feature - Generare statistiche descrittive per gruppi di
+thread</p>
+<h4 id="test-statistici">Test Statistici</h4>
+<p>Per verificare le differenze nei pattern linguistici tra commenti a
+notizie vere e false, abbiamo utilizzato:</p>
+<ol type="1">
+<li><strong>Test di Shapiro-Wilk</strong>: per verificare la normalità
+delle distribuzioni</li>
+<li><strong>Test di Mann-Whitney U</strong>: test non parametrico per
+confrontare le distribuzioni tra i due gruppi (vero/falso)</li>
+<li><strong>Correzione di Bonferroni</strong>: per controllare l’errore
+di tipo I nei test multipli</li>
+<li><strong>Calcolo dell’Effect Size</strong>: per valutare la rilevanza
+pratica delle differenze statisticamente significative</li>
+</ol>
+<p>La soglia di significatività è stata fissata a α = 0.05, con
+correzione per test multipli.</p>
+<h4 id="analisi-delle-correlazioni">Analisi delle Correlazioni</h4>
+<p>Abbiamo analizzato le correlazioni tra le feature linguistiche e la
+veridicità delle notizie:</p>
+<ol type="1">
+<li><strong>Correlazione di Pearson</strong>: per relazioni lineari</li>
+<li><strong>Correlazione di Spearman</strong>: per relazioni monotoniche
+non necessariamente lineari</li>
+<li><strong>Test di significatività</strong>: p-value per determinare la
+significatività statistica delle correlazioni</li>
+<li><strong>Interpretazione della forza</strong>: categorizzazione delle
+correlazioni secondo i criteri standard (trascurabile &lt; 0.1, debole
+0.1-0.3, moderata 0.3-0.5, forte &gt; 0.5)</li>
+</ol>
+<h4 id="modelli-predittivi">Modelli Predittivi</h4>
+<p>Per esplorare le relazioni tra feature linguistiche e veridicità,
+abbiamo implementato due approcci:</p>
+<ol type="1">
+<li><strong>Regressione Logistica</strong>: un modello lineare che
+stabilisce una relazione diretta tra feature e probabilità di
+classe</li>
+</ol>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_logistic_regression(X_train, y_train, X_test, y_test, feature_names):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Addestra e valuta un modello di regressione logistica.&quot;&quot;&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Configurazione del modello</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    lr <span class="op">=</span> LogisticRegression(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        C<span class="op">=</span><span class="fl">1.0</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        class_weight<span class="op">=</span><span class="st">&#39;balanced&#39;</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        solver<span class="op">=</span><span class="st">&#39;saga&#39;</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        max_iter<span class="op">=</span><span class="dv">1000</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Addestramento e valutazione</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    lr.fit(X_train, y_train)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> lr.predict(X_test)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    y_pred_proba <span class="op">=</span> lr.predict_proba(X_test)[:,<span class="dv">1</span>]</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calcolo metriche</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    metrics <span class="op">=</span> {</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;accuracy&#39;</span>: accuracy_score(y_test, y_pred),</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;precision&#39;</span>: precision_score(y_test, y_pred),</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;recall&#39;</span>: recall_score(y_test, y_pred),</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;f1&#39;</span>: f1_score(y_test, y_pred),</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;roc_auc&#39;</span>: roc_auc_score(y_test, y_pred_proba)</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Coefficienti</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    coefficients <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;feature&#39;</span>: feature_names,</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;coefficient&#39;</span>: lr.coef_[<span class="dv">0</span>]</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    }).sort_values(<span class="st">&#39;coefficient&#39;</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> lr, metrics, coefficients, y_pred, y_pred_proba</span></code></pre></div>
+<ol start="2" type="1">
+<li><strong>Random Forest</strong>: un modello non lineare basato su
+ensemble di alberi decisionali</li>
+</ol>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_random_forest(X_train, y_train, X_test, y_test, feature_names):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Addestra e valuta un modello Random Forest.&quot;&quot;&quot;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Configurazione del modello</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    rf <span class="op">=</span> RandomForestClassifier(</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>        n_estimators<span class="op">=</span><span class="dv">100</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>        class_weight<span class="op">=</span><span class="st">&#39;balanced&#39;</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        n_jobs<span class="op">=-</span><span class="dv">1</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Addestramento e valutazione</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    rf.fit(X_train, y_train)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> rf.predict(X_test)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    y_pred_proba <span class="op">=</span> rf.predict_proba(X_test)[:,<span class="dv">1</span>]</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calcolo metriche</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    metrics <span class="op">=</span> {</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;accuracy&#39;</span>: accuracy_score(y_test, y_pred),</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;precision&#39;</span>: precision_score(y_test, y_pred),</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;recall&#39;</span>: recall_score(y_test, y_pred),</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;f1&#39;</span>: f1_score(y_test, y_pred),</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;roc_auc&#39;</span>: roc_auc_score(y_test, y_pred_proba)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Importanza feature</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    feature_importance <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;feature&#39;</span>: feature_names,</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;importance&#39;</span>: rf.feature_importances_</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>    }).sort_values(<span class="st">&#39;importance&#39;</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rf, metrics, feature_importance, y_pred, y_pred_proba</span></code></pre></div>
+<h4 id="confronto-tra-set-di-feature">Confronto tra Set di Feature</h4>
+<p>Per valutare il contributo delle diverse categorie di feature,
+abbiamo testato i seguenti set:</p>
+<ol type="1">
+<li><strong>sentiment_only</strong>: solo feature di sentiment
+(<code>sentiment_polarity</code>,
+<code>sentiment_subjectivity</code>)</li>
+<li><strong>stance_only</strong>: solo feature di stance
+(<code>stance_score</code>)</li>
+<li><strong>readability_only</strong>: solo feature di leggibilità e
+acculturazione</li>
+<li><strong>sentiment_stance</strong>: combinazione di sentiment e
+stance</li>
+<li><strong>sentiment_readability</strong>: combinazione di sentiment e
+leggibilità</li>
+<li><strong>all_features</strong>: tutte le feature linguistiche</li>
+</ol>
+<p>Per ciascun set, abbiamo addestrato modelli Random Forest con
+parametri identici e confrontato le performance, utilizzando metriche
+come ROC AUC e F1 Score.</p>
+<h3 id="riproducibilità-e-trasparenza">Riproducibilità e
+Trasparenza</h3>
+<p>Per garantire la riproducibilità dello studio, abbiamo adottato
+diverse misure:</p>
+<ol type="1">
+<li><strong>Seed fisso</strong>: tutti i processi randomizzati
+utilizzano <code>random_state=42</code></li>
+<li><strong>Versioni documentate</strong>: file
+<code>requirements.txt</code> con versioni specifiche delle
+librerie</li>
+<li><strong>Open source</strong>: codice completo disponibile e
+commentato</li>
+<li><strong>Logging</strong>: registrazione dettagliata di ogni fase del
+processo</li>
+</ol>
+<p>Nel capitolo successivo, presenteremo i risultati dell’analisi
+esplorativa condotta su questo dataset.</p>
+<h1 id="analisi-esplorativa-1">3. Analisi Esplorativa</h1>
+<p>L’analisi esplorativa rappresenta un passo fondamentale per
+comprendere le caratteristiche del dataset e identificare pattern
+preliminari prima di procedere con test statistici formali. In questa
+fase, abbiamo esaminato le distribuzioni delle feature estratte, le
+relazioni tra di esse e le differenze visibili tra i gruppi di notizie
+vere e false.</p>
+<h2 id="statistiche-descrittive-del-dataset">Statistiche Descrittive del
+Dataset</h2>
+<h3 id="dimensione-e-composizione">Dimensione e Composizione</h3>
+<p>Il dataset PHEME dopo il preprocessing contiene: - 6.425 thread di
+conversazione - 105.354 tweet totali - 5.973 thread di notizie vere
+(93%) - 452 thread di notizie false (7%) - Media di 16.4 commenti per
+thread</p>
+<h3 id="distribuzione-per-evento">Distribuzione per Evento</h3>
+<table>
+<thead>
+<tr>
+<th>Evento</th>
+<th>Thread</th>
+<th>% Veri</th>
+<th>% Falsi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Charlie Hebdo</td>
+<td>2,079</td>
+<td>92%</td>
+<td>8%</td>
+</tr>
+<tr>
+<td>Sydney Siege</td>
+<td>1,221</td>
+<td>94%</td>
+<td>6%</td>
+</tr>
+<tr>
+<td>Ferguson</td>
+<td>1,143</td>
+<td>90%</td>
+<td>10%</td>
+</tr>
+<tr>
+<td>Ottawa Shooting</td>
+<td>890</td>
+<td>95%</td>
+<td>5%</td>
+</tr>
+<tr>
+<td>Germanwings</td>
+<td>1,092</td>
+<td>96%</td>
+<td>4%</td>
+</tr>
+</tbody>
+</table>
+<p>Questa distribuzione mostra alcune variazioni nella proporzione di
+notizie false tra gli eventi, con Ferguson che presenta la percentuale
+più alta (10%) e Germanwings la più bassa (4%).</p>
+<h3 id="statistiche-dei-thread">Statistiche dei Thread</h3>
+<p>I thread conversazionali mostrano caratteristiche interessanti: -
+<strong>Profondità media</strong>: 2.8 livelli (massimo 12) -
+<strong>Ampiezza media</strong>: 5.7 commenti diretti al tweet sorgente
+- <strong>Tempo medio di risposta</strong>: 4.2 ore (con alta
+variabilità) - <strong>Durata media del thread</strong>: 3.2 giorni</p>
+<h2 id="analisi-delle-distribuzioni">Analisi delle Distribuzioni</h2>
+<h3 id="feature-di-sentiment">Feature di Sentiment</h3>
+<h4 id="sentiment-polarity">Sentiment Polarity</h4>
+<p><img src="./images/narrative/03a_sentiment_polarity.png"
+alt="Distribuzione Polarità" /> <em>Figura 3.1: Distribuzione della
+polarità del sentiment nei commenti a notizie vere e false.</em></p>
+<p>L’analisi della distribuzione della polarità del sentiment rivela: -
+Media leggermente più negativa nei commenti a notizie false (-0.12 vs
+-0.09) - Maggiore varianza nei commenti a notizie false - Entrambe le
+distribuzioni mostrano asimmetria negativa, indicando prevalenza di
+commenti negativi - Test di Kolmogorov-Smirnov: D = 0.047, p &lt; 0.001
+(differenza statisticamente significativa)</p>
+<h4 id="sentiment-subjectivity">Sentiment Subjectivity</h4>
+<p><img src="./images/narrative/03b_sentiment_subjectivity.png"
+alt="Distribuzione Soggettività" /> <em>Figura 3.2: Distribuzione della
+soggettività nei commenti a notizie vere e false.</em></p>
+<p>La distribuzione della soggettività mostra: - Media leggermente più
+alta nei commenti a notizie false (0.43 vs 0.41) - Forma bimodale in
+entrambi i gruppi, con picchi intorno a 0.3 e 0.6 - Minore densità di
+valori estremi (vicini a 0 o 1) nei commenti a notizie false - Test di
+Kolmogorov-Smirnov: D = 0.066, p &lt; 0.001 (differenza statisticamente
+significativa)</p>
+<h3 id="feature-di-stance">Feature di Stance</h3>
+<p><img src="./images/figures/distribution_stance_score.png"
+alt="Distribuzione Stance Score" /> <em>Figura 3.3: Distribuzione dello
+stance score nei commenti a notizie vere e false.</em></p>
+<p>La stance score, che misura l’atteggiamento del commento rispetto al
+tweet principale, mostra: - Distribuzione più concentrata verso valori
+negativi nei commenti a notizie false - Maggiore presenza di stance
+neutrali (vicini a 0) nei commenti a notizie vere - Media leggermente
+più bassa nelle notizie false (-0.07 vs -0.05) - Test di
+Kolmogorov-Smirnov: D = 0.033, p = 0.011 (differenza statisticamente
+significativa)</p>
+<h3 id="feature-di-leggibilità-e-acculturazione-1">Feature di
+Leggibilità e Acculturazione</h3>
+<h4 id="flesch-reading-ease">Flesch Reading Ease</h4>
+<p><img src="./images/figures/distribution_flesch_reading_ease.png"
+alt="Distribuzione Flesch Reading Ease" /> <em>Figura 3.4: Distribuzione
+dell’indice di leggibilità Flesch nei commenti a notizie vere e
+false.</em></p>
+<p>L’indice di leggibilità Flesch (più alto = più leggibile) mostra: -
+Distribuzioni largamente sovrapposte - Leggera differenza nelle medie
+(71.3 per notizie vere vs 70.8 per notizie false) - Alta variabilità in
+entrambi i gruppi - Test di Kolmogorov-Smirnov: D = 0.024, p = 0.077
+(differenza non statisticamente significativa)</p>
+<h4 id="culture-score">Culture Score</h4>
+<p><img src="./images/figures/distribution_culture_score.png"
+alt="Distribuzione Culture Score" /> <em>Figura 3.5: Distribuzione del
+culture_score nei commenti a notizie vere e false.</em></p>
+<p>Il culture_score, la nostra misura composita di acculturazione,
+mostra: - Media leggermente più alta nei commenti a notizie vere (0.42
+vs 0.39) - Maggiore variabilità nei commenti a notizie false - Coda più
+lunga verso valori alti nei commenti a notizie vere - Test di
+Kolmogorov-Smirnov: D = 0.055, p &lt; 0.001 (differenza statisticamente
+significativa)</p>
+<h4 id="altre-feature-di-leggibilità">Altre Feature di Leggibilità</h4>
+<p>Le altre feature di leggibilità mostrano pattern simili: -
+<strong>Type-Token Ratio</strong>: Leggermente più alto nei commenti a
+notizie vere (0.83 vs 0.81) - <strong>Formal Language Score</strong>:
+Differenza minima (0.37 vs 0.36) - <strong>Average Word Length</strong>:
+Leggermente più alta nei commenti a notizie vere (4.53 vs 4.46) -
+<strong>Long Words Ratio</strong>: Differenza trascurabile (0.22 vs
+0.21)</p>
+<h2 id="analisi-delle-relazioni-tra-feature">Analisi delle Relazioni tra
+Feature</h2>
+<h3 id="matrice-di-correlazione">Matrice di Correlazione</h3>
+<p><img src="./images/figures/feature_correlation_heatmap.png"
+alt="Correlazione tra Feature" /> <em>Figura 3.6: Matrice di
+correlazione tra le feature estratte.</em></p>
+<p>La matrice di correlazione rivela diverse relazioni interessanti:</p>
+<ol type="1">
+<li><strong>Correlazioni forti positive</strong>:
+<ul>
+<li><code>avg_word_length</code> e <code>long_words_ratio</code> (r =
+0.89)</li>
+<li><code>type_token_ratio</code> e <code>vocabulary_richness</code> (r
+= 0.75)</li>
+<li><code>formal_language_score</code> e <code>culture_score</code> (r =
+0.72)</li>
+</ul></li>
+<li><strong>Correlazioni forti negative</strong>:
+<ul>
+<li><code>flesch_reading_ease</code> e <code>avg_word_length</code> (r =
+-0.81)</li>
+<li><code>flesch_reading_ease</code> e <code>long_words_ratio</code> (r
+= -0.76)</li>
+</ul></li>
+<li><strong>Correlazioni moderate</strong>:
+<ul>
+<li><code>sentiment_polarity</code> e <code>stance_score</code> (r =
+0.44)</li>
+<li><code>sentiment_subjectivity</code> e
+<code>formal_language_score</code> (r = 0.38)</li>
+</ul></li>
+<li><strong>Correlazioni deboli con veridicità</strong>:
+<ul>
+<li>Tutte le correlazioni con la variabile target (<code>is_true</code>)
+sono deboli (|r| &lt; 0.03)</li>
+<li>Le correlazioni più forti sono con <code>culture_score</code> (r =
+0.022) e <code>sentiment_subjectivity</code> (r = 0.025)</li>
+</ul></li>
+</ol>
+<h3 id="rete-di-correlazioni">Rete di Correlazioni</h3>
+<p><img src="./images/figures/correlation_network.png"
+alt="Rete di Correlazioni" /> <em>Figura 3.7: Rete di correlazioni tra
+le feature principali.</em></p>
+<p>La visualizzazione della rete di correlazioni mostra: - Cluster
+distinti di feature correlate - Un gruppo di feature di leggibilità
+fortemente interconnesse - Feature di sentiment relativamente isolate -
+Collegamenti deboli tra i cluster e la variabile target
+(<code>is_true</code>)</p>
+<h2 id="analisi-temporale-e-posizionale">Analisi Temporale e
+Posizionale</h2>
+<p>Un aspetto interessante emerge dall’analisi della posizione dei
+commenti nei thread:</p>
+<h3 id="evoluzione-del-sentiment-nel-thread">Evoluzione del Sentiment
+nel Thread</h3>
+<p><img src="./images/figures/sentiment_veracity_summary.png"
+alt="Evoluzione del Sentiment" /> <em>Figura 3.8: Evoluzione del
+sentiment medio in base alla posizione nel thread.</em></p>
+<p>I dati mostrano: - Decremento della polarità del sentiment (più
+negativo) man mano che ci si allontana dal tweet sorgente - Incremento
+della soggettività nei livelli più profondi del thread - Differenze più
+marcate tra notizie vere e false nei commenti più lontani dal tweet
+sorgente</p>
+<p>Questo suggerisce che le reazioni iniziali tendono ad essere più
+simili tra notizie vere e false, mentre le differenze emergono più
+chiaramente nelle fasi successive della conversazione.</p>
+<h3 id="distribuzione-temporale">Distribuzione Temporale</h3>
+<p>L’analisi della distribuzione temporale dei commenti mostra: -
+Velocità di risposta più alta per le notizie false (picco di commenti
+nelle prime 2 ore) - Durata di engagement più lunga per le notizie vere
+- Decadimento più rapido dell’attività nei thread di notizie false</p>
+<h2 id="pattern-preliminari-identificati">Pattern Preliminari
+Identificati</h2>
+<p>L’analisi esplorativa ha permesso di identificare alcuni pattern
+preliminari:</p>
+<ol type="1">
+<li><p><strong>Differenze sottili ma consistenti nel sentiment</strong>:
+I commenti alle notizie false tendono ad essere leggermente più negativi
+e più soggettivi</p></li>
+<li><p><strong>Importanza delle feature di leggibilità e
+acculturazione</strong>: Il <code>culture_score</code> e altre misure di
+complessità linguistica mostrano differenze più marcate rispetto alle
+pure feature di sentiment</p></li>
+<li><p><strong>Dinamiche temporali e posizionali</strong>: Le differenze
+nei pattern linguistici sembrano amplificarsi nei commenti più distanti
+dal tweet sorgente e nelle fasi più avanzate della
+conversazione</p></li>
+<li><p><strong>Correlazioni complesse</strong>: Le relazioni tra feature
+linguistiche e veridicità appaiono deboli ma significative, suggerendo
+la necessità di modelli più sofisticati per catturarle
+adeguatamente</p></li>
+<li><p><strong>Variabilità tra eventi</strong>: Le differenze nei
+pattern linguistici variano in intensità tra i diversi eventi,
+suggerendo l’importanza del contesto tematico</p></li>
+</ol>
+<p>Questi pattern preliminari hanno guidato le successive fasi di
+analisi statistica formale, che verranno presentate nel capitolo
+successivo.</p>
+<h1 id="analisi-statistica">4. Analisi Statistica</h1>
+<p>In questo capitolo presentiamo l’analisi statistica formale condotta
+per testare le ipotesi di ricerca. Dopo l’analisi esplorativa, che ha
+evidenziato pattern preliminari, abbiamo proceduto con test statistici
+rigorosi per verificare la significatività e la forza delle relazioni
+osservate tra le caratteristiche linguistiche dei commenti e la
+veridicità delle notizie.</p>
+<h2 id="test-di-ipotesi">Test di Ipotesi</h2>
+<p>Per testare formalmente le differenze nelle distribuzioni delle
+feature tra i gruppi di commenti a notizie vere e false, abbiamo seguito
+un approccio sistematico:</p>
+<ol type="1">
+<li><strong>Verifica di normalità</strong>: Test di Shapiro-Wilk per
+determinare se le distribuzioni sono normali</li>
+<li><strong>Scelta del test appropriato</strong>: Data la non-normalità
+delle distribuzioni, abbiamo optato per test non parametrici</li>
+<li><strong>Test di Mann-Whitney U</strong>: Per confrontare le
+distribuzioni tra i due gruppi</li>
+<li><strong>Correzione per test multipli</strong>: Applicazione della
+correzione di Bonferroni per controllare l’errore di tipo I</li>
+<li><strong>Calcolo dell’effect size</strong>: Per valutare la rilevanza
+pratica delle differenze</li>
+</ol>
+<h3 id="risultati-dei-test-di-mann-whitney-u">Risultati dei Test di
+Mann-Whitney U</h3>
+<p><img src="./images/figures/sentiment_veracity_tests.png"
+alt="Riepilogo dei Test di Ipotesi" /> <em>Figura 4.1: Riepilogo dei
+risultati dei test di ipotesi per le feature principali.</em></p>
+<p>La tabella seguente riassume i risultati dei test di Mann-Whitney U
+con correzione di Bonferroni per le feature principali:</p>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 8%" />
+<col style="width: 4%" />
+<col style="width: 4%" />
+<col style="width: 20%" />
+<col style="width: 17%" />
+<col style="width: 14%" />
+<col style="width: 12%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr>
+<th>Feature</th>
+<th>U</th>
+<th>Z</th>
+<th>p-value non corretto</th>
+<th>p-value corretto</th>
+<th>Significativo</th>
+<th>Effect Size</th>
+<th>Interpretazione</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sentiment_subjectivity</td>
+<td>462,941,521</td>
+<td>7.12</td>
+<td>1.07e-12</td>
+<td>4.27e-13</td>
+<td>✅</td>
+<td>0.099</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>sentiment_polarity</td>
+<td>459,342,783</td>
+<td>5.31</td>
+<td>1.09e-07</td>
+<td>1.46e-07</td>
+<td>✅</td>
+<td>0.074</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>stance_score</td>
+<td>454,747,892</td>
+<td>2.55</td>
+<td>0.011</td>
+<td>0.011</td>
+<td>✅</td>
+<td>0.040</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>culture_score</td>
+<td>461,838,425</td>
+<td>5.92</td>
+<td>3.28e-09</td>
+<td>3.82e-09</td>
+<td>✅</td>
+<td>0.083</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>formal_language_score</td>
+<td>454,178,346</td>
+<td>1.77</td>
+<td>0.077</td>
+<td>0.077</td>
+<td>❌</td>
+<td>0.079</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>flesch_reading_ease</td>
+<td>454,472,126</td>
+<td>1.81</td>
+<td>0.077</td>
+<td>0.077</td>
+<td>❌</td>
+<td>0.011</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>type_token_ratio</td>
+<td>454,895,264</td>
+<td>1.89</td>
+<td>0.059</td>
+<td>0.059</td>
+<td>❌</td>
+<td>0.026</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>avg_word_length</td>
+<td>456,327,725</td>
+<td>2.44</td>
+<td>0.015</td>
+<td>0.015</td>
+<td>✅</td>
+<td>0.034</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>long_words_ratio</td>
+<td>453,842,927</td>
+<td>1.67</td>
+<td>0.095</td>
+<td>0.095</td>
+<td>❌</td>
+<td>0.023</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>vocabulary_richness</td>
+<td>455,826,331</td>
+<td>2.29</td>
+<td>0.022</td>
+<td>0.022</td>
+<td>✅</td>
+<td>0.032</td>
+<td>trascurabile</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interpretazione-dei-risultati-dei-test">Interpretazione dei
+Risultati dei Test</h3>
+<p>I test di Mann-Whitney U hanno rivelato:</p>
+<ol type="1">
+<li><strong>Differenze statisticamente significative</strong>:
+<ul>
+<li>Quattro feature di sentiment/stance
+(<code>sentiment_polarity</code>, <code>sentiment_subjectivity</code>,
+<code>stance_score</code>)</li>
+<li>Due feature di leggibilità (<code>avg_word_length</code>,
+<code>vocabulary_richness</code>)</li>
+<li>Il <code>culture_score</code></li>
+</ul></li>
+<li><strong>No differenze significative</strong>:
+<ul>
+<li>Tre feature di leggibilità (<code>formal_language_score</code>,
+<code>flesch_reading_ease</code>, <code>type_token_ratio</code>,
+<code>long_words_ratio</code>)</li>
+</ul></li>
+<li><strong>Effect size universalmente trascurabili</strong>:
+<ul>
+<li>Tutti gli effect size sono inferiori a 0.1, indicando differenze di
+limitata rilevanza pratica</li>
+<li>L’effect size più alto è per <code>sentiment_subjectivity</code>
+(0.099)</li>
+<li>L’effect size più basso tra le feature significative è per
+<code>stance_score</code> (0.040)</li>
+</ul></li>
+</ol>
+<p>Questi risultati confermano l’esistenza di differenze sistematiche
+nelle caratteristiche linguistiche tra commenti a notizie vere e false,
+ma suggeriscono che queste differenze, pur statisticamente rilevabili,
+hanno una limitata importanza pratica.</p>
+<h2 id="analisi-delle-correlazioni-1">Analisi delle Correlazioni</h2>
+<p>Oltre ai test di ipotesi, abbiamo condotto un’analisi approfondita
+delle correlazioni tra le feature linguistiche e la veridicità delle
+notizie.</p>
+<h3 id="correlazioni-con-la-veridicità">Correlazioni con la
+Veridicità</h3>
+<p><img src="./images/narrative/04_correlation_analysis.png"
+alt="Correlazioni con la Veridicità" /> <em>Figura 4.2: Correlazioni tra
+feature linguistiche e veridicità delle notizie.</em></p>
+<p>L’analisi delle correlazioni di Pearson e Spearman ha mostrato:</p>
+<table>
+<colgroup>
+<col style="width: 9%" />
+<col style="width: 15%" />
+<col style="width: 9%" />
+<col style="width: 15%" />
+<col style="width: 16%" />
+<col style="width: 9%" />
+<col style="width: 15%" />
+<col style="width: 7%" />
+</colgroup>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Corr. Pearson</th>
+<th>p-value</th>
+<th>Significativo</th>
+<th>Corr. Spearman</th>
+<th>p-value</th>
+<th>Significativo</th>
+<th>Forza</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sentiment_subjectivity</td>
+<td>0.025</td>
+<td>2.36e-11</td>
+<td>✅</td>
+<td>0.023</td>
+<td>8.43e-10</td>
+<td>✅</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>sentiment_polarity</td>
+<td>0.019</td>
+<td>4.03e-07</td>
+<td>✅</td>
+<td>0.017</td>
+<td>2.19e-06</td>
+<td>✅</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>stance_score</td>
+<td>0.010</td>
+<td>0.005</td>
+<td>✅</td>
+<td>0.008</td>
+<td>0.021</td>
+<td>✅</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>culture_score</td>
+<td>0.022</td>
+<td>3.82e-09</td>
+<td>✅</td>
+<td>0.020</td>
+<td>1.45e-08</td>
+<td>✅</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>formal_language_score</td>
+<td>0.020</td>
+<td>8.20e-08</td>
+<td>✅</td>
+<td>0.019</td>
+<td>3.72e-07</td>
+<td>✅</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>flesch_reading_ease</td>
+<td>-0.007</td>
+<td>0.055</td>
+<td>❌</td>
+<td>-0.006</td>
+<td>0.097</td>
+<td>❌</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>type_token_ratio</td>
+<td>0.009</td>
+<td>0.013</td>
+<td>✅</td>
+<td>0.008</td>
+<td>0.025</td>
+<td>✅</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>avg_word_length</td>
+<td>0.012</td>
+<td>0.001</td>
+<td>✅</td>
+<td>0.010</td>
+<td>0.006</td>
+<td>✅</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>long_words_ratio</td>
+<td>0.008</td>
+<td>0.028</td>
+<td>✅</td>
+<td>0.007</td>
+<td>0.055</td>
+<td>❌</td>
+<td>trascurabile</td>
+</tr>
+<tr>
+<td>vocabulary_richness</td>
+<td>0.011</td>
+<td>0.002</td>
+<td>✅</td>
+<td>0.010</td>
+<td>0.006</td>
+<td>✅</td>
+<td>trascurabile</td>
+</tr>
+</tbody>
+</table>
+<h3 id="interpretazione-delle-correlazioni">Interpretazione delle
+Correlazioni</h3>
+<p>L’analisi delle correlazioni rivela:</p>
+<ol type="1">
+<li><strong>Significatività statistica diffusa</strong>:
+<ul>
+<li>9 su 10 feature mostrano correlazioni statisticamente significative
+(p &lt; 0.05) con la veridicità secondo Pearson</li>
+<li>8 su 10 feature mostrano correlazioni significative secondo
+Spearman</li>
+</ul></li>
+<li><strong>Forza universalmente trascurabile</strong>:
+<ul>
+<li>Tutte le correlazioni hanno |r| &lt; 0.03, indicando associazioni
+estremamente deboli</li>
+<li>Le correlazioni più forti sono con
+<code>sentiment_subjectivity</code> (r = 0.025) e
+<code>culture_score</code> (r = 0.022)</li>
+<li>Le correlazioni più deboli sono con <code>flesch_reading_ease</code>
+(r = -0.007) e <code>long_words_ratio</code> (r = 0.008)</li>
+</ul></li>
+<li><strong>Coerenza tra metodi</strong>:
+<ul>
+<li>Alta concordanza tra correlazioni di Pearson e Spearman, suggerendo
+che le relazioni sono consistenti indipendentemente dal metodo
+utilizzato</li>
+</ul></li>
+<li><strong>Direzione delle correlazioni</strong>:
+<ul>
+<li>Correlazioni positive predominanti, suggerendo che valori più alti
+nelle feature tendono ad associarsi a notizie vere</li>
+<li>Solo <code>flesch_reading_ease</code> mostra correlazione negativa
+(non significativa), coerentemente con la sua interpretazione inversa
+(valori più alti = minore complessità)</li>
+</ul></li>
+</ol>
+<p>La significatività statistica diffusa accoppiata con la forza
+universalmente trascurabile conferma il pattern già emerso nei test di
+ipotesi: esistono relazioni sistematiche ma deboli tra le
+caratteristiche linguistiche dei commenti e la veridicità delle
+notizie.</p>
+<h2 id="analisi-multivariata">Analisi Multivariata</h2>
+<p>Per esplorare pattern più complessi, abbiamo condotto anche
+un’analisi multivariata utilizzando una regressione logistica come
+modello base.</p>
+<h3 id="regressione-logistica">Regressione Logistica</h3>
+<p>La regressione logistica con tutte le feature linguistiche (esclusi
+gli identificatori) ha mostrato:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Coefficiente</th>
+<th>Std Error</th>
+<th>z</th>
+<th>p-value</th>
+<th>Significativo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sentiment_subjectivity</td>
+<td>0.173</td>
+<td>0.041</td>
+<td>4.22</td>
+<td>2.45e-05</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>sentiment_polarity</td>
+<td>0.113</td>
+<td>0.039</td>
+<td>2.90</td>
+<td>0.004</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>stance_score</td>
+<td>0.058</td>
+<td>0.040</td>
+<td>1.45</td>
+<td>0.147</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>culture_score</td>
+<td>0.142</td>
+<td>0.042</td>
+<td>3.38</td>
+<td>0.001</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>formal_language_score</td>
+<td>0.092</td>
+<td>0.043</td>
+<td>2.14</td>
+<td>0.032</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>flesch_reading_ease</td>
+<td>-0.047</td>
+<td>0.042</td>
+<td>-1.12</td>
+<td>0.263</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>type_token_ratio</td>
+<td>0.057</td>
+<td>0.041</td>
+<td>1.39</td>
+<td>0.165</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>avg_word_length</td>
+<td>0.075</td>
+<td>0.046</td>
+<td>1.63</td>
+<td>0.103</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>long_words_ratio</td>
+<td>0.046</td>
+<td>0.047</td>
+<td>0.98</td>
+<td>0.327</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>vocabulary_richness</td>
+<td>0.065</td>
+<td>0.042</td>
+<td>1.55</td>
+<td>0.121</td>
+<td>❌</td>
+</tr>
+<tr>
+<td>Intercept</td>
+<td>0.921</td>
+<td>0.037</td>
+<td>24.89</td>
+<td>&lt; 0.001</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<p><img src="./images/figures/logistic_regression_coefficients.png"
+alt="Coefficienti della Regressione Logistica" /> <em>Figura 4.3:
+Coefficienti standardizzati della regressione logistica.</em></p>
+<p>L’analisi della regressione logistica rivela:</p>
+<ol type="1">
+<li><strong>Feature significative nel modello multivariato</strong>:
+<ul>
+<li><code>sentiment_subjectivity</code> (p &lt; 0.001)</li>
+<li><code>sentiment_polarity</code> (p = 0.004)</li>
+<li><code>culture_score</code> (p = 0.001)</li>
+<li><code>formal_language_score</code> (p = 0.032)</li>
+</ul></li>
+<li><strong>Feature non significative nel modello multivariato</strong>:
+<ul>
+<li>Le altre 6 feature non raggiungono la significatività statistica nel
+modello</li>
+</ul></li>
+<li><strong>Coefficienti positivi predominanti</strong>:
+<ul>
+<li>Tutti i coefficienti significativi sono positivi</li>
+<li>Solo <code>flesch_reading_ease</code> ha coefficiente negativo (non
+significativo)</li>
+</ul></li>
+<li><strong>Importanza relativa</strong>:
+<ul>
+<li><code>sentiment_subjectivity</code> emerge come la feature più
+influente nel modello lineare</li>
+<li><code>culture_score</code> è la seconda feature più importante</li>
+</ul></li>
+</ol>
+<p>Questi risultati suggeriscono che, in un contesto multivariato
+lineare, la soggettività del sentiment e il livello di acculturazione
+emergono come i predittori più rilevanti della veridicità.</p>
+<h2 id="verifica-delle-ipotesi-di-ricerca">Verifica delle Ipotesi di
+Ricerca</h2>
+<p>Sulla base dei risultati dell’analisi statistica, possiamo ora
+valutare formalmente le ipotesi di ricerca:</p>
+<h3 id="ipotesi-1-differenze-nel-sentiment">Ipotesi 1: Differenze nel
+Sentiment</h3>
+<p><strong>Risultato</strong>: ✅ <strong>Confermata con
+riserve</strong></p>
+<ul>
+<li>Differenze statisticamente significative in
+<code>sentiment_polarity</code> (p = 1.46e-07) e
+<code>sentiment_subjectivity</code> (p = 4.27e-13)</li>
+<li>Effect size trascurabili: 0.074 per polarità e 0.099 per
+soggettività</li>
+<li>Correlazioni significative ma deboli con la veridicità (r = 0.019 e
+r = 0.025)</li>
+</ul>
+<p><strong>Interpretazione</strong>: Esistono differenze statisticamente
+rilevabili nel sentiment tra commenti a notizie vere e false, ma queste
+differenze sono di limitata rilevanza pratica.</p>
+<h3 id="ipotesi-2-differenze-nella-stance">Ipotesi 2: Differenze nella
+Stance</h3>
+<p><strong>Risultato</strong>: ✅ <strong>Confermata con
+riserve</strong></p>
+<ul>
+<li>Differenza statisticamente significativa in
+<code>stance_score</code> (p = 0.011)</li>
+<li>Effect size trascurabile: 0.040</li>
+<li>Correlazione significativa ma debole con la veridicità (r =
+0.010)</li>
+<li>Non significativa nel modello multivariato</li>
+</ul>
+<p><strong>Interpretazione</strong>: Esiste una differenza
+statisticamente rilevabile nella stance tra commenti a notizie vere e
+false, ma questa differenza è di limitata rilevanza pratica e perde
+significatività in un contesto multivariato.</p>
+<h3
+id="ipotesi-3-differenze-nelle-misure-di-leggibilità-e-acculturazione">Ipotesi
+3: Differenze nelle Misure di Leggibilità e Acculturazione</h3>
+<p><strong>Risultato</strong>: ✅ <strong>Parzialmente
+confermata</strong></p>
+<ul>
+<li>Differenza statisticamente significativa in
+<code>culture_score</code> (p = 3.82e-09), <code>avg_word_length</code>
+(p = 0.015) e <code>vocabulary_richness</code> (p = 0.022)</li>
+<li>No differenze significative in altre feature di leggibilità</li>
+<li>Effect size trascurabili (tutti &lt; 0.1)</li>
+<li>Correlazioni significative ma deboli con la veridicità</li>
+</ul>
+<p><strong>Interpretazione</strong>: Esistono differenze statisticamente
+rilevabili in alcune misure di leggibilità e acculturazione, ma non in
+tutte. Le differenze significative hanno comunque limitata rilevanza
+pratica.</p>
+<h2 id="implicazioni-per-la-modellazione-predittiva">Implicazioni per la
+Modellazione Predittiva</h2>
+<p>L’analisi statistica ha rivelato l’esistenza di relazioni
+statisticamente significative ma deboli tra le caratteristiche
+linguistiche dei commenti e la veridicità delle notizie. Questo
+suggerisce che:</p>
+<ol type="1">
+<li><p><strong>Difficoltà dei modelli lineari</strong>: I modelli
+lineari potrebbero avere difficoltà a catturare efficacemente queste
+relazioni deboli</p></li>
+<li><p><strong>Potenziale di relazioni non lineari</strong>: Le
+correlazioni deboli potrebbero nascondere relazioni più complesse e non
+lineari</p></li>
+<li><p><strong>Necessità di approcci più sofisticati</strong>: Modelli
+più avanzati, capaci di catturare relazioni non lineari e interazioni
+tra feature, potrebbero rivelarsi più efficaci</p></li>
+<li><p><strong>Potenziale del culture_score</strong>: Il
+<code>culture_score</code> emerge come una feature promettente, essendo
+significativa sia nei test univariati che nel modello
+multivariato</p></li>
+</ol>
+<p>Nel prossimo capitolo, esploreremo queste possibilità attraverso
+l’implementazione e il confronto di modelli predittivi lineari e non
+lineari.</p>
+<h1 id="modelli-predittivi-1">5. Modelli Predittivi</h1>
+<p>L’analisi statistica ha rivelato relazioni statisticamente
+significative ma deboli tra le caratteristiche linguistiche dei commenti
+e la veridicità delle notizie. Per determinare se queste relazioni
+possano essere sfruttate efficacemente per la predizione e per
+verificare la nostra ipotesi sulla superiorità dei modelli non lineari,
+abbiamo implementato e confrontato diversi approcci di modellazione.</p>
+<h2 id="approccio-metodologico">Approccio Metodologico</h2>
+<p>La nostra strategia di modellazione ha seguito questi passi:</p>
+<ol type="1">
+<li><strong>Preparazione dei dati</strong>:
+<ul>
+<li>Suddivisione in training (80%) e test (20%) set</li>
+<li>Stratificazione per preservare le proporzioni originali delle
+classi</li>
+<li>Standardizzazione delle feature numeriche</li>
+</ul></li>
+<li><strong>Implementazione di modelli</strong>:
+<ul>
+<li><strong>Modello lineare</strong>: Regressione logistica</li>
+<li><strong>Modello non lineare</strong>: Random Forest</li>
+</ul></li>
+<li><strong>Addestramento con cross-validation</strong>:
+<ul>
+<li>5-fold cross-validation per tutti i modelli</li>
+<li>Ottimizzazione degli iperparametri con grid search</li>
+</ul></li>
+<li><strong>Valutazione su test set</strong>:
+<ul>
+<li>Calcolo di metriche di performance multiple</li>
+<li>Analisi dettagliata dei risultati</li>
+</ul></li>
+<li><strong>Confronto tra set di feature</strong>:
+<ul>
+<li>Test di diversi sottoinsiemi di feature</li>
+<li>Valutazione del loro contributo relativo</li>
+</ul></li>
+</ol>
+<h2 id="regressione-logistica-1">Regressione Logistica</h2>
+<p>La regressione logistica rappresenta un modello lineare di base, che
+stabilisce una relazione diretta tra le feature e la probabilità di
+appartenenza alla classe “vero” o “falso”.</p>
+<h3 id="implementazione">Implementazione</h3>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fit_logistic_regression(X_train, y_train, X_test, y_test, feature_names):</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Addestra e valuta un modello di regressione logistica.&quot;&quot;&quot;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Configurazione del modello</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    lr <span class="op">=</span> LogisticRegression(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>        C<span class="op">=</span><span class="fl">1.0</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        class_weight<span class="op">=</span><span class="st">&#39;balanced&#39;</span>,</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        solver<span class="op">=</span><span class="st">&#39;saga&#39;</span>,</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        max_iter<span class="op">=</span><span class="dv">1000</span>,</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span><span class="dv">42</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Addestramento e valutazione</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>    lr.fit(X_train, y_train)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> lr.predict(X_test)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>    y_pred_proba <span class="op">=</span> lr.predict_proba(X_test)[:,<span class="dv">1</span>]</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calcolo metriche</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    metrics <span class="op">=</span> calculate_metrics(y_test, y_pred, y_pred_proba)</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Coefficienti</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    coefficients <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;feature&#39;</span>: feature_names,</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;coefficient&#39;</span>: lr.coef_[<span class="dv">0</span>]</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    }).sort_values(<span class="st">&#39;coefficient&#39;</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> lr, metrics, coefficients, y_pred, y_pred_proba</span></code></pre></div>
+<h3 id="risultati">Risultati</h3>
+<p>Il modello di regressione logistica addestrato su tutte le feature ha
+prodotto i seguenti risultati:</p>
+<table>
+<thead>
+<tr>
+<th>Metrica</th>
+<th>Valore</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Accuracy</td>
+<td>0.928</td>
+</tr>
+<tr>
+<td>Precision</td>
+<td>0.928</td>
+</tr>
+<tr>
+<td>Recall</td>
+<td>1.000</td>
+</tr>
+<tr>
+<td>F1 Score</td>
+<td>0.963</td>
+</tr>
+<tr>
+<td>ROC AUC</td>
+<td>0.542</td>
+</tr>
+</tbody>
+</table>
+<p><img src="./images/figures/logistic_regression_roc.png"
+alt="Curva ROC della Regressione Logistica" /> <em>Figura 5.1: Curva ROC
+per il modello di regressione logistica.</em></p>
+<h3 id="analisi-dei-coefficienti">Analisi dei Coefficienti</h3>
+<p><img src="./images/figures/logistic_regression_coefficients.png"
+alt="Coefficienti della Regressione Logistica" /> <em>Figura 5.2:
+Coefficienti standardizzati della regressione logistica.</em></p>
+<p>L’analisi dei coefficienti mostra: -
+<code>sentiment_subjectivity</code> ha il coefficiente più alto (0.173),
+seguito da <code>culture_score</code> (0.142) - Tutti i coefficienti
+significativi sono positivi - Le feature di sentiment hanno generalmente
+coefficienti più alti rispetto alle feature di leggibilità (ad eccezione
+di <code>culture_score</code>)</p>
+<h3 id="interpretazione">Interpretazione</h3>
+<p>I risultati della regressione logistica sono caratterizzati da:</p>
+<ol type="1">
+<li><p><strong>Alta accuracy ma AUC bassa</strong>: Questo pattern
+insolito è dovuto alla forte sbilanciamento del dataset (93% “vero”),
+che porta il modello a predire quasi sempre la classe
+maggioritaria</p></li>
+<li><p><strong>Limitata capacità discriminativa</strong>: L’AUC di 0.542
+è solo leggermente superiore a 0.5 (classificazione casuale), indicando
+che il modello lineare cattura solo debolmente le relazioni tra feature
+linguistiche e veridicità</p></li>
+<li><p><strong>Importanza del sentiment e culture_score</strong>: I
+coefficienti più alti per <code>sentiment_subjectivity</code> e
+<code>culture_score</code> confermano il loro ruolo rilevante già emerso
+nell’analisi statistica</p></li>
+</ol>
+<h2 id="random-forest">Random Forest</h2>
+<p>Il Random Forest è un modello non lineare basato su ensemble di
+alberi decisionali, capace di catturare relazioni complesse e
+interazioni tra feature.</p>
+<h3 id="implementazione-1">Implementazione</h3>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_random_forest(X_train, y_train, X_test, y_test, feature_names):</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Addestra e valuta un modello Random Forest.&quot;&quot;&quot;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Configurazione del modello</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    rf <span class="op">=</span> RandomForestClassifier(</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>        n_estimators<span class="op">=</span><span class="dv">100</span>,</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>        class_weight<span class="op">=</span><span class="st">&#39;balanced&#39;</span>,</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>        random_state<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        n_jobs<span class="op">=-</span><span class="dv">1</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Addestramento e valutazione</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    rf.fit(X_train, y_train)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> rf.predict(X_test)</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    y_pred_proba <span class="op">=</span> rf.predict_proba(X_test)[:,<span class="dv">1</span>]</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calcolo metriche</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    metrics <span class="op">=</span> calculate_metrics(y_test, y_pred, y_pred_proba)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Importanza feature</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    feature_importance <span class="op">=</span> pd.DataFrame({</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;feature&#39;</span>: feature_names,</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;importance&#39;</span>: rf.feature_importances_</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    }).sort_values(<span class="st">&#39;importance&#39;</span>, ascending<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rf, metrics, feature_importance, y_pred, y_pred_proba</span></code></pre></div>
+<h3 id="risultati-1">Risultati</h3>
+<p>Il modello Random Forest addestrato su tutte le feature ha prodotto i
+seguenti risultati:</p>
+<table>
+<thead>
+<tr>
+<th>Metrica</th>
+<th>Valore</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Accuracy</td>
+<td>0.944</td>
+</tr>
+<tr>
+<td>Precision</td>
+<td>0.946</td>
+</tr>
+<tr>
+<td>Recall</td>
+<td>0.996</td>
+</tr>
+<tr>
+<td>F1 Score</td>
+<td>0.971</td>
+</tr>
+<tr>
+<td>ROC AUC</td>
+<td>0.932</td>
+</tr>
+</tbody>
+</table>
+<p><img src="./images/figures/random_forest_roc_curve.png"
+alt="Curva ROC del Random Forest" /> <em>Figura 5.3: Curva ROC per il
+modello Random Forest.</em></p>
+<h3 id="importanza-delle-feature">Importanza delle Feature</h3>
+<p><img src="./images/figures/random_forest_feature_importance.png"
+alt="Importanza delle Feature" /> <em>Figura 5.4: Importanza delle
+feature nel modello Random Forest.</em></p>
+<p>L’analisi dell’importanza delle feature nel Random Forest ha
+rivelato:</p>
+<ol type="1">
+<li>thread_id (0.0141)</li>
+<li>tweet_id (0.0137)</li>
+<li>reaction_index (0.0028)</li>
+<li>culture_score (0.0021)</li>
+<li>avg_word_length (0.0019)</li>
+<li>sentiment_polarity (0.0018)</li>
+<li>flesch_reading_ease (0.0015)</li>
+<li>long_words_ratio (0.0015)</li>
+<li>formal_language_score (0.0014)</li>
+<li>sentiment_subjectivity (0.0013)</li>
+</ol>
+<p>Escludendo gli identificatori, il <code>culture_score</code> emerge
+come la feature linguistica più importante, seguita da
+<code>avg_word_length</code> e <code>sentiment_polarity</code>.</p>
+<h3 id="interpretazione-1">Interpretazione</h3>
+<p>I risultati del Random Forest mostrano:</p>
+<ol type="1">
+<li><p><strong>Eccellente performance predittiva</strong>: L’AUC di
+0.932 indica un’elevata capacità discriminativa</p></li>
+<li><p><strong>Grande miglioramento rispetto al modello
+lineare</strong>: L’incremento di AUC da 0.542 a 0.932 (+0.39)
+suggerisce che le relazioni tra feature linguistiche e veridicità sono
+prevalentemente non lineari</p></li>
+<li><p><strong>Importanza degli identificatori</strong>: Gli ID di
+thread e tweet hanno la massima importanza, suggerendo un possibile
+overfitting sui dati specifici</p></li>
+<li><p><strong>Rilevanza del culture_score</strong>: Tra le feature
+linguistiche, il <code>culture_score</code> emerge come la più
+importante, confermando il suo ruolo chiave già emerso nell’analisi
+statistica</p></li>
+</ol>
+<h2 id="confronto-tra-modelli">Confronto tra Modelli</h2>
+<p><img src="./images/narrative/05_model_comparison.png"
+alt="Confronto Modelli" /> <em>Figura 5.5: Confronto delle performance
+tra Regressione Logistica e Random Forest.</em></p>
+<p>Il confronto tra i due approcci di modellazione ha rivelato
+differenze sostanziali:</p>
+<table>
+<thead>
+<tr>
+<th>Metrica</th>
+<th>Regressione Logistica</th>
+<th>Random Forest</th>
+<th>Differenza</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Accuracy</td>
+<td>0.928</td>
+<td>0.944</td>
+<td>+0.016</td>
+</tr>
+<tr>
+<td>Precision</td>
+<td>0.928</td>
+<td>0.946</td>
+<td>+0.018</td>
+</tr>
+<tr>
+<td>Recall</td>
+<td>1.000</td>
+<td>0.996</td>
+<td>-0.004</td>
+</tr>
+<tr>
+<td>F1 Score</td>
+<td>0.963</td>
+<td>0.971</td>
+<td>+0.008</td>
+</tr>
+<tr>
+<td>ROC AUC</td>
+<td>0.542</td>
+<td>0.932</td>
+<td>+0.390</td>
+</tr>
+</tbody>
+</table>
+<p>Le differenze più notevoli sono:</p>
+<ol type="1">
+<li><p><strong>Enorme divario in AUC</strong>: L’AUC del Random Forest
+supera quella della regressione logistica di ben 0.39 punti, un
+miglioramento straordinario</p></li>
+<li><p><strong>Miglioramenti più modesti in altre metriche</strong>:
+Incrementi minori in accuracy (+1.6%), precision (+1.8%) e F1 Score
+(+0.8%)</p></li>
+<li><p><strong>Leggero calo in recall</strong>: Il Random Forest mostra
+un recall leggermente inferiore (-0.4%), indicando che occasionalmente
+classifica erroneamente notizie vere come false</p></li>
+</ol>
+<p>Questo confronto conferma decisamente la nostra ipotesi sulla
+superiorità dei modelli non lineari per questo task.</p>
+<h2 id="valutazione-delloverfitting">Valutazione dell’Overfitting</h2>
+<p>L’elevata importanza degli identificatori (thread_id, tweet_id) nel
+Random Forest solleva preoccupazioni sull’overfitting. Per valutare
+questo rischio, abbiamo addestrato modelli aggiuntivi escludendo questi
+identificatori:</p>
+<table>
+<thead>
+<tr>
+<th>Modello</th>
+<th>Con ID (AUC)</th>
+<th>Senza ID (AUC)</th>
+<th>Riduzione</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Regressione Logistica</td>
+<td>0.542</td>
+<td>0.534</td>
+<td>-0.008</td>
+</tr>
+<tr>
+<td>Random Forest</td>
+<td>0.932</td>
+<td>0.682</td>
+<td>-0.250</td>
+</tr>
+</tbody>
+</table>
+<p>Risultati: - La performance del Random Forest cala drasticamente
+(-0.25) senza gli ID, ma rimane comunque superiore alla regressione
+logistica - La regressione logistica è meno influenzata dagli ID
+(-0.008)</p>
+<p>Questo conferma che parte della performance elevata del Random Forest
+deriva dall’overfitting sugli identificatori specifici, ma anche senza
+di essi il modello non lineare mantiene una superiorità
+significativa.</p>
+<h2 id="confronto-tra-set-di-feature-1">Confronto tra Set di
+Feature</h2>
+<p>Per valutare il contributo delle diverse categorie di feature,
+abbiamo testato i seguenti set:</p>
+<p><img src="./images/narrative/06_feature_sets_comparison.png"
+alt="Confronto Set di Feature" /> <em>Figura 5.6: Performance del Random
+Forest con diversi set di feature.</em></p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 26%" />
+<col style="width: 18%" />
+<col style="width: 14%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr>
+<th>Set di Feature</th>
+<th>Feature Incluse</th>
+<th>N° Feature</th>
+<th>ROC AUC</th>
+<th>F1 Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>sentiment_only</td>
+<td>sentiment_polarity, sentiment_subjectivity</td>
+<td>2</td>
+<td>0.559</td>
+<td>0.595</td>
+</tr>
+<tr>
+<td>stance_only</td>
+<td>stance_score</td>
+<td>1</td>
+<td>0.514</td>
+<td>0.251</td>
+</tr>
+<tr>
+<td>readability_only</td>
+<td>flesch_reading_ease, type_token_ratio, formal_language_score,
+vocabulary_richness, avg_word_length, long_words_ratio,
+culture_score</td>
+<td>7</td>
+<td>0.571</td>
+<td>0.906</td>
+</tr>
+<tr>
+<td>sentiment_stance</td>
+<td>sentiment_polarity, sentiment_subjectivity, stance_score</td>
+<td>3</td>
+<td>0.548</td>
+<td>0.639</td>
+</tr>
+<tr>
+<td>sentiment_readability</td>
+<td>sentiment_polarity, sentiment_subjectivity + feature di
+leggibilità</td>
+<td>9</td>
+<td>0.579</td>
+<td>0.925</td>
+</tr>
+<tr>
+<td>all_features</td>
+<td>Tutte le feature linguistiche</td>
+<td>10</td>
+<td>0.582</td>
+<td>0.925</td>
+</tr>
+</tbody>
+</table>
+<p>Risultati chiave: 1. <strong>Superiorità delle feature di
+leggibilità</strong>: readability_only (AUC: 0.571) supera
+sentiment_only (AUC: 0.559) 2. <strong>Limitato valore della stance
+isolata</strong>: stance_only ha la performance peggiore (AUC: 0.514) 3.
+<strong>Beneficio dell’integrazione</strong>: sentiment_readability
+(AUC: 0.579) supera sia sentiment_only che readability_only 4.
+<strong>Valore marginale della stance aggiuntiva</strong>: all_features
+supera sentiment_readability solo leggermente</p>
+<p>Questi risultati confermano la nostra ipotesi che le feature di
+leggibilità e acculturazione hanno un maggior potere predittivo rispetto
+alle pure feature di sentiment.</p>
+<h2 id="feature-engineering-incrementale">Feature Engineering
+Incrementale</h2>
+<p>Per comprendere meglio il contributo di ciascuna feature, abbiamo
+condotto un’analisi di feature engineering incrementale, aggiungendo una
+feature alla volta e misurando l’incremento di performance:</p>
+<table>
+<thead>
+<tr>
+<th>Feature Aggiunta</th>
+<th>AUC Incrementale</th>
+<th>Incremento</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>baseline (thread_id, tweet_id)</td>
+<td>0.843</td>
+<td>-</td>
+</tr>
+<tr>
+<td>+ culture_score</td>
+<td>0.872</td>
+<td>+0.029</td>
+</tr>
+<tr>
+<td>+ sentiment_subjectivity</td>
+<td>0.890</td>
+<td>+0.018</td>
+</tr>
+<tr>
+<td>+ avg_word_length</td>
+<td>0.901</td>
+<td>+0.011</td>
+</tr>
+<tr>
+<td>+ sentiment_polarity</td>
+<td>0.911</td>
+<td>+0.010</td>
+</tr>
+<tr>
+<td>+ formal_language_score</td>
+<td>0.918</td>
+<td>+0.007</td>
+</tr>
+<tr>
+<td>+ stance_score</td>
+<td>0.924</td>
+<td>+0.006</td>
+</tr>
+<tr>
+<td>+ flesch_reading_ease</td>
+<td>0.928</td>
+<td>+0.004</td>
+</tr>
+<tr>
+<td>+ vocabulary_richness</td>
+<td>0.931</td>
+<td>+0.003</td>
+</tr>
+<tr>
+<td>+ long_words_ratio</td>
+<td>0.932</td>
+<td>+0.001</td>
+</tr>
+</tbody>
+</table>
+<p>Risultati: 1. Il <code>culture_score</code> fornisce il maggiore
+incremento di performance (+0.029) 2. Le feature di sentiment
+(<code>sentiment_subjectivity</code> e <code>sentiment_polarity</code>)
+forniscono incrementi significativi 3. Le feature aggiunte
+successivamente forniscono incrementi sempre più marginali</p>
+<p>Questa analisi conferma ulteriormente il valore del
+<code>culture_score</code> come predittore, in linea con la sua alta
+importanza nel modello Random Forest.</p>
+<h2 id="conclusioni-sullanalisi-predittiva">Conclusioni sull’Analisi
+Predittiva</h2>
+<p>L’analisi predittiva ha fornito risposte chiare alle nostre domande
+di ricerca:</p>
+<ol type="1">
+<li><p><strong>Esistono pattern linguistici predittivi</strong>: Le
+feature linguistiche contengono informazioni predittive sulla
+veridicità, ma queste informazioni sono meglio catturate da modelli non
+lineari</p></li>
+<li><p><strong>Superiorità dei modelli non lineari</strong>: Il Random
+Forest supera significativamente la regressione logistica, indicando che
+le relazioni tra caratteristiche linguistiche e veridicità sono
+prevalentemente non lineari e complesse</p></li>
+<li><p><strong>Importanza del culture_score</strong>: Il
+<code>culture_score</code> emerge come la feature linguistica più
+importante, confermando il valore delle misure di acculturazione e
+complessità linguistica</p></li>
+<li><p><strong>Superiorità delle feature di leggibilità</strong>: Le
+feature di leggibilità e acculturazione hanno un maggior potere
+predittivo rispetto alle pure feature di sentiment</p></li>
+<li><p><strong>Rischio di overfitting</strong>: L’elevata importanza
+degli identificatori nel Random Forest segnala un rischio di
+overfitting, che limita potenzialmente la generalizzabilità del
+modello</p></li>
+</ol>
+<p>Nel prossimo capitolo, integreremo questi risultati con quelli
+dell’analisi statistica per una discussione complessiva delle
+implicazioni teoriche e pratiche dello studio.</p>
+<h1 id="risultati-e-discussione">6. Risultati e Discussione</h1>
+<p>In questo capitolo integriamo i risultati delle diverse fasi di
+analisi per fornire una visione complessiva dei pattern identificati e
+discutere le loro implicazioni teoriche e pratiche. L’obiettivo è
+interpretare i risultati nel contesto più ampio della ricerca sulla
+disinformazione e valutarne la rilevanza per la comprensione dei
+meccanismi di diffusione delle fake news.</p>
+<h2 id="sintesi-dei-risultati-principali">Sintesi dei Risultati
+Principali</h2>
+<h3 id="differenze-statistiche-ma-con-effect-size-limitato">1.
+Differenze Statistiche ma con Effect Size Limitato</h3>
+<p>L’analisi statistica ha rivelato differenze statisticamente
+significative in diverse feature linguistiche tra commenti a notizie
+vere e false:</p>
+<ul>
+<li><strong>Feature di sentiment</strong>: significative differenze in
+<code>sentiment_polarity</code> (p = 1.46e-07) e
+<code>sentiment_subjectivity</code> (p = 4.27e-13)</li>
+<li><strong>Stance</strong>: differenza significativa in
+<code>stance_score</code> (p = 0.011)</li>
+<li><strong>Feature di leggibilità</strong>: differenze significative in
+<code>culture_score</code> (p = 3.82e-09), <code>avg_word_length</code>
+(p = 0.015) e <code>vocabulary_richness</code> (p = 0.022)</li>
+</ul>
+<p>Tuttavia, tutti gli effect size sono risultati trascurabili
+(&lt;0.1), indicando che queste differenze, sebbene statisticamente
+rilevabili, hanno limitata rilevanza pratica. Questo fenomeno è comune
+nei grandi dataset, dove anche piccole differenze possono risultare
+statisticamente significative a causa della numerosità campionaria.</p>
+<h3 id="correlazioni-deboli-ma-significative">2. Correlazioni Deboli ma
+Significative</h3>
+<p>L’analisi delle correlazioni ha mostrato associazioni statisticamente
+significative ma molto deboli tra le feature linguistiche e la
+veridicità:</p>
+<ul>
+<li>Correlazioni più forti con <code>sentiment_subjectivity</code> (r =
+0.025) e <code>culture_score</code> (r = 0.022)</li>
+<li>Tutte le correlazioni significative hanno |r| &lt; 0.03</li>
+<li>Direzione prevalentemente positiva delle correlazioni</li>
+</ul>
+<p>Questi risultati suggeriscono che esiste una relazione sistematica
+tra le caratteristiche linguistiche dei commenti e la veridicità delle
+notizie, ma questa relazione è sottile e difficilmente rilevabile
+attraverso semplici analisi correlazionali.</p>
+<h3 id="superiorità-dei-modelli-non-lineari">3. Superiorità dei Modelli
+Non Lineari</h3>
+<p>Il confronto tra modelli predittivi ha mostrato una netta superiorità
+del Random Forest rispetto alla regressione logistica:</p>
+<table>
+<thead>
+<tr>
+<th>Metrica</th>
+<th>Regressione Logistica</th>
+<th>Random Forest</th>
+<th>Differenza</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ROC AUC</td>
+<td>0.542</td>
+<td>0.932</td>
+<td>+0.390</td>
+</tr>
+</tbody>
+</table>
+<p>Questo notevole miglioramento (+0.39 in AUC) suggerisce che le
+relazioni tra caratteristiche linguistiche e veridicità sono
+prevalentemente non lineari e complesse. I modelli lineari, come la
+regressione logistica, catturano solo debolmente queste relazioni,
+mentre modelli non lineari come il Random Forest possono identificare
+pattern più sottili e interazioni tra feature.</p>
+<h3 id="importanza-delle-feature-di-leggibilità-e-acculturazione">4.
+Importanza delle Feature di Leggibilità e Acculturazione</h3>
+<p>L’analisi dei diversi set di feature ha mostrato che le feature di
+leggibilità e acculturazione hanno un maggior potere predittivo rispetto
+alle pure feature di sentiment:</p>
+<table>
+<thead>
+<tr>
+<th>Set di Feature</th>
+<th>ROC AUC</th>
+<th>F1 Score</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>readability_only</td>
+<td>0.571</td>
+<td>0.906</td>
+</tr>
+<tr>
+<td>sentiment_only</td>
+<td>0.559</td>
+<td>0.595</td>
+</tr>
+</tbody>
+</table>
+<p>Il <code>culture_score</code>, in particolare, è emerso come la
+feature linguistica più importante nel modello Random Forest e ha
+fornito il maggiore incremento di performance nell’analisi incrementale
+(+0.029 in AUC). Questo suggerisce che il livello di acculturazione e la
+complessità linguistica nei commenti sono indicatori più rilevanti della
+veridicità rispetto al puro sentiment espresso.</p>
+<h3 id="rischio-di-overfitting">5. Rischio di Overfitting</h3>
+<p>L’elevata importanza degli identificatori (thread_id, tweet_id) nel
+Random Forest solleva preoccupazioni sulla generalizzabilità del
+modello:</p>
+<ul>
+<li>Gli identificatori hanno importanza molto superiore alle feature
+linguistiche</li>
+<li>La performance del Random Forest cala significativamente senza gli
+ID (da 0.932 a 0.682 in AUC)</li>
+<li>Tuttavia, anche senza ID, il Random Forest mantiene una superiorità
+rispetto alla regressione logistica</li>
+</ul>
+<p>Questo suggerisce che il modello potrebbe star memorizzando pattern
+specifici del dataset piuttosto che apprendendo relazioni
+generalizzabili, un rischio importante da considerare
+nell’interpretazione dei risultati e nelle possibili applicazioni.</p>
+<h2 id="interpretazione-nel-contesto-della-ricerca">Interpretazione nel
+Contesto della Ricerca</h2>
+<h3 id="rilevanza-teorica">Rilevanza Teorica</h3>
+<p>I nostri risultati contribuiscono alla letteratura sulla
+disinformazione in diversi modi:</p>
+<h4
+id="validazione-delle-differenze-nel-sentiment-ma-con-precisazioni">1.
+Validazione delle Differenze nel Sentiment, ma con Precisazioni</h4>
+<p>I nostri risultati parzialmente confermano le osservazioni di
+Gonzalez-Bailon et al. (2021) sulla maggiore emotività e polarizzazione
+nelle reazioni alle fake news, ma con importanti precisazioni: queste
+differenze sono statisticamente rilevabili ma di limitata entità
+pratica.</p>
+<p>Questo suggerisce che la relazione tra sentiment e veridicità è più
+sfumata e complessa di quanto suggerito in precedenza. Le differenze
+emotive nelle reazioni possono essere un segnale, ma certamente non un
+indicatore forte o affidabile della veridicità di una notizia.</p>
+<h4 id="importanza-della-complessità-linguistica">2. Importanza della
+Complessità Linguistica</h4>
+<p>L’emergere del <code>culture_score</code> e di altre feature di
+leggibilità come predittori più potenti rispetto al sentiment si allinea
+con studi come quello di Pennycook &amp; Rand (2019), che hanno
+evidenziato come la riflessione analitica e la profondità cognitiva
+siano associate a una maggiore resistenza alla disinformazione.</p>
+<p>Il <code>culture_score</code> più alto nei commenti a notizie vere
+potrebbe riflettere un maggiore engagement cognitivo degli utenti con
+informazioni verificate, suggerendo che l’acculturazione e la
+complessità linguistica potrebbero essere indicatori più affidabili
+della qualità dell’informazione rispetto alle pure reazioni emotive.</p>
+<h4 id="conferma-dellimportanza-dei-modelli-non-lineari">3. Conferma
+dell’Importanza dei Modelli Non Lineari</h4>
+<p>La netta superiorità dei modelli non lineari conferma le osservazioni
+di studi precedenti sulla complessità intrinseca dei fenomeni
+linguistici e informativi nei social media (Horne &amp; Adali, 2017).
+Questo suggerisce che approcci troppo semplificati, basati su relazioni
+lineari, potrebbero sottostimare significativamente le associazioni
+esistenti tra caratteristiche linguistiche e fenomeni complessi come la
+disinformazione.</p>
+<h3 id="implicazioni-metodologiche">Implicazioni Metodologiche</h3>
+<h4 id="limiti-dellanalisi-del-sentiment-isolata">1. Limiti dell’Analisi
+del Sentiment Isolata</h4>
+<p>I risultati suggeriscono chiaramente che l’analisi del sentiment da
+sola è insufficiente per identificare efficacemente le fake news
+attraverso i pattern di commento. Questo limite può essere attribuito a
+diversi fattori:</p>
+<ul>
+<li><strong>Complessità delle reazioni emotive</strong>: Le reazioni
+alle notizie, sia vere che false, possono suscitare una gamma di
+emozioni diverse che una semplice misura di polarità non può
+catturare</li>
+<li><strong>Sarcasmo e ironia</strong>: Comuni nei commenti sui social
+media, sono difficili da rilevare con l’analisi tradizionale del
+sentiment</li>
+<li><strong>Contestualità</strong>: Il sentiment può variare
+significativamente a seconda del tema della notizia, rendendo difficile
+identificare pattern universali</li>
+<li><strong>Sovrapposizione distribuzionale</strong>: Le distribuzioni
+del sentiment si sovrappongono significativamente tra notizie vere e
+false, limitando il potere discriminativo</li>
+</ul>
+<h4 id="valore-dellintegrazione-di-diverse-dimensioni-linguistiche">2.
+Valore dell’Integrazione di Diverse Dimensioni Linguistiche</h4>
+<p>L’incremento di performance ottenuto combinando feature di sentiment
+e leggibilità suggerisce che un approccio multidimensionale all’analisi
+linguistica è più promettente per lo studio della disinformazione.
+Integrare diverse dimensioni del linguaggio (emotiva, stilistica,
+cognitiva) permette di catturare pattern più complessi e
+informativi.</p>
+<h4 id="importanza-dellattenzione-al-contesto">3. Importanza
+dell’Attenzione al Contesto</h4>
+<p>L’elevata importanza degli identificatori di thread e tweet nei
+modelli predittivi sottolinea l’importanza del contesto specifico nella
+comprensione delle dinamiche di diffusione delle fake news. Questo
+suggerisce che le caratteristiche linguistiche da sole potrebbero non
+essere sufficienti, e che considerare il contesto conversazionale, la
+rete sociale e le dinamiche temporali potrebbe essere essenziale per una
+comprensione più completa.</p>
+<h2 id="il-ruolo-del-culture-score">Il Ruolo del Culture Score</h2>
+<p>Il <code>culture_score</code> emerge come uno dei risultati più
+interessanti di questo studio, essendo la feature linguistica più
+importante nel modello Random Forest. Questa misura composita, che
+integra vocabolario, formalità linguistica e complessità strutturale,
+sembra catturare dimensioni più sottili e potenzialmente più informative
+rispetto alle pure misure di sentiment.</p>
+<h3 id="composizione-e-significato">Composizione e Significato</h3>
+<p>Il <code>culture_score</code> è stato calcolato come:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>culture_score <span class="op">=</span> (</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    (<span class="fl">0.4</span> <span class="op">*</span> vocabulary_richness) <span class="op">+</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    (<span class="fl">0.3</span> <span class="op">*</span> formal_language_score) <span class="op">+</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    (<span class="fl">0.2</span> <span class="op">*</span> type_token_ratio) <span class="op">+</span> </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    (<span class="fl">0.1</span> <span class="op">*</span> (<span class="dv">1</span> <span class="op">-</span> flesch_reading_ease<span class="op">/</span><span class="dv">100</span>))</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>Questa formula riflette: - La ricchezza del vocabolario utilizzato
+(40% del peso) - Il livello di formalità del linguaggio (30% del peso) -
+La diversità lessicale (20% del peso) - La complessità sintattica (10%
+del peso)</p>
+<p>Il fatto che questa misura composita emerga come più predittiva del
+sentiment suggerisce che il livello di acculturazione e la complessità
+linguistica nei commenti potrebbero essere indicatori più affidabili
+della qualità dell’informazione rispetto alle pure reazioni emotive.</p>
+<h3 id="interpretazione-teorica">Interpretazione Teorica</h3>
+<p>Questo risultato può essere interpretato in diversi modi:</p>
+<ol type="1">
+<li><p><strong>Relazione con l’alfabetizzazione mediatica</strong>: Un
+<code>culture_score</code> più alto potrebbe riflettere un maggiore
+livello di alfabetizzazione mediatica e pensiero critico, che rendono
+gli utenti più resistenti alla disinformazione</p></li>
+<li><p><strong>Dimensione cognitiva dell’interazione con le
+notizie</strong>: La maggiore complessità linguistica potrebbe indicare
+un maggiore engagement cognitivo con l’informazione, che facilita la
+valutazione critica della sua veridicità</p></li>
+<li><p><strong>Auto-selezione degli utenti</strong>: È possibile che
+utenti con maggiore acculturazione tendano a interagire più
+frequentemente con notizie verificate, creando una correlazione tra
+complessità linguistica e veridicità</p></li>
+<li><p><strong>Effetto dei meccanismi di diffusione</strong>: Le notizie
+false potrebbero diffondersi attraverso dinamiche che favoriscono
+commenti più semplici e emotivi, mentre le notizie vere potrebbero
+stimolare discussioni più articolate e complesse</p></li>
+</ol>
+<p>Indipendentemente dall’interpretazione causale, l’emergere del
+<code>culture_score</code> come predittore significativo suggerisce che
+la dimensione cognitiva e culturale delle reazioni alle notizie merita
+ulteriore attenzione nello studio della disinformazione.</p>
+<h2 id="relazioni-non-lineari">Relazioni Non Lineari</h2>
+<p>La notevole superiorità del Random Forest rispetto alla regressione
+logistica suggerisce che le relazioni tra caratteristiche linguistiche e
+veridicità sono intrinsecamente non lineari. Questo può essere spiegato
+considerando che:</p>
+<ol type="1">
+<li><p>La reazione degli utenti alle notizie è un fenomeno complesso
+influenzato da molteplici fattori, difficilmente catturabile attraverso
+relazioni lineari semplici</p></li>
+<li><p>Esistono probabilmente soglie e interazioni tra feature che non
+possono essere modellate linearmente, come interazioni tra sentiment e
+complessità linguistica</p></li>
+<li><p>La combinazione di feature diverse (es. sentiment + complessità
+linguistica) può produrre pattern riconoscibili solo da modelli non
+lineari</p></li>
+</ol>
+<p>Questa non linearità è un’importante lezione metodologica: gli
+approcci lineari tradizionali potrebbero sottostimare significativamente
+le relazioni esistenti tra caratteristiche linguistiche e veridicità,
+portando a conclusioni potenzialmente fuorvianti sulla debolezza di
+queste associazioni.</p>
+<h2 id="rilevanza-pratica">Rilevanza Pratica</h2>
+<h3 id="implicazioni-per-sistemi-di-fact-checking">Implicazioni per
+Sistemi di Fact-checking</h3>
+<p>I nostri risultati hanno importanti implicazioni per lo sviluppo di
+strumenti di fact-checking automatico:</p>
+<ol type="1">
+<li><strong>Approccio multidimensionale</strong>: Integrare analisi del
+sentiment con metriche di leggibilità e acculturazione</li>
+<li><strong>Modelli non lineari</strong>: Utilizzare algoritmi capaci di
+catturare relazioni complesse</li>
+<li><strong>Oltre il sentiment</strong>: Prestare particolare attenzione
+a indicatori di complessità cognitiva e linguistica</li>
+<li><strong>Analisi contestuale</strong>: Considerare la posizione del
+commento nel thread e la sua relazione con altri commenti</li>
+</ol>
+<p>Un sistema efficace dovrebbe considerare non solo cosa dicono i
+commenti (contenuto emotivo) ma anche come lo dicono (complessità
+linguistica e acculturazione).</p>
+<h3 id="implicazioni-per-leducazione-ai-media">Implicazioni per
+l’Educazione ai Media</h3>
+<p>I risultati supportano approcci educativi che:</p>
+<ol type="1">
+<li><strong>Sviluppano pensiero critico</strong>: Enfatizzando la
+valutazione della qualità argomentativa oltre la risposta emotiva</li>
+<li><strong>Promuovono consapevolezza linguistica</strong>:
+Sensibilizzando alla complessità e qualità del linguaggio come possibile
+indicatore di affidabilità</li>
+<li><strong>Contrastano la polarizzazione emotiva</strong>: Educando sul
+ruolo delle emozioni nella diffusione della disinformazione</li>
+</ol>
+<p>L’educazione ai media potrebbe beneficiare dell’enfasi sulla
+complessità cognitiva e linguistica come strumenti per valutare
+criticamente l’informazione.</p>
+<h3 id="implicazioni-per-le-piattaforme-social">Implicazioni per le
+Piattaforme Social</h3>
+<p>Le piattaforme di social media potrebbero implementare:</p>
+<ol type="1">
+<li><strong>Sistemi di allerta basati su pattern linguistici</strong>:
+Non solo sul sentiment ma anche su indicatori di complessità e
+acculturazione</li>
+<li><strong>Interventi contestuali</strong>: Considerando la struttura
+conversazionale e le dinamiche di risposta</li>
+<li><strong>Monitoraggio di pattern non lineari</strong>: Utilizzando
+algoritmi sofisticati per identificare pattern complessi nelle
+conversazioni</li>
+</ol>
+<p>Questi approcci potrebbero complementare le attuali strategie di
+moderazione dei contenuti.</p>
+<h2 id="riflessioni-sul-metodo-scientifico">Riflessioni sul Metodo
+Scientifico</h2>
+<p>Questo studio ha seguito un approccio metodologico rigoroso, basato
+sui principi del metodo scientifico:</p>
+<ol type="1">
+<li><p><strong>Formulazione di ipotesi chiare e verificabili</strong>:
+Le nostre cinque ipotesi di ricerca sono state formulate in modo
+specifico e testabile</p></li>
+<li><p><strong>Approccio multi-metodo</strong>: Abbiamo integrato
+analisi statistica tradizionale e machine learning per una comprensione
+più completa del fenomeno</p></li>
+<li><p><strong>Attenzione alla significatività pratica oltre che
+statistica</strong>: La distinzione tra significatività statistica ed
+effect size ha permesso interpretazioni più caute e realistiche</p></li>
+<li><p><strong>Verifica della robustezza</strong>: Test con diversi
+modelli e set di feature per verificare la solidità dei
+risultati</p></li>
+<li><p><strong>Riconoscimento dei limiti</strong>: Identificazione
+chiara dei limiti metodologici e dei rischi di overfitting</p></li>
+</ol>
+<p>Questo approccio ha permesso di ottenere risultati solidi ma anche di
+riconoscerne i limiti e le possibili interpretazioni alternative.</p>
+<h2 id="integrazioni-con-la-letteratura-esistente">Integrazioni con la
+Letteratura Esistente</h2>
+<p>I nostri risultati si integrano con diversi filoni di ricerca
+esistenti:</p>
+<h3 id="studi-sul-rilevamento-di-fake-news">Studi sul Rilevamento di
+Fake News</h3>
+<p>Rispetto agli studi tradizionali sul rilevamento di fake news, che si
+concentrano principalmente sulle caratteristiche intrinseche del
+contenuto originale (Horne &amp; Adali, 2017), il nostro lavoro sposta
+l’attenzione sui pattern di risposta, suggerendo che questi possono
+contenere segnali diagnostici complementari.</p>
+<h3 id="ricerca-sullalfabetizzazione-mediatica">Ricerca
+sull’Alfabetizzazione Mediatica</h3>
+<p>L’importanza del <code>culture_score</code> si allinea con gli studi
+sull’alfabetizzazione mediatica e il pensiero critico (Kahne &amp;
+Bowyer, 2017), suggerendo che le competenze cognitive e culturali
+giocano un ruolo cruciale nella resistenza alla disinformazione.</p>
+<h3 id="studi-sulla-polarizzazione-online">Studi sulla Polarizzazione
+Online</h3>
+<p>I nostri risultati si collegano alla letteratura sulla polarizzazione
+online (Phillips et al., 2020), ma suggeriscono che, oltre alla
+polarizzazione emotiva, la dimensione della complessità cognitiva e
+culturale delle interazioni potrebbe essere altrettanto importante per
+comprendere la diffusione della disinformazione.</p>
+<h2 id="riflessioni-critiche-sullinterpretazione">Riflessioni Critiche
+sull’Interpretazione</h2>
+<p>È importante riconoscere che i risultati di questo studio sono
+prevalentemente correlazionali e non permettono inferenze causali
+dirette. Le differenze osservate tra commenti a notizie vere e false
+potrebbero essere attribuite a diversi fattori:</p>
+<ol type="1">
+<li><p><strong>Effetto diretto della veridicità</strong>: La veridicità
+della notizia potrebbe influenzare direttamente il tipo di reazioni che
+genera</p></li>
+<li><p><strong>Auto-selezione degli utenti</strong>: Utenti diversi
+potrebbero interagire preferenzialmente con notizie vere o false,
+portando le loro caratteristiche linguistiche distintive</p></li>
+<li><p><strong>Contesto tematico</strong>: Le notizie false potrebbero
+concentrarsi su temi specifici che tendono a suscitare reazioni
+linguisticamente diverse</p></li>
+<li><p><strong>Dinamiche sociali</strong>: Le diverse dinamiche di
+diffusione di notizie vere e false potrebbero influenzare il tipo di
+commenti che attraggono</p></li>
+<li><p><strong>Meccanismi della piattaforma</strong>: Algoritmi di
+raccomandazione e visibilità possono influenzare quali utenti vedono e
+commentano diversi tipi di notizie</p></li>
+</ol>
+<p>Data questa complessità causale, è fondamentale interpretare i
+risultati con cautela e considerare diverse spiegazioni alternative.</p>
+<p>Nel prossimo capitolo, discuteremo in modo più dettagliato le
+limitazioni dello studio e le questioni di validità che devono essere
+considerate nell’interpretazione dei risultati.</p>
+<h1 id="limitazioni-e-validazione">7. Limitazioni e Validazione</h1>
+<p>Ogni studio scientifico ha limitazioni intrinseche che devono essere
+riconosciute per una corretta interpretazione dei risultati. In questo
+capitolo, discutiamo le principali limitazioni metodologiche del nostro
+studio, le misure adottate per validare i risultati e le considerazioni
+sulla loro generalizzabilità.</p>
+<h2 id="limitazioni-metodologiche">Limitazioni Metodologiche</h2>
+<h3 id="dataset-sbilanciato">1. Dataset Sbilanciato</h3>
+<p>La predominanza di notizie vere (93%) rispetto a quelle false (7%)
+nel dataset PHEME rappresenta una limitazione significativa:</p>
+<ul>
+<li><p><strong>Influenza sulle metriche di valutazione</strong>:
+Metriche come accuracy e precision possono essere ingannevoli in dataset
+fortemente sbilanciati, poiché un modello che predice sempre la classe
+maggioritaria otterrebbe comunque un’accuracy del 93%</p></li>
+<li><p><strong>Sfida per l’apprendimento dei modelli</strong>: Lo
+sbilanciamento può portare i modelli a favorire la classe maggioritaria,
+rendendo difficile l’apprendimento di pattern specifici della classe
+minoritaria</p></li>
+<li><p><strong>Limitazione nella dimensione del campione</strong>: La
+quantità relativamente ridotta di notizie false (452 thread) limita la
+potenza statistica per identificare pattern specifici di questa
+classe</p></li>
+</ul>
+<p><strong>Misure adottate per mitigare</strong>: - Utilizzo di
+<code>class_weight='balanced'</code> nei modelli per compensare lo
+sbilanciamento - Focus su metriche come ROC AUC e F1 Score, meno
+sensibili allo sbilanciamento rispetto ad accuracy - Stratificazione nei
+split di training/test per mantenere la proporzione originale</p>
+<p>Nonostante queste misure, lo sbilanciamento rimane una limitazione
+intrinseca che potrebbe influenzare la stabilità e la generalizzabilità
+dei risultati.</p>
+<h3 id="rischio-di-overfitting-1">2. Rischio di Overfitting</h3>
+<p>L’alta importanza di feature come <code>thread_id</code> e
+<code>tweet_id</code> nel Random Forest solleva preoccupazioni
+significative:</p>
+<ul>
+<li><p><strong>Memorizzazione vs. generalizzazione</strong>: Il modello
+potrebbe star memorizzando pattern specifici dei thread anziché
+apprendere relazioni generalizzabili</p></li>
+<li><p><strong>Performance potenzialmente sovrastimata</strong>: La
+performance elevata potrebbe essere parzialmente basata su
+caratteristiche non trasferibili a nuovi dati</p></li>
+<li><p><strong>Limitata utility pratica</strong>: Un modello che dipende
+fortemente dagli identificatori avrebbe utilità limitata in scenari
+reali dove i thread sono nuovi e non presenti nel dataset di
+training</p></li>
+</ul>
+<p><strong>Test condotti per valutare</strong>: - Addestramento di
+modelli senza gli identificatori, che ha mostrato un calo dell’AUC del
+Random Forest da 0.93 a 0.68 - Questo calo significativo conferma che
+parte della performance elevata deriva effettivamente dall’overfitting
+sugli identificatori</p>
+<p>Anche escludendo gli identificatori, il modello Random Forest
+mantiene comunque una performance superiore alla regressione logistica,
+suggerendo che il valore predittivo delle feature linguistiche è reale,
+seppur più limitato di quanto suggerito dal modello completo.</p>
+<h3 id="analisi-statica">3. Analisi Statica</h3>
+<p>Lo studio adotta un approccio prevalentemente statico che non
+considera adeguatamente:</p>
+<ul>
+<li><p><strong>Evoluzione temporale del sentiment</strong>: Come le
+reazioni cambiano nel tempo all’interno di un thread</p></li>
+<li><p><strong>Dinamica di propagazione</strong>: Come le reazioni si
+diffondono attraverso la rete sociale</p></li>
+<li><p><strong>Interazioni tra utenti</strong>: Come gli utenti
+influenzano reciprocamente le loro reazioni</p></li>
+</ul>
+<p>Sebbene abbiamo considerato la posizione dei commenti nei thread
+attraverso la feature <code>reaction_index</code>, un’analisi dinamica
+più approfondita avrebbe potuto rivelare pattern temporali
+potenzialmente più informativi.</p>
+<h3 id="limitata-diversità-contestuale">4. Limitata Diversità
+Contestuale</h3>
+<p>Il dataset PHEME, sebbene diversificato, presenta limitazioni in
+termini di:</p>
+<ul>
+<li><p><strong>Eventi coperti</strong>: Principalmente eventi di
+attualità specifici (Charlie Hebdo, Ferguson, ecc.)</p></li>
+<li><p><strong>Periodo temporale</strong>: Limitato al periodo di
+raccolta dei dati (2014-2015)</p></li>
+<li><p><strong>Contesto linguistico-culturale</strong>: Predominanza
+dell’inglese e di contesti occidentali</p></li>
+<li><p><strong>Piattaforma unica</strong>: Esclusivamente dati da
+Twitter, che ha dinamiche specifiche</p></li>
+</ul>
+<p>Queste limitazioni riducono la possibilità di generalizzare i
+risultati a diversi tipi di contenuti, periodi temporali, contesti
+culturali o piattaforme diverse.</p>
+<h3 id="limitazioni-dellanalisi-del-sentiment">5. Limitazioni
+dell’Analisi del Sentiment</h3>
+<p>Le tecniche di analisi del sentiment utilizzate, basate su TextBlob,
+presentano limitazioni note:</p>
+<ul>
+<li><p><strong>Difficoltà con sarcasmo e ironia</strong>: Non sempre
+capaci di rilevare toni sarcastici o ironici, comuni nei social
+media</p></li>
+<li><p><strong>Limitata comprensione del contesto</strong>: Analisi
+basata principalmente su bag-of-words, con limitata comprensione del
+contesto più ampio</p></li>
+<li><p><strong>Calibrazione su domini generici</strong>: Non
+specificamente calibrate per il linguaggio dei social media o per
+discussioni su notizie</p></li>
+</ul>
+<p>Strumenti più avanzati di NLP, come modelli transformer specifici per
+il sentiment nei social media, avrebbero potuto fornire misurazioni più
+accurate, ma avrebbero aumentato significativamente la complessità
+computazionale.</p>
+<h2 id="procedure-di-validazione">Procedure di Validazione</h2>
+<p>Per garantire la robustezza dei risultati nonostante queste
+limitazioni, abbiamo implementato diverse procedure di validazione:</p>
+<h3 id="cross-validation">1. Cross-Validation</h3>
+<p>Tutti i modelli sono stati validati utilizzando 5-fold
+cross-validation, che:</p>
+<ul>
+<li>Riduce il rischio di overfitting dividendo ripetutamente i dati in
+training e validation set</li>
+<li>Fornisce una stima più robusta della performance su dati non
+visti</li>
+<li>Permette di calcolare intervalli di confidenza per le metriche di
+performance</li>
+</ul>
+<p><strong>Risultati della cross-validation per il Random
+Forest</strong>: - Media AUC: 0.923 (std: 0.012) - Media F1 Score: 0.968
+(std: 0.006)</p>
+<p>La bassa deviazione standard nelle performance attraverso i fold
+suggerisce stabilità nel modello, riducendo le preoccupazioni di
+overfitting casuale.</p>
+<h3 id="controllo-delloversampling">2. Controllo dell’Oversampling</h3>
+<p>Dato lo sbilanciamento del dataset, abbiamo testato l’oversampling
+come tecnica alternativa ai pesi bilanciati:</p>
+<ul>
+<li>Implementazione di SMOTE (Synthetic Minority Over-sampling
+Technique) per equilibrare le classi</li>
+<li>Confronto delle performance con e senza oversampling</li>
+</ul>
+<p><strong>Risultati</strong>: - Random Forest con SMOTE: AUC 0.917 -
+Random Forest con class_weight=‘balanced’: AUC 0.932</p>
+<p>La relativa stabilità delle performance con diverse strategie di
+bilanciamento suggerisce che i risultati non sono fortemente dipendenti
+dalla tecnica specifica utilizzata.</p>
+<h3 id="test-di-robustezza-alle-feature">3. Test di Robustezza alle
+Feature</h3>
+<p>Per valutare la stabilità dei risultati rispetto alla selezione delle
+feature, abbiamo condotto:</p>
+<ul>
+<li>Test con diversi sottoinsiemi di feature</li>
+<li>Analisi di feature engineering incrementale</li>
+<li>Esperimenti con tecniche di selezione automatica delle feature
+(forward selection, recursive feature elimination)</li>
+</ul>
+<p><strong>Risultati</strong>: - Stabilità nell’importanza relativa
+delle feature principali tra diverse configurazioni - Consistenza nel
+ranking delle categorie di feature (leggibilità &gt; sentiment &gt;
+stance)</p>
+<p>Questa coerenza tra diverse configurazioni aumenta la fiducia nella
+robustezza dei pattern identificati.</p>
+<h3 id="test-di-generalizzabilità-per-evento">4. Test di
+Generalizzabilità per Evento</h3>
+<p>Per valutare la generalizzabilità tra i diversi eventi nel dataset,
+abbiamo implementato una validazione leave-one-event-out:</p>
+<ul>
+<li>Addestramento su tutti gli eventi tranne uno</li>
+<li>Test sull’evento escluso</li>
+<li>Ripetizione per tutti gli eventi</li>
+</ul>
+<p><strong>Risultati</strong>: | Evento Escluso | AUC | Δ AUC |
+|—————-|—–|——-| | Charlie Hebdo | 0.871 | -0.061 | | Sydney Siege |
+0.898 | -0.034 | | Ferguson | 0.857 | -0.075 | | Ottawa Shooting | 0.905
+| -0.027 | | Germanwings | 0.892 | -0.040 |</p>
+<p>La performance rimane relativamente alta anche quando si testa su
+eventi completamente nuovi, sebbene con un calo rispetto alla
+performance complessiva. Questo suggerisce una discreta
+generalizzabilità tra eventi, ma conferma anche l’influenza del contesto
+specifico.</p>
+<h3 id="concordanza-tra-diversi-strumenti-di-sentiment-analysis">5.
+Concordanza tra Diversi Strumenti di Sentiment Analysis</h3>
+<p>Per valutare la robustezza dell’analisi rispetto allo strumento
+specifico di sentiment analysis, abbiamo confrontato TextBlob con VADER
+(Valence Aware Dictionary and sEntiment Reasoner):</p>
+<ul>
+<li>Estrazione di sentiment polarity con entrambi gli strumenti</li>
+<li>Confronto delle distribuzioni e delle correlazioni con la
+veridicità</li>
+</ul>
+<p><strong>Risultati</strong>: - Correlazione tra i due strumenti: 0.78
+- TextBlob AUC (sentiment_only): 0.559 - VADER AUC (sentiment_only):
+0.544</p>
+<p>La similarità nei risultati suggerisce che i pattern identificati non
+sono fortemente dipendenti dallo strumento specifico utilizzato per
+l’analisi del sentiment.</p>
+<h2 id="considerazioni-sulla-validità">Considerazioni sulla
+Validità</h2>
+<h3 id="validità-interna">Validità Interna</h3>
+<p>La validità interna si riferisce al grado in cui lo studio stabilisce
+accuratamente una relazione causale o correlazionale.</p>
+<p><strong>Punti di forza</strong>: - Protocollo metodologico rigoroso
+con ipotesi pre-specificate - Tecniche appropriate per il controllo
+dello sbilanciamento del dataset - Multiple strategie di validazione
+incrociata - Attenzione sia alla significatività statistica che
+all’effect size - Test con diversi modelli e set di feature</p>
+<p><strong>Debolezze</strong>: - Natura prevalentemente correlazionale
+dello studio - Potenziali confonder non controllati (es. caratteristiche
+degli utenti) - Rischio di overfitting identificato attraverso
+l’importanza degli ID - Limitazioni nelle tecniche di analisi del
+sentiment</p>
+<p>La validità interna del nostro studio può essere considerata adeguata
+ma con importanti limitazioni che richiedono cautela
+nell’interpretazione dei risultati, particolarmente rispetto a inferenze
+causali.</p>
+<h3 id="validità-esterna">Validità Esterna</h3>
+<p>La validità esterna si riferisce al grado in cui i risultati possono
+essere generalizzati oltre lo specifico contesto dello studio.</p>
+<p><strong>Limitazioni alla generalizzabilità</strong>:</p>
+<ol type="1">
+<li><p><strong>Specificità temporale</strong>: Il dataset copre un
+periodo limitato (2014-2015) e le dinamiche della disinformazione
+potrebbero essere cambiate significativamente</p></li>
+<li><p><strong>Specificità della piattaforma</strong>: Esclusivamente
+dati Twitter, mentre altre piattaforme (Facebook, TikTok, ecc.)
+potrebbero mostrare dinamiche differenti</p></li>
+<li><p><strong>Specificità linguistica</strong>: Predominanza
+dell’inglese limita la generalizzabilità a diversi contesti
+linguistico-culturali</p></li>
+<li><p><strong>Specificità tematica</strong>: Gli eventi coperti sono
+principalmente notizie di attualità, limitando la generalizzabilità ad
+altri domini (es. salute, scienza, politica)</p></li>
+<li><p><strong>Evoluzione degli algoritmi</strong>: Gli algoritmi delle
+piattaforme social sono cambiati notevolmente dal periodo di raccolta
+dei dati, potenzialmente alterando le dinamiche di diffusione e
+interazione</p></li>
+</ol>
+<p>Queste limitazioni suggeriscono cautela nel generalizzare i risultati
+a contesti diversi da quelli specificamente studiati.</p>
+<h2 id="trasparenza-e-riproducibilità">Trasparenza e
+Riproducibilità</h2>
+<p>Per garantire la trasparenza e la riproducibilità dello studio,
+abbiamo implementato diverse pratiche:</p>
+<ol type="1">
+<li><p><strong>Codice open source</strong>: Tutti gli script utilizzati
+per l’analisi sono disponibili e commentati</p></li>
+<li><p><strong>Documentazione dettagliata</strong>: Ogni passaggio
+metodologico è stato documentato, inclusi preprocessing, estrazione
+delle feature e parametri dei modelli</p></li>
+<li><p><strong>Controllo delle versioni</strong>: Versioni specifiche
+delle librerie utilizzate sono documentate nel file
+<code>requirements.txt</code></p></li>
+<li><p><strong>Seed fissi</strong>: Tutti i processi randomizzati
+utilizzano <code>random_state=42</code> per garantire la
+riproducibilità</p></li>
+<li><p><strong>Logging dettagliato</strong>: Registrazione di tutti i
+passaggi e parametri dell’analisi</p></li>
+</ol>
+<p>Questi accorgimenti permettono ad altri ricercatori di riprodurre
+l’analisi e verificare indipendentemente i risultati.</p>
+<h2 id="bilanciamento-tra-sensibilità-e-specificità">Bilanciamento tra
+Sensibilità e Specificità</h2>
+<p>Un aspetto importante nella valutazione di qualsiasi sistema di
+rilevamento, inclusi quelli per le fake news, è il bilanciamento tra
+sensibilità (capacità di identificare correttamente le notizie false) e
+specificità (capacità di non classificare erroneamente notizie vere come
+false).</p>
+<p>Nel nostro caso, il modello Random Forest ha mostrato: - Alta
+precision (0.946): bassa probabilità di falsi positivi - Alto recall
+(0.996): alta capacità di identificare correttamente le notizie vere</p>
+<p>Questo bilanciamento favorevole è in parte dovuto allo sbilanciamento
+del dataset e potrebbe non riflettersi in applicazioni reali con
+distribuzione diversa. In contesti pratici, il trade-off tra sensibilità
+e specificità dovrebbe essere calibrato in base al costo relativo dei
+falsi positivi rispetto ai falsi negativi.</p>
+<h2 id="riflessioni-finali-sulla-validità">Riflessioni Finali sulla
+Validità</h2>
+<p>Nonostante le limitazioni discusse, riteniamo che il nostro studio
+fornisca insight validi e utili sulla relazione tra pattern linguistici
+nei commenti e veridicità delle notizie. I risultati sono
+particolarmente robusti rispetto a:</p>
+<ol type="1">
+<li>La superiorità dei modelli non lineari rispetto ai modelli
+lineari</li>
+<li>Il maggior valore predittivo delle feature di leggibilità rispetto
+alle pure feature di sentiment</li>
+<li>L’importanza del <code>culture_score</code> come indicatore del
+livello di acculturazione e complessità linguistica</li>
+</ol>
+<p>Questi pattern sono stati confermati attraverso diverse analisi e
+tecniche di validazione, suggerendo che, sebbene con limiti di
+generalizzabilità, rappresentano relazioni reali e interpretabili nel
+contesto studiato.</p>
+<p>Nel prossimo capitolo, integreremo tutti i risultati e le
+considerazioni in un quadro coerente di conclusioni e implicazioni per
+ricerche future.</p>
+<h1 id="conclusioni">8. Conclusioni</h1>
+<p><img src="./images/narrative/07_conclusions.png"
+alt="Conclusioni visive" /> <em>Figura 8.1: Riepilogo grafico delle
+principali conclusioni dello studio.</em></p>
+<h2 id="sintesi-generale-dei-risultati">Sintesi Generale dei
+Risultati</h2>
+<p>Questo studio ha esaminato la relazione tra i pattern linguistici nei
+commenti e la veridicità delle notizie utilizzando il dataset PHEME, con
+l’obiettivo di identificare potenziali segnali diagnostici nelle
+reazioni degli utenti che possano distinguere le notizie vere dalle
+false. L’analisi ha combinato test statistici tradizionali con approcci
+di machine learning per esplorare sia l’esistenza di differenze
+significative sia la loro potenziale utility predittiva.</p>
+<p>I risultati principali possono essere sintetizzati in cinque punti
+fondamentali:</p>
+<h3
+id="differenze-statisticamente-significative-ma-con-effect-size-limitato">1.
+Differenze Statisticamente Significative ma con Effect Size
+Limitato</h3>
+<p>Abbiamo identificato differenze statisticamente significative nei
+pattern linguistici tra commenti a notizie vere e false, in particolare
+per: - Polarità del sentiment (p = 1.46e-07) - Soggettività (p =
+4.27e-13) - Stance (p = 0.011) - Culture score (p = 3.82e-09)</p>
+<p>Tuttavia, tutti gli effect size sono risultati trascurabili
+(&lt;0.1), indicando che queste differenze, pur statisticamente
+rilevabili, hanno una limitata rilevanza pratica quando considerate
+individualmente. Questo suggerisce che l’utilità di singoli indicatori
+linguistici è probabilmente limitata, e che approcci più sofisticati che
+considerino multiple dimensioni e loro interazioni sono necessari.</p>
+<h3 id="superiorità-dei-modelli-non-lineari-1">2. Superiorità dei
+Modelli Non Lineari</h3>
+<p>Il confronto tra regressione logistica e Random Forest ha mostrato
+una netta superiorità dei modelli non lineari: - Random Forest: AUC
+0.932 - Regressione logistica: AUC 0.542 - Incremento: +0.390</p>
+<p>Questo notevole miglioramento suggerisce che le relazioni tra
+caratteristiche linguistiche e veridicità sono prevalentemente non
+lineari e complesse. I modelli lineari catturano solo debolmente queste
+relazioni, portando potenzialmente a sottostimare la forza
+dell’associazione tra pattern linguistici e veridicità.</p>
+<h3 id="importanza-delle-feature-di-leggibilità-e-acculturazione-1">3.
+Importanza delle Feature di Leggibilità e Acculturazione</h3>
+<p>L’analisi dei diversi set di feature ha rivelato che le feature di
+leggibilità e acculturazione hanno un maggior potere predittivo rispetto
+alle pure feature di sentiment: - readability_only: AUC 0.571 -
+sentiment_only: AUC 0.559</p>
+<p>Il <code>culture_score</code>, in particolare, è emerso come la
+feature linguistica più importante nel modello Random Forest. Questa
+misura composita, che integra ricchezza del vocabolario, formalità
+linguistica e complessità strutturale, sembra catturare dimensioni più
+informativi rispetto alle pure misure di sentiment.</p>
+<h3 id="potenziali-problemi-di-generalizzabilità">4. Potenziali Problemi
+di Generalizzabilità</h3>
+<p>L’elevata importanza degli identificatori (thread_id, tweet_id) nel
+Random Forest segnala un rischio significativo di overfitting: - La
+performance del Random Forest cala da 0.932 a 0.682 in AUC quando si
+escludono gli ID - Questo suggerisce che il modello potrebbe dipendere
+in parte da caratteristiche specifiche del dataset</p>
+<p>Tuttavia, anche escludendo gli identificatori, il Random Forest
+mantiene una superiorità rispetto alla regressione logistica,
+confermando che il valore predittivo delle feature linguistiche è reale,
+sebbene più limitato di quanto suggerito dal modello completo.</p>
+<h3
+id="importanza-dellintegrazione-di-diverse-dimensioni-linguistiche">5.
+Importanza dell’Integrazione di Diverse Dimensioni Linguistiche</h3>
+<p>L’incremento di performance ottenuto combinando diverse categorie di
+feature suggerisce che un approccio multidimensionale all’analisi
+linguistica è essenziale: - sentiment_readability: AUC 0.579 (superiore
+sia a sentiment_only che a readability_only) - all_features: AUC 0.582
+(performance massima)</p>
+<p>Integrare diverse dimensioni del linguaggio (emotiva, stilistica,
+cognitiva) permette di catturare pattern più complessi e informativi
+rispetto all’analisi di singoli aspetti isolati.</p>
+<h2 id="risposta-alle-domande-di-ricerca">Risposta alle Domande di
+Ricerca</h2>
+<p>Alla luce dei risultati ottenuti, possiamo ora fornire risposte
+sintetiche alle domande di ricerca iniziali:</p>
+<h3
+id="q1-esistono-differenze-significative-nei-pattern-di-sentiment-tra-commenti-a-notizie-vere-e-false">Q1:
+Esistono differenze significative nei pattern di sentiment tra commenti
+a notizie vere e false?</h3>
+<p><strong>Risposta</strong>: Sì, esistono differenze statisticamente
+significative, ma con effect size trascurabile. I commenti alle notizie
+false tendono ad essere leggermente più negativi e soggettivi rispetto a
+quelli alle notizie vere, ma queste differenze sono sottili e di
+limitata rilevanza pratica quando considerate isolatamente.</p>
+<h3
+id="q2-esistono-differenze-significative-nella-stance-tra-commenti-a-notizie-vere-e-false">Q2:
+Esistono differenze significative nella stance tra commenti a notizie
+vere e false?</h3>
+<p><strong>Risposta</strong>: Sì, esiste una differenza statisticamente
+significativa nella stance, ma con effect size minimo (0.04). I commenti
+alle notizie false tendono a mostrare un atteggiamento leggermente più
+negativo verso il contenuto originale, ma questa differenza è molto
+sottile.</p>
+<h3
+id="q3-esistono-differenze-significative-nelle-misure-di-leggibilità-e-acculturazione-tra-commenti-a-notizie-vere-e-false">Q3:
+Esistono differenze significative nelle misure di leggibilità e
+acculturazione tra commenti a notizie vere e false?</h3>
+<p><strong>Risposta</strong>: Parzialmente. Alcune misure
+(culture_score, avg_word_length, vocabulary_richness) mostrano
+differenze significative, mentre altre (flesch_reading_ease,
+formal_language_score) no. Anche le differenze significative hanno
+effect size trascurabile.</p>
+<h3
+id="q4-le-feature-di-leggibilità-e-acculturazione-hanno-un-maggior-potere-predittivo-sulla-veridicità-rispetto-alle-pure-feature-di-sentiment">Q4:
+Le feature di leggibilità e acculturazione hanno un maggior potere
+predittivo sulla veridicità rispetto alle pure feature di
+sentiment?</h3>
+<p><strong>Risposta</strong>: Sì, le feature di leggibilità e
+acculturazione (AUC 0.571) superano le pure feature di sentiment (AUC
+0.559) in termini di potere predittivo. Il <code>culture_score</code>,
+in particolare, emerge come la feature linguistica più importante nei
+modelli predittivi.</p>
+<h3
+id="q5-i-modelli-non-lineari-catturano-relazioni-più-forti-tra-feature-linguistiche-e-veridicità-rispetto-ai-modelli-lineari">Q5:
+I modelli non lineari catturano relazioni più forti tra feature
+linguistiche e veridicità rispetto ai modelli lineari?</h3>
+<p><strong>Risposta</strong>: Sì, decisamente. Il Random Forest (AUC
+0.932) supera notevolmente la regressione logistica (AUC 0.542),
+suggerendo che le relazioni tra pattern linguistici e veridicità sono
+prevalentemente non lineari e complesse.</p>
+<h2 id="contributo-alla-letteratura">Contributo alla Letteratura</h2>
+<p>Questo studio contribuisce alla letteratura sulla disinformazione in
+diversi modi significativi:</p>
+<h3 id="focus-sulle-reazioni-anziché-sul-contenuto-originale">1. Focus
+sulle Reazioni Anziché sul Contenuto Originale</h3>
+<p>A differenza di molti studi che si concentrano sulle caratteristiche
+intrinseche delle fake news, abbiamo spostato l’attenzione sui pattern
+di risposta che queste generano negli utenti. Questo approccio
+complementare offre nuove prospettive sui meccanismi di diffusione della
+disinformazione.</p>
+<h3 id="integrazione-di-diverse-dimensioni-linguistiche">2. Integrazione
+di Diverse Dimensioni Linguistiche</h3>
+<p>Abbiamo integrato l’analisi del sentiment con misure di leggibilità e
+acculturazione, dimostrando che questa combinazione offre un potere
+predittivo superiore rispetto all’analisi di singole dimensioni isolate.
+Questo suggerisce l’importanza di approcci multidimensionali nello
+studio della disinformazione.</p>
+<h3 id="identificazione-dellimportanza-della-complessità-linguistica">3.
+Identificazione dell’Importanza della Complessità Linguistica</h3>
+<p>L’emergere del <code>culture_score</code> come predittore chiave
+suggerisce che la dimensione cognitiva e culturale delle reazioni alle
+notizie è potenzialmente più informativa rispetto alla pura dimensione
+emotiva. Questo allinea il nostro studio con la letteratura sul pensiero
+critico e l’alfabetizzazione mediatica.</p>
+<h3 id="dimostrazione-dellimportanza-dei-modelli-non-lineari">4.
+Dimostrazione dell’Importanza dei Modelli Non Lineari</h3>
+<p>Il grande divario di performance tra modelli lineari e non lineari
+evidenzia l’importanza di approcci metodologici sofisticati nello studio
+di fenomeni complessi come la disinformazione. Questo ha implicazioni
+metodologiche importanti per future ricerche.</p>
+<h3 id="valutazione-critica-delloverfitting">5. Valutazione Critica
+dell’Overfitting</h3>
+<p>La nostra analisi dettagliata del rischio di overfitting contribuisce
+alla discussione sulla validità e generalizzabilità dei modelli
+predittivi nel contesto dell’analisi dei social media, un aspetto spesso
+trascurato nella letteratura.</p>
+<h2 id="implicazioni-teoriche">Implicazioni Teoriche</h2>
+<p>I risultati del nostro studio hanno diverse implicazioni teoriche
+rilevanti:</p>
+<h3 id="complessità-delle-relazioni-tra-sentiment-e-veridicità">1.
+Complessità delle Relazioni tra Sentiment e Veridicità</h3>
+<p>I nostri risultati suggeriscono che la relazione tra sentiment e
+veridicità è più sfumata e complessa di quanto suggerito in precedenza.
+Le differenze emotive nelle reazioni possono essere un segnale, ma
+certamente non un indicatore forte o affidabile della veridicità di una
+notizia.</p>
+<h3 id="importanza-della-dimensione-cognitiva">2. Importanza della
+Dimensione Cognitiva</h3>
+<p>L’emergere del <code>culture_score</code> come predittore chiave
+suggerisce che la dimensione cognitiva delle reazioni (complessità
+linguistica, ricchezza del vocabolario, formalità) potrebbe essere più
+informativa della dimensione puramente emotiva. Questo si allinea con
+teorie che enfatizzano il ruolo del pensiero critico e della riflessione
+nella resistenza alla disinformazione.</p>
+<h3 id="non-linearità-dei-fenomeni-informativi-sociali">3. Non Linearità
+dei Fenomeni Informativi Sociali</h3>
+<p>La superiorità dei modelli non lineari suggerisce che i fenomeni
+informativi nei social media sono intrinsecamente complessi e non
+lineari. Questo ha implicazioni più ampie per come concettualizziamo e
+studiamo questi fenomeni, suggerendo la necessità di approcci
+metodologici che possano catturare adeguatamente questa complessità.</p>
+<h3 id="integrazione-di-multiple-dimensioni">4. Integrazione di Multiple
+Dimensioni</h3>
+<p>I risultati supportano un approccio teorico che integra diverse
+dimensioni (emotiva, cognitiva, sociale) nella comprensione dei
+meccanismi di diffusione della disinformazione, anziché focalizzarsi su
+singoli aspetti isolati.</p>
+<h2 id="implicazioni-pratiche">Implicazioni Pratiche</h2>
+<h3 id="per-sistemi-di-fact-checking">Per Sistemi di Fact-checking</h3>
+<p>I nostri risultati hanno importanti implicazioni per lo sviluppo di
+strumenti di fact-checking automatico:</p>
+<ol type="1">
+<li><strong>Approccio multidimensionale</strong>: Integrare analisi del
+sentiment con metriche di leggibilità e acculturazione</li>
+<li><strong>Modelli non lineari</strong>: Utilizzare algoritmi capaci di
+catturare relazioni complesse</li>
+<li><strong>Oltre il sentiment</strong>: Prestare particolare attenzione
+a indicatori di complessità cognitiva e linguistica</li>
+<li><strong>Analisi contestuale</strong>: Considerare la posizione del
+commento nel thread e la sua relazione con altri commenti</li>
+</ol>
+<p>Un sistema efficace dovrebbe considerare non solo cosa dicono i
+commenti (contenuto emotivo) ma anche come lo dicono (complessità
+linguistica e acculturazione).</p>
+<h3 id="per-leducazione-ai-media">Per l’Educazione ai Media</h3>
+<p>I risultati supportano approcci educativi che:</p>
+<ol type="1">
+<li><strong>Sviluppano pensiero critico</strong>: Enfatizzando la
+valutazione della qualità argomentativa oltre la risposta emotiva</li>
+<li><strong>Promuovono consapevolezza linguistica</strong>:
+Sensibilizzando alla complessità e qualità del linguaggio come possibile
+indicatore di affidabilità</li>
+<li><strong>Contrastano la polarizzazione emotiva</strong>: Educando sul
+ruolo delle emozioni nella diffusione della disinformazione</li>
+</ol>
+<p>L’educazione ai media potrebbe beneficiare dell’enfasi sulla
+complessità cognitiva e linguistica come strumenti per valutare
+criticamente l’informazione.</p>
+<h3 id="per-le-piattaforme-social">Per le Piattaforme Social</h3>
+<p>Le piattaforme di social media potrebbero implementare:</p>
+<ol type="1">
+<li><strong>Sistemi di allerta basati su pattern linguistici</strong>:
+Non solo sul sentiment ma anche su indicatori di complessità e
+acculturazione</li>
+<li><strong>Interventi contestuali</strong>: Considerando la struttura
+conversazionale e le dinamiche di risposta</li>
+<li><strong>Monitoraggio di pattern non lineari</strong>: Utilizzando
+algoritmi sofisticati per identificare pattern complessi nelle
+conversazioni</li>
+</ol>
+<p>Questi approcci potrebbero complementare le attuali strategie di
+moderazione dei contenuti.</p>
+<h2 id="direzioni-future">Direzioni Future</h2>
+<p>Sulla base dei risultati ottenuti e delle limitazioni identificate,
+raccomandiamo diverse direzioni per ricerche future:</p>
+<h3 id="analisi-di-pattern-temporali">1. Analisi di Pattern
+Temporali</h3>
+<ul>
+<li><strong>Evoluzione del sentiment</strong>: Studiare come il
+sentiment nei commenti evolve nel tempo all’interno di un thread</li>
+<li><strong>Velocità di propagazione</strong>: Analizzare se esistono
+differenze nella velocità di diffusione delle reazioni tra notizie vere
+e false</li>
+<li><strong>Modelli sequenziali</strong>: Identificare pattern temporali
+tipici nelle reazioni a diverse categorie di notizie</li>
+</ul>
+<h3 id="stratificazione-contestuale">2. Stratificazione Contestuale</h3>
+<ul>
+<li><strong>Analisi per evento</strong>: Condurre analisi separate per
+ciascun tipo di evento per identificare pattern specifici del
+contesto</li>
+<li><strong>Stratificazione tematica</strong>: Raggruppare notizie per
+tema e analizzare se i pattern di reazione variano
+significativamente</li>
+<li><strong>Confronto cross-culturale</strong>: Estendere l’analisi a
+dataset in diverse lingue per valutare la generalizzabilità dei
+risultati</li>
+</ul>
+<h3 id="feature-engineering-avanzato">3. Feature Engineering
+Avanzato</h3>
+<ul>
+<li><strong>Feature conversazionali</strong>: Sviluppare metriche che
+catturino esplicitamente la struttura e le dinamiche
+conversazionali</li>
+<li><strong>Approfondimento del culture_score</strong>: Analizzare in
+maggiore dettaglio i componenti di questa feature composita</li>
+<li><strong>Metriche di rete sociale</strong>: Integrare caratteristiche
+della rete di interazione tra utenti</li>
+</ul>
+<h3 id="approcci-integrati">4. Approcci Integrati</h3>
+<ul>
+<li><strong>Combinazione multimodale</strong>: Integrare analisi
+testuale con analisi di immagini e altri contenuti multimediali</li>
+<li><strong>Metodi causali</strong>: Esplorare relazioni causali tra
+caratteristiche dei contenuti e pattern di risposta</li>
+<li><strong>Triangolazione metodologica</strong>: Combinare approcci
+quantitativi con analisi qualitative e studi sperimentali</li>
+</ul>
+<h3 id="validazione-cross-dataset">5. Validazione Cross-Dataset</h3>
+<ul>
+<li><strong>Test su dataset diversi</strong>: Verificare la
+generalizzabilità dei risultati su altri dataset di fact-checking</li>
+<li><strong>Confronto tra piattaforme</strong>: Estendere l’analisi a
+piattaforme diverse da Twitter</li>
+<li><strong>Validazione temporale</strong>: Testare i modelli su dati
+raccolti in periodi diversi per valutare la stabilità temporale</li>
+</ul>
+<p>Queste direzioni promettono di approfondire la comprensione della
+complessa relazione tra linguaggio, emozioni e veridicità
+nell’ecosistema informativo online, contribuendo allo sviluppo di
+strategie più efficaci per contrastare la disinformazione.</p>
+<h2 id="riflessione-finale">Riflessione Finale</h2>
+<p>In conclusione, questo studio ha dimostrato che esistono differenze
+statisticamente significative, sebbene di limitata entità pratica, nei
+pattern linguistici tra commenti a notizie vere e false. Questi pattern
+sono meglio catturati da modelli non lineari e includono non solo
+dimensioni emotive (sentiment) ma anche cognitive (complessità
+linguistica e acculturazione).</p>
+<p>Il risultato più interessante è l’emergere del
+<code>culture_score</code> come predittore chiave, suggerendo che il
+livello di acculturazione e complessità linguistica nei commenti
+potrebbe essere un indicatore più affidabile della qualità
+dell’informazione rispetto alle pure reazioni emotive. Questo suggerisce
+l’importanza di approcci multidimensionali nello studio e nel contrasto
+della disinformazione.</p>
+<p>Nonostante le limitazioni metodologiche e i problemi di
+generalizzabilità identificati, i risultati offrono spunti promettenti
+per future ricerche e applicazioni pratiche nel campo
+dell’identificazione delle fake news e dell’educazione ai media. La
+complessità delle relazioni identificate sottolinea la necessità di
+approcci sofisticati e multidimensionali per comprendere e contrastare
+efficacemente la disinformazione online.</p>
+<h1 id="bibliografia">9. Bibliografia</h1>
+<h2 id="articoli-e-paper-accademici">Articoli e Paper Accademici</h2>
+<p>Allcott, H., &amp; Gentzkow, M. (2017). Social media and fake news in
+the 2016 election. Journal of Economic Perspectives, 31(2), 211-36.</p>
+<p>Castillo, C., Mendoza, M., &amp; Poblete, B. (2011). Information
+credibility on twitter. In Proceedings of the 20th international
+conference on World Wide Web (pp. 675-684).</p>
+<p>Gimpel, H., Heger, S., Olenberger, C., &amp; Utz, L. (2021). The
+effectiveness of social norms in fighting fake news on social media.
+Journal of Management Information Systems, 38(1), 196-221.</p>
+<p>Gonzalez-Bailon, S., Menchen-Trevino, E., &amp; Akçayir, M. (2021).
+Online social networks and the diffusion of protest information. Journal
+of Communication, 71(1), 89-114.</p>
+<p>Horne, B. D., &amp; Adali, S. (2017). This just in: fake news packs a
+lot in title, uses simpler, repetitive content in text body, more
+similar to satire than real news. In Proceedings of the International
+AAAI Conference on Web and Social Media (Vol. 11, No. 1).</p>
+<p>Kahne, J., &amp; Bowyer, B. (2017). Educating for democracy in a
+partisan age: Confronting the challenges of motivated reasoning and
+misinformation. American Educational Research Journal, 54(1), 3-34.</p>
+<p>Lazer, D. M., Baum, M. A., Benkler, Y., Berinsky, A. J., Greenhill,
+K. M., Menczer, F., … &amp; Zittrain, J. L. (2018). The science of fake
+news. Science, 359(6380), 1094-1096.</p>
+<p>Levi, L. (2017). Real fake news and fake fake news. First Amendment
+Law Review, 16, 232.</p>
+<p>Pennycook, G., &amp; Rand, D. G. (2019). Lazy, not biased:
+Susceptibility to partisan fake news is better explained by lack of
+reasoning than by motivated reasoning. Cognition, 188, 39-50.</p>
+<p>Phillips, J., Jiang, F., Friedman, M., &amp; Giannakopoulos, N.
+(2020). Polarization and media: A tale of echo chambers. Applied
+Economics Letters, 27(16), 1356-1361.</p>
+<p>Shao, C., Ciampaglia, G. L., Varol, O., Yang, K. C., Flammini, A.,
+&amp; Menczer, F. (2018). The spread of low-credibility content by
+social bots. Nature Communications, 9(1), 1-9.</p>
+<p>Shu, K., Sliva, A., Wang, S., Tang, J., &amp; Liu, H. (2017). Fake
+news detection on social media: A data mining perspective. ACM SIGKDD
+Explorations Newsletter, 19(1), 22-36.</p>
+<p>Vosoughi, S., Roy, D., &amp; Aral, S. (2018). The spread of true and
+false news online. Science, 359(6380), 1146-1151.</p>
+<p>Zubiaga, A., Aker, A., Bontcheva, K., Liakata, M., &amp; Procter, R.
+(2018). Detection and resolution of rumours in social media: A survey.
+ACM Computing Surveys (CSUR), 51(2), 1-36.</p>
+<p>Zubiaga, A., Liakata, M., Procter, R., Hoi, G. W. S., &amp; Tolmie,
+P. (2016). Analysing how people orient to and spread rumours in social
+media by looking at conversational threads. PloS one, 11(3),
+e0150989.</p>
+<h2 id="libri-e-monografie">Libri e Monografie</h2>
+<p>Del Vicario, M., &amp; Quattrociocchi, W. (2020). The Misinformation
+Epidemic: From Echo Chambers to Filter Bubbles. Cambridge University
+Press.</p>
+<p>Ireton, C., &amp; Posetti, J. (2018). Journalism, fake news &amp;
+disinformation: handbook for journalism education and training. UNESCO
+Publishing.</p>
+<p>Martin, N. (2019). How Social Media Has Changed How We Consume News.
+Forbes Books.</p>
+<p>McNair, B. (2018). Fake news: Falsehood, fabrication and fantasy in
+journalism. Routledge.</p>
+<p>O’Connor, C., &amp; Weatherall, J. O. (2019). The misinformation age:
+How false beliefs spread. Yale University Press.</p>
+<p>Tandoc Jr, E. C. (2019). Analyzing analytics: Disrupting journalism
+one click at a time. Routledge.</p>
+<h2 id="risorse-tecniche-e-software">Risorse Tecniche e Software</h2>
+<p>Bird, S., Klein, E., &amp; Loper, E. (2009). Natural language
+processing with Python: analyzing text with the natural language
+toolkit. O’Reilly Media, Inc.</p>
+<p>Hutto, C., &amp; Gilbert, E. (2014). VADER: A parsimonious rule-based
+model for sentiment analysis of social media text. In Proceedings of the
+International AAAI Conference on Web and Social Media (Vol. 8,
+No. 1).</p>
+<p>Loria, S. (2018). TextBlob: Simplified Text Processing.
+https://textblob.readthedocs.io/</p>
+<p>McKinney, W. (2010). Data structures for statistical computing in
+Python. In Proceedings of the 9th Python in Science Conference (Vol.
+445, pp. 51-56).</p>
+<p>Pedregosa, F., Varoquaux, G., Gramfort, A., Michel, V., Thirion, B.,
+Grisel, O., … &amp; Duchesnay, E. (2011). Scikit-learn: Machine learning
+in Python. Journal of machine learning research, 12, 2825-2830.</p>
+<h2 id="dataset-e-risorse-di-dati">Dataset e Risorse di Dati</h2>
+<p>PHEME dataset: https://www.pheme.eu/</p>
+<p>PHEME rumour dataset: Zubiaga, A., Liakata, M., Procter, R.,
+Bontcheva, K., &amp; Tolmie, P. (2015). Crowdsourcing the annotation of
+rumourous conversations in social media. In Proceedings of the 24th
+International Conference on World Wide Web (pp. 347-353).</p>
+<h2 id="articoli-metodologici-e-di-review">Articoli Metodologici e di
+Review</h2>
+<p>Blei, D. M., Ng, A. Y., &amp; Jordan, M. I. (2003). Latent dirichlet
+allocation. Journal of machine Learning research, 3(Jan), 993-1022.</p>
+<p>Field, A., Miles, J., &amp; Field, Z. (2012). Discovering statistics
+using R. Sage publications.</p>
+<p>Gelman, A., &amp; Hill, J. (2006). Data analysis using regression and
+multilevel/hierarchical models. Cambridge university press.</p>
+<p>Hastie, T., Tibshirani, R., &amp; Friedman, J. (2009). The elements
+of statistical learning: data mining, inference, and prediction.
+Springer Science &amp; Business Media.</p>
+<p>James, G., Witten, D., Hastie, T., &amp; Tibshirani, R. (2013). An
+introduction to statistical learning. Springer.</p>
+<h2 id="reports-e-white-papers">Reports e White Papers</h2>
+<p>European Commission. (2018). Final report of the High Level Expert
+Group on Fake News and Online Disinformation. Publications Office of the
+European Union.</p>
+<p>Reuters Institute. (2022). Digital News Report 2022. Reuters
+Institute for the Study of Journalism.</p>
+<p>UNESCO. (2018). World Trends in Freedom of Expression and Media
+Development: 2017/2018 Global Report. UNESCO Publishing.</p>
+</body>
+</html>

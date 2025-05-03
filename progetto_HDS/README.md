@@ -59,16 +59,36 @@ Per una panoramica completa del progetto e dei risultati ottenuti, si consiglia 
 
 3. Approfondire con il report scientifico completo, partendo dall'[introduzione](./reports/report_scientifico/01_introduzione.md) e proseguendo con le sezioni successive.
 
-## Come Generare il Report Completo in PDF
+## Come Generare il Report Completo
 
-È disponibile uno script per generare un PDF completo del report scientifico:
+Sono disponibili script per generare il report scientifico completo in diversi formati:
+
+### Versione PDF (richiede LaTeX)
 
 ```bash
-cd reports
+cd "/Users/simone/Documents/magistrale/digital humanites/progetto_HDS/reports"
 ./genera_report_pdf.sh
 ```
 
 Il file PDF risultante sarà disponibile nella directory `reports` con il nome `report_completo.pdf`.
+
+Se lo script segnala che manca `pdflatex`, puoi installarlo con:
+```bash
+brew install --cask basictex
+```
+
+### Versione HTML semplificata (solo testo)
+
+Se hai problemi con la generazione del PDF, puoi generare una versione HTML semplificata:
+
+```bash
+cd "/Users/simone/Documents/magistrale/digital humanites/progetto_HDS/reports"
+./genera_html_semplificato.sh
+```
+
+Il file HTML risultante sarà disponibile nella directory `reports` con il nome `report_semplificato.html`.
+
+Nota: La versione HTML contiene solo il testo senza immagini, ma è utile per una rapida consultazione quando non è possibile generare il PDF completo.
 
 ## Requisiti Software
 

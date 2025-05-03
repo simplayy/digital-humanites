@@ -1,0 +1,7 @@
+,,culture_score,culture_score,culture_score,culture_score,flesch_reading_ease,flesch_reading_ease,type_token_ratio,type_token_ratio,readability_category
+,,mean,std,min,max,mean,std,mean,std,<lambda>
+veracity,is_rumour,,,,,,,,,
+false,True,0.6372257803545601,0.1909386714049038,0.0,0.9959999999999999,60.97977363515312,33.934409971926904,0.9020821406160763,0.24591735333441403,"{'moderate': 1463, 'easy': 1282, 'difficult': 922, 'very_easy': 892, 'very_difficult': 698, 'unknown': 179}"
+true,False,0.6432942027497481,0.1744359243411665,0.0,0.9959999999999999,60.51786034884382,37.42216290193935,0.9156665034532349,0.20995824755130127,"{'moderate': 20942, 'easy': 18996, 'difficult': 11117, 'very_easy': 10526, 'very_difficult': 8823, 'unknown': 1825}"
+true,True,0.6402491492779014,0.1821674419354927,0.0,0.9959999999999999,59.92305439612226,34.84001174475802,0.910038045480424,0.23041863460993972,"{'moderate': 4385, 'easy': 3705, 'difficult': 2520, 'very_easy': 2228, 'very_difficult': 2016, 'unknown': 421}"
+unverified,True,0.6539184930444341,0.1605879801212845,0.0,0.9959999999999999,61.978398905557135,34.441268375149235,0.9241551474485573,0.1911882357396377,"{'moderate': 3227, 'easy': 2982, 'difficult': 1673, 'very_easy': 1594, 'very_difficult': 1123, 'unknown': 207}"

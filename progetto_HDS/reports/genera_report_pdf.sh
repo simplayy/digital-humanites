@@ -19,8 +19,31 @@ if ! command -v pdflatex &> /dev/null; then
 fi
 
 # Directory del report scientifico
-REPORT_DIR="/Users/simone/Documents/magistrale/digital humanites/progetto_HDS/reports/report_scientifico"
-OUTPUT_DIR="/Users/simone/Documents/magistrale/digital humanites/progetto_HDS/reports"
+REPORT_DIR="./report_scientifico"
+OUTPUT_DIR="."
+TEMP_DIR=$(mktemp -d)
+echo "Directory temporanea creata: $TEMP_DIR"
+
+# Copiamo tutti i file markdown nella directory temporanea
+echo "Preparazione dei file markdown..."
+cp -r "$REPORT_DIR"/*.md "$TEMP_DIR/"
+
+# Copia le immagini necessarie in una struttura facilmente accessibile
+mkdir -p "$TEMP_DIR/images/figures"
+mkdir -p "$TEMP_DIR/images/narrative"
+
+echo "Copia delle immagini nella directory temporanea..."
+cp -r ../results/figures/* "$TEMP_DIR/images/figures/" 2>/dev/null || true
+cp -r ../results/narrative/* "$TEMP_DIR/images/narrative/" 2>/dev/null || true
+
+# Modifica i percorsi delle immagini nei file markdown
+echo "Aggiornamento dei percorsi delle immagini nei file markdown..."
+for file in "$TEMP_DIR"/*.md; do
+    # Sostituisci ../../results/figures/ con ./images/figures/
+    sed -i '' 's|../../results/figures/|./images/figures/|g' "$file"
+    # Sostituisci ../../results/narrative/ con ./images/narrative/
+    sed -i '' 's|../../results/narrative/|./images/narrative/|g' "$file"
+done
 
 # Verifica che la directory esista
 if [ ! -d "$REPORT_DIR" ]; then
@@ -84,27 +107,72 @@ FILES=(
 )
 
 # Combinare i file markdown in un unico PDF
-pandoc "$TEMP_FRONTESPIZIO" "$TEMP_STYLE" ${FILES[@]/#/"$REPORT_DIR/"} \
-  -o "$OUTPUT_DIR/report_completo.pdf" \
-  --from markdown \
-  --pdf-engine=xelatex \
-  --variable documentclass=report \
-  --variable papersize=a4 \
-  --variable fontsize=12pt \
-  --variable links-as-notes=true \
-  --variable toc-depth=3 \
-  --number-sections \
-  --highlight-style=tango
+# Creiamo un array di percorsi file con le virgolette per gestire gli spazi
+FILE_PATHS=()
+for file in "${FILES[@]}"; do
+  FILE_PATHS+=("$TEMP_DIR/$file")
+done
+
+echo "Tentativo di generazione PDF con pdflatex..."
+# Prova con pdflatex
+if command -v pdflatex &> /dev/null; then
+    pandoc "$TEMP_FRONTESPIZIO" "$TEMP_STYLE" "${FILE_PATHS[@]}" \
+      -o "$OUTPUT_DIR/report_completo.pdf" \
+      --from markdown \
+      --pdf-engine=pdflatex \
+      --variable documentclass=report \
+      --variable papersize=a4 \
+      --variable fontsize=12pt \
+      --variable links-as-notes=true \
+      --variable toc-depth=3 \
+      --number-sections \
+      --highlight-style=tango
+else
+    echo "pdflatex non trovato, tentativo con alternative..."
+    # Se pdflatex non è disponibile, prova con wkhtmltopdf
+    if command -v wkhtmltopdf &> /dev/null; then
+        echo "Usando wkhtmltopdf..."
+        # Prima converti in HTML
+        pandoc "$TEMP_FRONTESPIZIO" "$TEMP_STYLE" "${FILE_PATHS[@]}" \
+          -o "$TEMP_DIR/report.html" \
+          --from markdown \
+          --to html \
+          --standalone \
+          --toc \
+          --toc-depth=3 \
+          --highlight-style=tango
+        
+        # Poi da HTML a PDF
+        wkhtmltopdf --enable-local-file-access "$TEMP_DIR/report.html" "$OUTPUT_DIR/report_completo.pdf"
+    else
+        echo "Nessun motore PDF trovato, generazione file HTML..."
+        # Se nessuna alternativa è disponibile, genera almeno un HTML
+        pandoc "$TEMP_FRONTESPIZIO" "$TEMP_STYLE" "${FILE_PATHS[@]}" \
+          -o "$OUTPUT_DIR/report_completo.html" \
+          --from markdown \
+          --to html \
+          --standalone \
+          --toc \
+          --toc-depth=3 \
+          --highlight-style=tango
+        echo "Generato report in formato HTML: $OUTPUT_DIR/report_completo.html"
+        echo "Per generare un PDF, installa uno di questi pacchetti: pdflatex (brew install --cask basictex) o wkhtmltopdf (brew install wkhtmltopdf)"
+    fi
+fi
 
 # Verifica se la generazione è andata a buon fine
-if [ $? -eq 0 ]; then
+if [ -f "$OUTPUT_DIR/report_completo.pdf" ]; then
     echo "Il report completo è stato generato con successo: $OUTPUT_DIR/report_completo.pdf"
+elif [ -f "$OUTPUT_DIR/report_completo.html" ]; then
+    echo "Il report completo è stato generato in formato HTML: $OUTPUT_DIR/report_completo.html"
 else
     echo "Si è verificato un errore durante la generazione del report."
     exit 1
 fi
 
 # Pulizia file temporanei
+echo "Pulizia dei file temporanei..."
 rm -f "$TEMP_FRONTESPIZIO" "$TEMP_STYLE"
+rm -rf "$TEMP_DIR"
 
 echo "Processo completato."

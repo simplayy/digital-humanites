@@ -1,0 +1,41 @@
+var1,var2,correlation,p_value,p_value_corrected,significant,strength,direction
+vocabulary_richness,type_token_ratio,0.9790364744059873,0.0,0.0,True,molto forte,positiva
+formal_language_score,type_token_ratio,0.8564660003739085,0.0,0.0,True,molto forte,positiva
+vocabulary_richness,formal_language_score,0.8116966821272028,0.0,0.0,True,molto forte,positiva
+culture_score,type_token_ratio,0.8039261373980465,0.0,0.0,True,molto forte,positiva
+culture_score,vocabulary_richness,0.7807732252146566,0.0,0.0,True,molto forte,positiva
+long_words_ratio,avg_word_length,0.7561394636391398,0.0,0.0,True,molto forte,positiva
+avg_word_length,formal_language_score,0.7263082427653093,0.0,0.0,True,molto forte,positiva
+culture_score,flesch_reading_ease,0.7178203008417954,0.0,0.0,True,molto forte,positiva
+culture_score,formal_language_score,0.6803283208234192,0.0,0.0,True,forte,positiva
+avg_word_length,type_token_ratio,0.6756902977031934,0.0,0.0,True,forte,positiva
+avg_word_length,vocabulary_richness,0.6532072649678763,0.0,0.0,True,forte,positiva
+long_words_ratio,flesch_reading_ease,-0.47862771893374784,0.0,0.0,True,moderata,negativa
+long_words_ratio,formal_language_score,0.4219454335960034,0.0,0.0,True,moderata,positiva
+type_token_ratio,flesch_reading_ease,0.3648894163184754,0.0,0.0,True,moderata,positiva
+long_words_ratio,vocabulary_richness,0.3639114771161602,0.0,0.0,True,moderata,positiva
+long_words_ratio,type_token_ratio,0.36089337970891316,0.0,0.0,True,moderata,positiva
+culture_score,avg_word_length,0.3447254808118383,0.0,0.0,True,moderata,positiva
+stance_score,sentiment_polarity,0.34450006806422495,0.0,0.0,True,moderata,positiva
+vocabulary_richness,flesch_reading_ease,0.3290758424229147,0.0,0.0,True,moderata,positiva
+avg_word_length,flesch_reading_ease,-0.26905692690505717,0.0,0.0,True,debole,negativa
+formal_language_score,flesch_reading_ease,0.22931726119182866,0.0,0.0,True,debole,positiva
+type_token_ratio,sentiment_subjectivity,0.15735930775133924,0.0,0.0,True,debole,positiva
+vocabulary_richness,sentiment_subjectivity,0.13889063253453354,0.0,0.0,True,debole,positiva
+formal_language_score,sentiment_subjectivity,0.1385010335849215,0.0,0.0,True,debole,positiva
+culture_score,sentiment_subjectivity,0.11682974650056965,5.286630057934e-312,9.51593410428e-312,True,debole,positiva
+flesch_reading_ease,sentiment_subjectivity,0.08083141029791527,6.501649804765369e-150,1.1252855431324678e-149,True,trascurabile,positiva
+avg_word_length,sentiment_subjectivity,0.052459847793450726,3.891018302974109e-64,6.485030504956848e-64,True,trascurabile,positiva
+flesch_reading_ease,sentiment_polarity,0.030380138489128218,1.274448457029331e-22,2.048220734511425e-22,True,trascurabile,positiva
+long_words_ratio,sentiment_polarity,-0.025713872449596803,1.1949460972297873e-16,1.8542267025979455e-16,True,trascurabile,negativa
+culture_score,sentiment_polarity,0.023235252835345076,7.15971461339183e-14,1.0739571920087746e-13,True,trascurabile,positiva
+stance_score,sentiment_subjectivity,0.02082097102387984,1.9866210421673546e-11,2.8838047386300307e-11,True,trascurabile,positiva
+long_words_ratio,sentiment_subjectivity,-0.015757969247709405,3.857940996478003e-07,5.425229526297192e-07,True,trascurabile,negativa
+culture_score,long_words_ratio,-0.01514433184473352,1.0708353464646716e-06,1.4602300179063703e-06,True,trascurabile,negativa
+avg_word_length,sentiment_polarity,-0.014111885093490161,5.479018012027461e-06,7.251641486506934e-06,True,trascurabile,negativa
+avg_word_length,stance_score,0.013690351583588533,1.0348307710033479e-05,1.330496705575733e-05,True,trascurabile,positiva
+long_words_ratio,stance_score,0.013608287301472299,1.1687963278397652e-05,1.4609954097997065e-05,True,trascurabile,positiva
+vocabulary_richness,stance_score,0.010658518490465079,0.0005966667830885904,0.0007256758172699073,True,trascurabile,positiva
+sentiment_subjectivity,sentiment_polarity,-0.009708766203483656,0.0017648385679562616,0.0020899404094218885,True,trascurabile,negativa
+formal_language_score,stance_score,0.009257312602634196,0.0028658373674471573,0.0033067354239774893,True,trascurabile,positiva
+type_token_ratio,stance_score,0.008640145320875921,0.00538626420745579,0.006059547233387764,True,trascurabile,positiva

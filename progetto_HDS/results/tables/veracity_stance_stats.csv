@@ -1,0 +1,7 @@
+,,stance_score,stance_score,stance_score,stance_category
+,,mean,std,count,<lambda>
+veracity,is_rumour,,,,
+false,True,-0.0007548785192076912,0.07310608724956898,5436,"{'unrelated': 2607, 'indirect_supportive': 909, 'opposing': 825, 'neutral': 460, 'source': 393, 'critical': 132, 'supportive': 110}"
+true,False,0.00321244170218882,0.07067662654261506,72229,"{'unrelated': 34437, 'indirect_supportive': 15717, 'opposing': 11174, 'source': 4023, 'neutral': 3881, 'supportive': 1800, 'critical': 1197}"
+true,True,-0.0024841735085559323,0.07540563102159042,15275,"{'unrelated': 6820, 'indirect_supportive': 2958, 'opposing': 2236, 'neutral': 1155, 'source': 1067, 'critical': 619, 'supportive': 420}"
+unverified,True,-0.0020151846881831556,0.0639310880860666,10806,"{'unrelated': 5191, 'indirect_supportive': 2100, 'opposing': 1632, 'neutral': 793, 'source': 573, 'critical': 297, 'supportive': 220}"

@@ -1,0 +1,11 @@
+,stance_score,stance_score,stance_score,stance_category
+,mean,std,count,<lambda>
+event,,,,
+charliehebdo,0.001094326492093061,0.0621189820568519,38268,"{'unrelated': 18896, 'indirect_supportive': 8051, 'opposing': 5889, 'source': 2079, 'neutral': 1964, 'critical': 698, 'supportive': 691}"
+ferguson,0.003215469345440717,0.07622053482721344,24175,"{'unrelated': 11138, 'indirect_supportive': 5024, 'opposing': 3707, 'neutral': 1811, 'source': 1143, 'supportive': 783, 'critical': 569}"
+germanwings-crash,-0.0007445581828157278,0.0635686559232048,4489,"{'unrelated': 2109, 'indirect_supportive': 671, 'opposing': 650, 'source': 469, 'neutral': 389, 'critical': 123, 'supportive': 78}"
+gurlitt,-0.0008419659648727845,0.018424472354007206,179,"{'source': 138, 'unrelated': 23, 'indirect_supportive': 11, 'neutral': 4, 'opposing': 2, 'critical': 1}"
+ottawashooting,-2.754267431092075e-05,0.08556256118529523,12284,"{'unrelated': 5385, 'indirect_supportive': 2508, 'opposing': 1790, 'neutral': 894, 'source': 890, 'critical': 427, 'supportive': 390}"
+prince-toronto,0.14285714285714288,0.3779644730092273,7,"{'source': 4, 'supportive': 1, 'unrelated': 1, 'indirect_supportive': 1}"
+putinmissing,0.0011622646524456163,0.00984371527690417,348,"{'unrelated': 136, 'source': 112, 'indirect_supportive': 64, 'opposing': 31, 'neutral': 4, 'supportive': 1}"
+sydneysiege,0.0021262434601764437,0.07190783076124115,23996,"{'unrelated': 11367, 'indirect_supportive': 5354, 'opposing': 3798, 'neutral': 1223, 'source': 1221, 'supportive': 606, 'critical': 427}"

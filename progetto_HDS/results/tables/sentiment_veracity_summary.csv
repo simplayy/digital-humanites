@@ -1,0 +1,11 @@
+feature,test_name,p_value,significant,effect_size,effect_interpretation,p_value_corrected,significant_corrected
+sentiment_subjectivity,Mann-Whitney U,4.2681853156866974e-14,True,0.0986772661978143,trascurabile,4.268185315686697e-13,True
+formal_language_score,Mann-Whitney U,0.0330574045749064,True,0.0794613355635358,trascurabile,0.07686317080488217,False
+sentiment_polarity,Mann-Whitney U,2.923856714014558e-08,True,0.07373089163793321,trascurabile,1.4619283570072789e-07,True
+stance_score,Mann-Whitney U,0.0033036367661474354,True,0.04046009537791096,trascurabile,0.011012122553824786,True
+flesch_reading_ease,Mann-Whitney U,0.038431585402441085,True,0.011316868278019332,trascurabile,0.07686317080488217,False
+type_token_ratio,Mann-Whitney U,0.06743377739252238,False,0.07651260224214229,trascurabile,0.10194463537599972,False
+vocabulary_richness,Mann-Whitney U,0.0713612447631998,False,0.057202402577828854,trascurabile,0.10194463537599972,False
+avg_word_length,Mann-Whitney U,0.899770908634359,False,0.051221719575272044,trascurabile,0.899770908634359,False
+culture_score,Mann-Whitney U,0.5804279214913344,False,0.044144962764230015,trascurabile,0.6449199127681493,False
+long_words_ratio,Mann-Whitney U,0.16337503854290547,False,0.016320652503511897,trascurabile,0.20421879817863184,False

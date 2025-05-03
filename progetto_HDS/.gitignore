@@ -24,11 +24,6 @@ logs/
 download.log
 preprocess.log
 
-# File di output e risultati temporanei
-results/figures/*
-results/tables/*
-!results/figures/.gitkeep
-!results/tables/.gitkeep
 
 # Notebook Jupyter
 .ipynb_checkpoints
