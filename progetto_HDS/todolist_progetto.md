@@ -122,9 +122,11 @@ Questa todolist semplificata traccia le attività principali per completare il p
   - [✅] Calcolare coefficienti di correlazione tra le variabili principali (03/05/2025)
   - [✅] Creare matrice di correlazione (03/05/2025)
 
-- [✅] Implementare analisi di regressione in `src/analysis/regression.py` (03/05/2025)
-  - [✅] Modello di regressione logistica per predire veridicità (03/05/2025)
-  - [✅] Valutare le performance del modello (03/05/2025)
+- [✅] Implementare modelli predittivi (03/05/2025)
+  - [✅] Modello lineare: Regressione logistica (`src/analysis/regression.py`) (03/05/2025)
+  - [✅] Modello non lineare: Random Forest (`src/analysis/random_forest.py`) (03/05/2025)
+  - [✅] Confrontare le performance dei modelli (03/05/2025)
+  - [✅] Analizzare l'importanza delle feature nei diversi modelli (03/05/2025)
 
 - [✅] Calcolare la significatività statistica (03/05/2025)
   - [✅] Documentare p-value e dimensione dell'effetto (03/05/2025)
@@ -133,6 +135,7 @@ Questa todolist semplificata traccia le attività principali per completare il p
 - [✅] Validare i risultati (03/05/2025)
   - [✅] Utilizzare tecniche di validazione incrociata (03/05/2025)
   - [✅] Verificare la robustezza dei risultati (03/05/2025)
+  - [✅] Testare diversi set di feature per valutarne il contributo (03/05/2025)
 
 ## 5. Visualizzazione e interpretazione dei risultati
 
@@ -152,9 +155,16 @@ Questa todolist semplificata traccia le attività principali per completare il p
   - [✅] Heatmap della matrice di correlazione (03/05/2025)
   - [✅] Rete di correlazioni tra feature (03/05/2025)
 
+- [✅] Visualizzare confronto tra modelli (03/05/2025)
+  - [✅] Implementare `src/visualization/model_comparison.py` (03/05/2025)
+  - [✅] Confronto di performance tra modelli lineari e non lineari (03/05/2025)
+  - [✅] Visualizzazione dell'importanza delle feature nei diversi modelli (03/05/2025)
+  - [✅] Grafico di riepilogo dei risultati principali (03/05/2025)
+
 - [✅] Preparare tabelle riassuntive (03/05/2025)
   - [✅] Tabella con risultati statistici principali (03/05/2025)
   - [✅] Tabella di confronto tra notizie vere e false (03/05/2025)
+  - [✅] Tabella di confronto delle performance dei modelli (03/05/2025)
 
 - [ ] Interpretare i risultati
   - [ ] Documentare le interpretazioni in reports/analysis_results.md
