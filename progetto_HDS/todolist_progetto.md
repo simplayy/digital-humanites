@@ -220,45 +220,45 @@ Questa todolist semplificata traccia le attività principali per completare il p
 
 ## 6. Documentazione e reporting
 
-- [ ] Preparare un report scientifico
-  - [ ] Riassumere la metodologia utilizzata
-  - [ ] Presentare i risultati principali con interpretazioni
-  - [ ] Discutere la significatività statistica
+- [✅] Preparare un report scientifico (03/05/2025)
+  - [✅] Riassumere la metodologia utilizzata (03/05/2025)
+  - [✅] Presentare i risultati principali con interpretazioni (03/05/2025)
+  - [✅] Discutere la significatività statistica (03/05/2025)
 
-- [ ] Documentare il protocollo di analisi
-  - [ ] Descrivere chiaramente ipotesi e metodi
-  - [ ] Specificare criteri di accettazione/rifiuto delle ipotesi
+- [✅] Documentare il protocollo di analisi (03/05/2025)
+  - [✅] Descrivere chiaramente ipotesi e metodi (03/05/2025)
+  - [✅] Specificare criteri di accettazione/rifiuto delle ipotesi (03/05/2025)
 
-- [ ] Discutere limitazioni e implicazioni
-  - [ ] Identificare limiti metodologici
-  - [ ] Considerare le possibili generalizzazioni dei risultati
+- [✅] Discutere limitazioni e implicazioni (03/05/2025)
+  - [✅] Identificare limiti metodologici (03/05/2025)
+  - [✅] Considerare le possibili generalizzazioni dei risultati (03/05/2025)
 
-- [ ] Preparare materiale per la riproducibilità
-  - [ ] Documentare le procedure di analisi
-  - [ ] Assicurare che il codice sia commentato e comprensibile
+- [✅] Preparare materiale per la riproducibilità (03/05/2025)
+  - [✅] Documentare le procedure di analisi (03/05/2025)
+  - [✅] Assicurare che il codice sia commentato e comprensibile (03/05/2025)
 
 ## 7. Validazione e verifica
 
-- [ ] Verificare i risultati
-  - [ ] Controllare la correttezza dell'implementazione
-  - [ ] Validare le conclusioni statistiche
+- [✅] Verificare i risultati (03/05/2025)
+  - [✅] Controllare la correttezza dell'implementazione (03/05/2025)
+  - [✅] Validare le conclusioni statistiche (03/05/2025)
 
-- [ ] Valutare la validità dello studio
-  - [ ] Esaminare la validità interna
-  - [ ] Considerare la validità esterna
+- [✅] Valutare la validità dello studio (03/05/2025)
+  - [✅] Esaminare la validità interna (03/05/2025)
+  - [✅] Considerare la validità esterna (03/05/2025)
 
 ## 8. Conclusione
 
-- [ ] Finalizzare il progetto
-  - [ ] Controllare la coerenza complessiva
-  - [ ] Verificare che le conclusioni siano supportate dai dati
+- [✅] Finalizzare il progetto (03/05/2025)
+  - [✅] Controllare la coerenza complessiva (03/05/2025)
+  - [✅] Verificare che le conclusioni siano supportate dai dati (03/05/2025)
 
-- [ ] Preparare la presentazione
-  - [ ] Creare slide focalizzate sui risultati chiave
-  - [ ] Evidenziare le implicazioni principali
+- [✅] Preparare la presentazione (03/05/2025)
+  - [✅] Creare slide focalizzate sui risultati chiave (03/05/2025)
+  - [✅] Evidenziare le implicazioni principali (03/05/2025)
 
-- [ ] Riflettere sulle direzioni future
-  - [ ] Identificare possibili estensioni della ricerca
+- [✅] Riflettere sulle direzioni future (03/05/2025)
+  - [✅] Identificare possibili estensioni della ricerca (03/05/2025)
 
 ## Note e osservazioni
 
