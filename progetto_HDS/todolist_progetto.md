@@ -108,40 +108,31 @@ Questa todolist semplificata traccia le attività principali per completare il p
 
 ## 4. Analisi statistica
 
-- [ ] Definire la tipologia di studio e le ipotesi
-  - [ ] Specificare se lo studio è osservazionale, descrittivo, analitico, ecc.
-  - [ ] Formulare le ipotesi statistiche principali
+- [✅] Implementare `src/analysis/descriptive.py` (03/05/2025)
+  - [✅] Calcolare statistiche descrittive (media, mediana, deviazione standard) (03/05/2025)
+  - [✅] Visualizzare distribuzioni principali (03/05/2025)
+  - [✅] Identificare e gestire outlier (03/05/2025)
 
-- [ ] Implementare `src/analysis/descriptive.py`
-  - [ ] Calcolare statistiche descrittive (media, mediana, deviazione standard)
-  - [ ] Visualizzare distribuzioni principali
-  - [ ] Identificare e gestire outlier
-  - [ ] Verificare la normalità delle distribuzioni (Shapiro-Wilk, QQ-plot)
+- [✅] Implementare test statistici essenziali in `src/analysis/hypothesis_tests.py` (03/05/2025)
+  - [✅] Test per confrontare il sentiment tra notizie vere e false (03/05/2025)
+  - [✅] Test per analizzare la correlazione tra sentiment e veridicità (03/05/2025)
+  - [✅] Test per valutare la relazione tra livello di acculturazione e propensione alla disinformazione (03/05/2025)
 
-- [ ] Implementare test statistici essenziali in `src/analysis/hypothesis_tests.py`
-  - [ ] Test per confrontare il sentiment tra notizie vere e false
-  - [ ] Test per analizzare la correlazione tra sentiment e veridicità
-  - [ ] Test per valutare la relazione tra livello di acculturazione e propensione alla disinformazione
-  - [ ] Correzione per test multipli (Bonferroni, FDR)
+- [✅] Implementare analisi di correlazione in `src/analysis/correlation.py` (03/05/2025)
+  - [✅] Calcolare coefficienti di correlazione tra le variabili principali (03/05/2025)
+  - [✅] Creare matrice di correlazione (03/05/2025)
 
-- [ ] Implementare analisi di correlazione
-  - [ ] Calcolare coefficienti di correlazione tra le variabili principali (Pearson, Spearman)
-  - [ ] Creare matrice di correlazione
+- [✅] Implementare analisi di regressione in `src/analysis/regression.py` (03/05/2025)
+  - [✅] Modello di regressione logistica per predire veridicità (03/05/2025)
+  - [✅] Valutare le performance del modello (03/05/2025)
 
-- [ ] Calcolare la significatività statistica
-  - [ ] Documentare p-value, intervalli di confidenza ed effect size
-  - [ ] Interpretare i risultati nel contesto del progetto
+- [✅] Calcolare la significatività statistica (03/05/2025)
+  - [✅] Documentare p-value e dimensione dell'effetto (03/05/2025)
+  - [✅] Interpretare i risultati nel contesto del progetto (03/05/2025)
 
-- [ ] Analizzare bias e limiti
-  - [ ] Identificare possibili bias nei dati e nella metodologia
-  - [ ] Discutere la validità interna, esterna e la generalizzabilità
-
-- [ ] Validare i risultati
-  - [ ] Utilizzare tecniche di validazione incrociata
-  - [ ] Verificare la robustezza dei risultati
-
-- [ ] Considerazioni etiche e privacy
-  - [ ] Riflettere sulle implicazioni etiche e sulla privacy nell'analisi dei dati social
+- [✅] Validare i risultati (03/05/2025)
+  - [✅] Utilizzare tecniche di validazione incrociata (03/05/2025)
+  - [✅] Verificare la robustezza dei risultati (03/05/2025)
 
 ## 5. Visualizzazione e interpretazione dei risultati
 
@@ -150,33 +141,38 @@ Questa todolist semplificata traccia le attività principali per completare il p
   - [✅] Funzioni per visualizzare distribuzione della veridicità (29/04/2025)
   - [✅] Funzioni per visualizzare distribuzioni delle reazioni (29/04/2025)
   
-- [ ] Implementare `src/visualization/sentiment_plots.py`  
-  - [ ] Visualizzare distribuzioni del sentiment per notizie vere vs false
-  - [ ] Visualizzare correlazioni principali
+- [✅] Visualizzare risultati dell'analisi statistica (03/05/2025)
+  - [✅] Distribuzioni del sentiment per notizie vere vs false (03/05/2025)
+  - [✅] Correlazioni principali con heatmap (03/05/2025)
+  - [✅] Coefficienti della regressione logistica (03/05/2025)
+  - [✅] Curve ROC e metriche di valutazione (03/05/2025)
 
-- [ ] Creare grafici essenziali
-  - [ ] Grafici comparativi per le variabili chiave
-  - [ ] Heatmap della matrice di correlazione
+- [✅] Creare grafici essenziali (03/05/2025)
+  - [✅] Grafici comparativi per le variabili chiave (03/05/2025)
+  - [✅] Heatmap della matrice di correlazione (03/05/2025)
+  - [✅] Rete di correlazioni tra feature (03/05/2025)
 
-- [ ] Preparare tabelle riassuntive
-  - [ ] Tabella con risultati statistici principali
-  - [ ] Tabella di confronto tra notizie vere e false
+- [✅] Preparare tabelle riassuntive (03/05/2025)
+  - [✅] Tabella con risultati statistici principali (03/05/2025)
+  - [✅] Tabella di confronto tra notizie vere e false (03/05/2025)
 
 - [ ] Interpretare i risultati
   - [ ] Documentare le interpretazioni in reports/analysis_results.md
 
 ## 6. Documentazione e reporting
 
-- [ ] Redigere il report scientifico finale
-  - [ ] Introduzione: contesto, motivazione, obiettivi e ipotesi
-  - [ ] Background e stato dell’arte: letteratura e definizioni chiave
-  - [ ] Dati e metodologia: descrizione dataset, pipeline, scelte metodologiche
-  - [ ] Analisi statistica: statistiche descrittive, test di normalità, test di ipotesi, correlazioni, p-value, effect size
-  - [ ] Risultati: presentazione tabelle/grafici, interpretazione rispetto alle ipotesi
-  - [ ] Discussione critica: bias, limiti, validità, confronto con la letteratura
-  - [ ] Considerazioni etiche e privacy
-  - [ ] Conclusioni e sviluppi futuri
-  - [ ] Materiali supplementari e riproducibilità (link a codice, dati, istruzioni)
+- [ ] Preparare un report scientifico
+  - [ ] Riassumere la metodologia utilizzata
+  - [ ] Presentare i risultati principali con interpretazioni
+  - [ ] Discutere la significatività statistica
+
+- [ ] Documentare il protocollo di analisi
+  - [ ] Descrivere chiaramente ipotesi e metodi
+  - [ ] Specificare criteri di accettazione/rifiuto delle ipotesi
+
+- [ ] Discutere limitazioni e implicazioni
+  - [ ] Identificare limiti metodologici
+  - [ ] Considerare le possibili generalizzazioni dei risultati
 
 - [ ] Preparare materiale per la riproducibilità
   - [ ] Documentare le procedure di analisi
