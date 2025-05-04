@@ -145,9 +145,6 @@ Un aspetto interessante emerge dall'analisi della posizione dei commenti nei thr
 
 ### Evoluzione del Sentiment nel Thread
 
-![Evoluzione del Sentiment](../../results/figures/sentiment_veracity_summary.png)
-*Figura 3.8: Evoluzione del sentiment medio in base alla posizione nel thread.*
-
 I dati mostrano:
 - Decremento della polarità del sentiment (più negativo) man mano che ci si allontana dal tweet sorgente
 - Incremento della soggettività nei livelli più profondi del thread
