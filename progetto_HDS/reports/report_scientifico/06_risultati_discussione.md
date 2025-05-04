@@ -30,9 +30,9 @@ Il confronto tra modelli predittivi ha mostrato una moderata superiorità del Ra
 
 | Metrica | Regressione Logistica | Random Forest | Differenza |
 |---------|----------------------|---------------|------------|
-| ROC AUC | 0.542 | 0.5769 | +0.0349 |
+| ROC AUC | 0.542 | 0.5774 | +0.0354 |
 
-Questo modesto miglioramento (+0.035 in AUC) suggerisce che le relazioni non lineari tra caratteristiche linguistiche e veridicità esistono, ma sono relativamente deboli. I modelli non lineari come il Random Forest mantengono un vantaggio nell'identificare pattern sottili e interazioni tra feature, ma questo vantaggio è contenuto quando ci si limita alle sole feature linguistiche.
+Questo modesto miglioramento (+0.0354 in AUC) suggerisce che le relazioni non lineari tra caratteristiche linguistiche e veridicità esistono, ma sono relativamente deboli. I modelli non lineari come il Random Forest mantengono un vantaggio nell'identificare pattern sottili e interazioni tra feature, ma questo vantaggio è contenuto quando ci si limita alle sole feature linguistiche.
 
 ### 4. Importanza dello Stance e delle Feature di Leggibilità
 
@@ -43,14 +43,14 @@ L'analisi dei diversi set di feature ha mostrato che le feature di leggibilità 
 | readability_only | 0.5713 | 0.9063 |
 | sentiment_only | 0.5590 | 0.5947 |
 
-Nell'analisi incrementale, lo `stance_score` è emerso come la feature più importante (+0.0111), seguito dalle feature di sentiment (`sentiment_polarity` +0.0092, `sentiment_subjectivity` +0.0057). Questo suggerisce che l'atteggiamento dell'utente rispetto alla notizia (stance) e la componente emotiva del linguaggio (sentiment) sono indicatori più rilevanti della veridicità rispetto alla pura complessità linguistica.
+Nell'analisi incrementale, le feature di sentiment hanno mostrato i contributi più importanti (`sentiment_polarity` +0.0117, `sentiment_subjectivity` +0.0107), seguite dalle misure di leggibilità come `flesch_reading_ease` (+0.0093) e `long_words_ratio` (+0.0074). Questo suggerisce che la componente emotiva del linguaggio (sentiment) e la complessità linguistica sono indicatori rilevanti della veridicità delle notizie.
 
 ### 5. Limitato Potere Predittivo
 
 L'analisi del modello Random Forest ha evidenziato un limitato potere predittivo delle feature linguistiche per la determinazione della veridicità delle notizie:
 
-- La performance del Random Forest basato su feature linguistiche raggiunge un AUC di 0.5769
-- Il Random Forest mantiene un modesto vantaggio rispetto alla regressione logistica (+0.035 in AUC)
+- La performance del Random Forest basato su feature linguistiche raggiunge un AUC di 0.5774
+- Il Random Forest mantiene un modesto vantaggio rispetto alla regressione logistica (+0.0354 in AUC)
 - Le feature linguistiche da sole offrono un miglioramento limitato rispetto a una classificazione casuale
 
 Questi risultati forniscono una stima realistica del valore predittivo delle caratteristiche linguistiche dei commenti per la determinazione della veridicità delle notizie, suggerendo che tale determinazione richiede probabilmente l'integrazione di fonti di informazione più diversificate e non solo l'analisi linguistica.

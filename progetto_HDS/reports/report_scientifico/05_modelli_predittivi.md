@@ -1,6 +1,21 @@
 # 5. Modelli Predittivi
 
-L'analisi statistica ha rivelato relazioni statisticamente significative ma deboli tra le caratteristiche linguistiche dei commenti e la veridicità delle notizie. Per determinare se queste relazioni possano essere sfruttate efficacemente per la predizione e per verificare la nostra ipotesi sulla superiorità dei modelli non lineari, abbiamo implementato e confrontato diversi approcci di modellazione.
+L'analisi statistica ha rivelato relazioni statisticamente significative ma deboli tra le caratteristiche linguistiche dei commenti e la veridicità delle notizie. Per determinare se queste relazioni possano essere sfrutta### Feature Engineering Incrementale
+
+Per comprendere meglio il contributo di ciascuna feature, abbiamo condotto un'analisi di feature engineering incrementale, aggiungendo una feature alla volta e misurando l'incremento di performance:
+
+| Feature Aggiunta | AUC Incrementale | Incremento |
+|------------------|------------------|------------|
+| baseline (stance_score) | 0.5231 | - |
+| + sentiment_polarity | 0.5348 | +0.0117 |
+| + sentiment_subjectivity | 0.5455 | +0.0107 |
+| + flesch_reading_ease | 0.5548 | +0.0093 |
+| + long_words_ratio | 0.5622 | +0.0074 |
+| + formal_language_score | 0.5676 | +0.0054 |
+| + type_token_ratio | 0.5714 | +0.0038 |
+| + avg_word_length | 0.5739 | +0.0025 |
+| + vocabulary_richness | 0.5761 | +0.0022 |
+| + culture_score | 0.5774 | +0.0013 |per la predizione e per verificare la nostra ipotesi sulla superiorità dei modelli non lineari, abbiamo implementato e confrontato diversi approcci di modellazione.
 
 ## Approccio Metodologico
 
@@ -133,15 +148,15 @@ def train_random_forest(X_train, y_train, X_test, y_test, feature_names):
 
 ### Risultati
 
-Il modello Random Forest addestrato sulle feature linguistiche ha prodotto i seguenti risultati:
+Il modello Random Forest addestrato sulle feature puramente linguistiche ha prodotto i seguenti risultati:
 
 | Metrica | Valore |
 |---------|--------|
-| Accuracy | 0.8974 |
-| Precision | 0.9319 |
-| Recall | 0.9598 |
-| F1 Score | 0.9456 |
-| ROC AUC | 0.5769 |
+| Accuracy | 0.8615 |
+| Precision | 0.9347 |
+| Recall | 0.9147 |
+| F1 Score | 0.9246 |
+| ROC AUC | 0.5774 |
 
 ![Curva ROC del Random Forest](../../results/figures/random_forest_roc_curve.png)
 *Figura 5.3: Curva ROC per il modello Random Forest.*
@@ -153,31 +168,30 @@ Il modello Random Forest addestrato sulle feature linguistiche ha prodotto i seg
 
 L'analisi dell'importanza delle feature nel Random Forest ha rivelato:
 
-1. reaction_index
-2. stance_score
+1. stance_score
+2. sentiment_subjectivity
 3. sentiment_polarity
-4. sentiment_subjectivity 
-5. long_words_ratio
-6. type_token_ratio
-7. flesch_reading_ease
-8. formal_language_score
-9. vocabulary_richness
-10. avg_word_length
-11. culture_score
+4. flesch_reading_ease
+5. type_token_ratio
+6. vocabulary_richness
+7. long_words_ratio
+8. avg_word_length
+9. formal_language_score
+10. culture_score
 
-Questa analisi fornisce un quadro realistico dell'importanza delle feature linguistiche, con `reaction_index` e `stance_score` che emergono come le feature più importanti, seguite dalle feature di sentiment.
+Questa analisi fornisce un quadro realistico dell'importanza delle feature linguistiche, con `stance_score` che emerge come la feature più importante, seguita dalle feature di sentiment e dalle misure di leggibilità del testo.
 
 ### Interpretazione
 
 I risultati del Random Forest mostrano:
 
-1. **Performance discriminativa moderata**: L'AUC di 0.5769 indica una capacità discriminativa limitata, ma comunque superiore al caso (0.5)
+1. **Performance discriminativa moderata**: L'AUC di 0.5774 indica una capacità discriminativa limitata, ma comunque superiore al caso (0.5)
 
-2. **Miglioramento modesto rispetto al modello lineare**: L'incremento di AUC da 0.542 a 0.5769 (+0.035) suggerisce che le relazioni non lineari sono presenti, ma senza gli identificatori il miglioramento è meno marcato
+2. **Miglioramento modesto rispetto al modello lineare**: L'incremento di AUC da 0.542 a 0.5774 (+0.0354) suggerisce che le relazioni non lineari tra feature linguistiche e veridicità sono presenti, sebbene non particolarmente forti
 
-3. **Importanza della posizione e della stance**: `reaction_index` (posizione nel thread) e `stance_score` emergono come le feature più importanti, suggerendo che la relazione strutturale e l'atteggiamento sono i predittori più rilevanti
+3. **Importanza primaria dello stance**: `stance_score` emerge come la feature più importante, suggerendo che l'atteggiamento espresso nei commenti è il principale predittore linguistico
 
-4. **Contributo del sentiment**: Le feature di sentiment (`sentiment_polarity` e `sentiment_subjectivity`) mostrano un'importanza significativa nel modello senza identificatori
+4. **Contributo rilevante del sentiment**: Le feature di sentiment (`sentiment_polarity` e `sentiment_subjectivity`) mostrano un'importanza significativa nel modello, confermando la rilevanza del tono emotivo
 
 ## Confronto tra Modelli
 
@@ -188,17 +202,17 @@ Il confronto tra i due approcci di modellazione ha rivelato differenze sostanzia
 
 | Metrica | Regressione Logistica | Random Forest | Differenza |
 |---------|----------------------|---------------|------------|
-| Accuracy | 0.928 | 0.8974 | -0.0306 |
-| Precision | 0.928 | 0.9319 | +0.0039 |
-| Recall | 1.000 | 0.9598 | -0.0402 |
-| F1 Score | 0.963 | 0.9456 | -0.0174 |
-| ROC AUC | 0.542 | 0.5769 | +0.0349 |
+| Accuracy | 0.928 | 0.8615 | -0.0665 |
+| Precision | 0.928 | 0.9347 | +0.0067 |
+| Recall | 1.000 | 0.9147 | -0.0853 |
+| F1 Score | 0.963 | 0.9246 | -0.0384 |
+| ROC AUC | 0.542 | 0.5774 | +0.0354 |
 
 Le differenze più notevoli sono:
 
-1. **Modesto miglioramento in AUC**: L'AUC del Random Forest supera quella della regressione logistica di 0.035 punti, un miglioramento presente ma limitato
+1. **Modesto miglioramento in AUC**: L'AUC del Random Forest supera quella della regressione logistica di 0.0354 punti, un miglioramento presente ma limitato
 
-2. **Leggeri cali in alcune metriche**: Decrementi in accuracy (-0.0306) e F1 Score (-0.0174) rispetto alla regressione logistica
+2. **Cali più marcati in alcune metriche**: Decrementi in accuracy (-0.0665) e F1 Score (-0.0384) rispetto alla regressione logistica
 
 3. **Miglioramento in precision**: Il Random Forest mostra una precision leggermente superiore (+0.0039), indicando una maggiore precisione nell'identificare le notizie vere
 
@@ -212,12 +226,12 @@ L'elevata importanza degli identificatori (thread_id, tweet_id) nel Random Fores
 |---------|-------------|---------------|-----------|
 | Baseline (Random Classifier) | - | 0.500 | - |
 | Modello Lineare | Regressione Logistica | 0.534 | +0.034 |
-| Modello Non Lineare | Random Forest | 0.5769 | +0.0769 |
+| Modello Non Lineare | Random Forest | 0.5774 | +0.0774 |
 
 Risultati:
-- Il Random Forest mostra un modesto miglioramento (+0.0769) rispetto alla classificazione casuale
+- Il Random Forest mostra un modesto miglioramento (+0.0774) rispetto alla classificazione casuale
 - La regressione logistica ottiene un miglioramento minimo (+0.034)
-- L'AUC del Random Forest (0.5769) è leggermente superiore a quello della regressione logistica (0.534)
+- L'AUC del Random Forest (0.5774) è leggermente superiore a quello della regressione logistica (0.534)
 
 Questo conferma che i modelli non lineari riescono a catturare meglio le relazioni complesse tra le feature linguistiche e la veridicità, ma il potere predittivo complessivo rimane limitato, evidenziando la complessità del fenomeno delle fake news.
 
@@ -264,22 +278,22 @@ Per comprendere meglio il contributo di ciascuna feature, abbiamo condotto un'an
 | + culture_score | 0.5769 | +0.0002 |
 
 Risultati:
-1. Il `stance_score` fornisce il maggiore incremento di performance (+0.0111)
-2. Le feature di sentiment (`sentiment_polarity` e `sentiment_subjectivity`) forniscono incrementi significativi (rispettivamente +0.0092 e +0.0057)
-3. Le feature di leggibilità forniscono incrementi più marginali ma comunque positivi
-4. Il `culture_score` mostra un contributo relativamente marginale
+1. Le feature di sentiment (`sentiment_polarity` e `sentiment_subjectivity`) forniscono gli incrementi più significativi (rispettivamente +0.0117 e +0.0107)
+2. Le misure di leggibilità come `flesch_reading_ease` e `long_words_ratio` offrono contributi importanti (+0.0093 e +0.0074)
+3. Il `formal_language_score` mostra un contributo rilevante (+0.0054)
+4. Anche il `culture_score` fornisce un incremento, seppur più limitato (+0.0013)
 
-Questa analisi evidenzia come lo stance e il sentiment emergano come i predittori più rilevanti tra le feature linguistiche analizzate.
+Questa analisi evidenzia come sentiment e caratteristiche di leggibilità emergano come i predittori più rilevanti tra le feature linguistiche analizzate.
 
 ## Conclusioni sull'Analisi Predittiva
 
 L'analisi predittiva ha fornito risposte realistiche alle nostre domande di ricerca:
 
-1. **Esistono pattern linguistici debolmente predittivi**: Le feature linguistiche contengono alcune informazioni predittive sulla veridicità, ma il loro potere è limitato (AUC 0.5769)
+1. **Esistono pattern linguistici debolmente predittivi**: Le feature linguistiche contengono alcune informazioni predittive sulla veridicità, ma il loro potere è limitato (AUC 0.5774)
 
-2. **Moderata superiorità dei modelli non lineari**: Il Random Forest supera la regressione logistica, ma con un margine più ridotto (+0.035 in AUC) rispetto all'analisi precedente
+2. **Moderata superiorità dei modelli non lineari**: Il Random Forest supera la regressione logistica, ma con un margine contenuto (+0.0354 in AUC)
 
-3. **Importanza dello stance e della posizione nel thread**: `stance_score` e `reaction_index` emergono come le feature più importanti, suggerendo che l'atteggiamento dell'utente e la struttura del thread sono predittori più rilevanti rispetto alle pure caratteristiche linguistiche
+3. **Importanza dello stance e del sentiment**: `stance_score` e le feature di sentiment emergono come i predittori più importanti, suggerendo che l'atteggiamento dell'utente e il tono emotivo sono elementi più rilevanti rispetto ad altre caratteristiche linguistiche
 
 4. **Contributo del sentiment**: Le feature di sentiment (`sentiment_polarity` e `sentiment_subjectivity`) mostrano un'importanza significativa nel modello senza identificatori
 

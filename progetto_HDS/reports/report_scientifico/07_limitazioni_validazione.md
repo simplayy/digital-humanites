@@ -47,7 +47,7 @@ Lo studio adotta un approccio prevalentemente statico che non considera adeguata
 
 - **Interazioni tra utenti**: Come gli utenti influenzano reciprocamente le loro reazioni
 
-Sebbene abbiamo considerato la posizione dei commenti nei thread attraverso la feature `reaction_index`, un'analisi dinamica più approfondita avrebbe potuto rivelare pattern temporali potenzialmente più informativi.
+Un'analisi dinamica più approfondita che consideri la struttura temporale delle risposte ai thread avrebbe potuto rivelare pattern temporali potenzialmente più informativi.
 
 ### 4. Limitata Diversità Contestuale
 
