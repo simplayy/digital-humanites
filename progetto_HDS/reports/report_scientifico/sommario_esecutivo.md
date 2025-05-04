@@ -27,18 +27,18 @@ La ricerca ha adottato un approccio multi-metodologico:
    - Differenze significative in polarità del sentiment, soggettività, stance e culture_score
    - Tutti gli effect size trascurabili (<0.1), indicando limitata rilevanza pratica di singole feature
 
-2. **Superiorità marcata dei modelli non lineari**
-   - Random Forest: AUC 0.932
+2. **Moderata superiorità dei modelli non lineari**
+   - Random Forest: AUC 0.5774
    - Regressione logistica: AUC 0.542
-   - Incremento: +0.390, suggerendo relazioni prevalentemente non lineari
+   - Incremento: +0.0354, suggerendo la presenza di relazioni non lineari
 
-3. **Maggiore rilevanza delle feature di leggibilità**
+3. **Importanza delle feature di stance e sentiment**
    - Set di feature di leggibilità (AUC 0.571) superiore a sentiment (AUC 0.559)
-   - Culture_score emerso come la feature linguistica più importante
+   - Stance_score emersa come la feature linguistica più importante, seguita da sentiment_subjectivity
 
-4. **Rischio di overfitting**
-   - Alta importanza degli identificatori nei modelli suggerisce potenziale specificità al dataset
-   - Calo significativo di performance escludendo ID (da AUC 0.932 a 0.682)
+4. **Pattern complementari tra le diverse feature**
+   - Importanza delle feature di stance, sentiment e leggibilità nel modello
+   - Performance moderata con feature linguistiche (AUC 0.5774), indicando la complessità del fenomeno
 
 5. **Valore dell'integrazione di diverse dimensioni**
    - Performance ottimale con combinazione di feature di sentiment, stance e leggibilità
@@ -70,6 +70,6 @@ La ricerca ha adottato un approccio multi-metodologico:
 5. **Limitazioni nelle tecniche di analisi del sentiment**
 
 ### Conclusione
-Questo studio dimostra che esistono differenze sistematiche nei pattern linguistici delle reazioni a notizie vere e false, ma queste differenze sono meglio catturate da modelli non lineari e approcci multidimensionali. Il livello di acculturazione e complessità linguistica nei commenti emerge come un indicatore potenzialmente più informativo della veridicità rispetto alle pure reazioni emotive.
+Questo studio dimostra che esistono differenze sistematiche nei pattern linguistici delle reazioni a notizie vere e false, ma queste differenze sono meglio catturate da modelli non lineari e approcci multidimensionali. L'atteggiamento espresso nei commenti (stance) e le caratteristiche di sentiment emergono come indicatori potenzialmente informativi della veridicità, insieme alle misure di complessità linguistica.
 
 I risultati suggeriscono che l'analisi dei commenti può fornire segnali diagnostici utili per l'identificazione della disinformazione, ma richiede approcci sofisticati che considerino simultaneamente diverse dimensioni linguistiche e le loro complesse interazioni. Questo apre nuove prospettive sia per la ricerca sulla disinformazione sia per lo sviluppo di strumenti pratici di fact-checking basati sull'analisi delle conversazioni online.
