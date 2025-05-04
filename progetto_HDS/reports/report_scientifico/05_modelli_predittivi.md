@@ -218,23 +218,6 @@ Le differenze più notevoli sono:
 
 Questo confronto conferma decisamente la nostra ipotesi sulla superiorità dei modelli non lineari per questo task.
 
-## Valutazione dell'Overfitting
-
-L'elevata importanza degli identificatori (thread_id, tweet_id) nel Random Forest solleva preoccupazioni sull'overfitting. Per valutare questo rischio, abbiamo addestrato modelli aggiuntivi escludendo questi identificatori:
-
-| Modello | Algoritmo | AUC | Δ vs Baseline |
-|---------|-------------|---------------|-----------|
-| Baseline (Random Classifier) | - | 0.500 | - |
-| Modello Lineare | Regressione Logistica | 0.534 | +0.034 |
-| Modello Non Lineare | Random Forest | 0.5774 | +0.0774 |
-
-Risultati:
-- Il Random Forest mostra un modesto miglioramento (+0.0774) rispetto alla classificazione casuale
-- La regressione logistica ottiene un miglioramento minimo (+0.034)
-- L'AUC del Random Forest (0.5774) è leggermente superiore a quello della regressione logistica (0.534)
-
-Questo conferma che i modelli non lineari riescono a catturare meglio le relazioni complesse tra le feature linguistiche e la veridicità, ma il potere predittivo complessivo rimane limitato, evidenziando la complessità del fenomeno delle fake news.
-
 ## Confronto tra Set di Feature
 
 Per valutare il contributo delle diverse categorie di feature, abbiamo testato i seguenti set:
