@@ -45,8 +45,6 @@ Questi obiettivi non sono solo di interesse teorico, ma hanno anche importanti i
 
 ## Ipotesi di Ricerca
 
-![Riepilogo delle ipotesi](../../results/narrative/02_hypothesis_summary.png)
-*Figura 1.2: Riepilogo delle principali ipotesi testate nello studio.*
 
 Il nostro studio è guidato da cinque ipotesi principali:
 
