@@ -116,6 +116,8 @@ def prepare_data(df: pd.DataFrame,
         feature_cols = [col for col in feature_cols if not (col.startswith('sentiment_category_') or 
                                                            col.startswith('stance_category_') or 
                                                            col.startswith('readability_category_'))]
+        # Esclude gli identificatori thread_id e tweet_id che causano overfitting
+        feature_cols = [col for col in feature_cols if col not in ['thread_id', 'tweet_id']]
     else:
         # Filtra solo le colonne che esistono nel DataFrame
         feature_cols = [col for col in feature_cols if col in df_processed.columns]

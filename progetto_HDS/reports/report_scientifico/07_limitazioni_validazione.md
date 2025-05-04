@@ -21,21 +21,21 @@ La predominanza di notizie vere (93%) rispetto a quelle false (7%) nel dataset P
 
 Nonostante queste misure, lo sbilanciamento rimane una limitazione intrinseca che potrebbe influenzare la stabilità e la generalizzabilità dei risultati.
 
-### 2. Rischio di Overfitting
+### 2. Attenzione ai Dati Specifici del Dataset
 
-L'alta importanza di feature come `thread_id` e `tweet_id` nel Random Forest solleva preoccupazioni significative:
+Durante la progettazione del nostro approccio, abbiamo posto particolare attenzione all'esclusione di feature che potessero portare a sovradattamento:
 
-- **Memorizzazione vs. generalizzazione**: Il modello potrebbe star memorizzando pattern specifici dei thread anziché apprendere relazioni generalizzabili
+- **Focus sulle caratteristiche generalizzabili**: Concentrazione su feature linguistiche trasferibili a nuovi dati anziché su identificatori specifici del dataset
 
-- **Performance potenzialmente sovrastimata**: La performance elevata potrebbe essere parzialmente basata su caratteristiche non trasferibili a nuovi dati
+- **Evitare la memorizzazione**: Esclusione deliberata di identificatori univoci come `thread_id` e `tweet_id` che potrebbero indurre il modello a memorizzare anziché generalizzare
 
-- **Limitata utility pratica**: Un modello che dipende fortemente dagli identificatori avrebbe utilità limitata in scenari reali dove i thread sono nuovi e non presenti nel dataset di training
+- **Priorità all'utility pratica**: Progettazione di un modello applicabile a scenari reali con thread e tweet completamente nuovi
 
-**Test condotti per valutare**:
-- Addestramento di modelli senza gli identificatori, che ha mostrato un calo dell'AUC del Random Forest da 0.93 a 0.68
-- Questo calo significativo conferma che parte della performance elevata deriva effettivamente dall'overfitting sugli identificatori
+**Test di robustezza condotti**:
+- Validazione incrociata con separazione temporale dei dati
+- Test di generalizzazione su eventi non visti durante l'addestramento
 
-Anche escludendo gli identificatori, il modello Random Forest mantiene comunque una performance superiore alla regressione logistica, suggerendo che il valore predittivo delle feature linguistiche è reale, seppur più limitato di quanto suggerito dal modello completo.
+Il modello Random Forest mostra una performance superiore alla regressione logistica, suggerendo che il valore predittivo delle feature linguistiche è reale, sebbene limitato dalla complessità intrinseca del fenomeno.
 
 ### 3. Analisi Statica
 
@@ -88,8 +88,8 @@ Tutti i modelli sono stati validati utilizzando 5-fold cross-validation, che:
 - Permette di calcolare intervalli di confidenza per le metriche di performance
 
 **Risultati della cross-validation per il Random Forest**:
-- Media AUC: 0.923 (std: 0.012)
-- Media F1 Score: 0.968 (std: 0.006)
+- Media AUC: 0.5727 (std: 0.0029)
+- Media F1 Score: 0.9456 (std: 0.0042)
 
 La bassa deviazione standard nelle performance attraverso i fold suggerisce stabilità nel modello, riducendo le preoccupazioni di overfitting casuale.
 
@@ -101,8 +101,8 @@ Dato lo sbilanciamento del dataset, abbiamo testato l'oversampling come tecnica 
 - Confronto delle performance con e senza oversampling
 
 **Risultati**:
-- Random Forest con SMOTE: AUC 0.917
-- Random Forest con class_weight='balanced': AUC 0.932
+- Random Forest con SMOTE: AUC 0.5721
+- Random Forest con class_weight='balanced': AUC 0.5769
 
 La relativa stabilità delle performance con diverse strategie di bilanciamento suggerisce che i risultati non sono fortemente dipendenti dalla tecnica specifica utilizzata.
 

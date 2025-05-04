@@ -24,36 +24,36 @@ L'analisi delle correlazioni ha mostrato associazioni statisticamente significat
 
 Questi risultati suggeriscono che esiste una relazione sistematica tra le caratteristiche linguistiche dei commenti e la veridicità delle notizie, ma questa relazione è sottile e difficilmente rilevabile attraverso semplici analisi correlazionali.
 
-### 3. Superiorità dei Modelli Non Lineari
+### 3. Moderata Superiorità dei Modelli Non Lineari
 
-Il confronto tra modelli predittivi ha mostrato una netta superiorità del Random Forest rispetto alla regressione logistica:
+Il confronto tra modelli predittivi ha mostrato una moderata superiorità del Random Forest rispetto alla regressione logistica:
 
 | Metrica | Regressione Logistica | Random Forest | Differenza |
 |---------|----------------------|---------------|------------|
-| ROC AUC | 0.542 | 0.932 | +0.390 |
+| ROC AUC | 0.542 | 0.5769 | +0.0349 |
 
-Questo notevole miglioramento (+0.39 in AUC) suggerisce che le relazioni tra caratteristiche linguistiche e veridicità sono prevalentemente non lineari e complesse. I modelli lineari, come la regressione logistica, catturano solo debolmente queste relazioni, mentre modelli non lineari come il Random Forest possono identificare pattern più sottili e interazioni tra feature.
+Questo modesto miglioramento (+0.035 in AUC) suggerisce che le relazioni non lineari tra caratteristiche linguistiche e veridicità esistono, ma sono relativamente deboli. I modelli non lineari come il Random Forest mantengono un vantaggio nell'identificare pattern sottili e interazioni tra feature, ma questo vantaggio è contenuto quando ci si limita alle sole feature linguistiche.
 
-### 4. Importanza delle Feature di Leggibilità e Acculturazione
+### 4. Importanza dello Stance e delle Feature di Leggibilità
 
-L'analisi dei diversi set di feature ha mostrato che le feature di leggibilità e acculturazione hanno un maggior potere predittivo rispetto alle pure feature di sentiment:
+L'analisi dei diversi set di feature ha mostrato che le feature di leggibilità e acculturazione mantengono un maggior potere predittivo rispetto alle pure feature di sentiment, ma con una differenza contenuta:
 
 | Set di Feature | ROC AUC | F1 Score |
 |----------------|---------|----------|
-| readability_only | 0.571 | 0.906 |
-| sentiment_only | 0.559 | 0.595 |
+| readability_only | 0.5713 | 0.9063 |
+| sentiment_only | 0.5590 | 0.5947 |
 
-Il `culture_score`, in particolare, è emerso come la feature linguistica più importante nel modello Random Forest e ha fornito il maggiore incremento di performance nell'analisi incrementale (+0.029 in AUC). Questo suggerisce che il livello di acculturazione e la complessità linguistica nei commenti sono indicatori più rilevanti della veridicità rispetto al puro sentiment espresso.
+Nell'analisi incrementale, lo `stance_score` è emerso come la feature più importante (+0.0111), seguito dalle feature di sentiment (`sentiment_polarity` +0.0092, `sentiment_subjectivity` +0.0057). Questo suggerisce che l'atteggiamento dell'utente rispetto alla notizia (stance) e la componente emotiva del linguaggio (sentiment) sono indicatori più rilevanti della veridicità rispetto alla pura complessità linguistica.
 
-### 5. Rischio di Overfitting
+### 5. Limitato Potere Predittivo
 
-L'elevata importanza degli identificatori (thread_id, tweet_id) nel Random Forest solleva preoccupazioni sulla generalizzabilità del modello:
+L'analisi del modello Random Forest ha evidenziato un limitato potere predittivo delle feature linguistiche per la determinazione della veridicità delle notizie:
 
-- Gli identificatori hanno importanza molto superiore alle feature linguistiche
-- La performance del Random Forest cala significativamente senza gli ID (da 0.932 a 0.682 in AUC)
-- Tuttavia, anche senza ID, il Random Forest mantiene una superiorità rispetto alla regressione logistica
+- La performance del Random Forest basato su feature linguistiche raggiunge un AUC di 0.5769
+- Il Random Forest mantiene un modesto vantaggio rispetto alla regressione logistica (+0.035 in AUC)
+- Le feature linguistiche da sole offrono un miglioramento limitato rispetto a una classificazione casuale
 
-Questo suggerisce che il modello potrebbe star memorizzando pattern specifici del dataset piuttosto che apprendendo relazioni generalizzabili, un rischio importante da considerare nell'interpretazione dei risultati e nelle possibili applicazioni.
+Questi risultati forniscono una stima realistica del valore predittivo delle caratteristiche linguistiche dei commenti per la determinazione della veridicità delle notizie, suggerendo che tale determinazione richiede probabilmente l'integrazione di fonti di informazione più diversificate e non solo l'analisi linguistica.
 
 ## Interpretazione nel Contesto della Ricerca
 
@@ -135,17 +135,17 @@ Questo risultato può essere interpretato in diversi modi:
 
 Indipendentemente dall'interpretazione causale, l'emergere del `culture_score` come predittore significativo suggerisce che la dimensione cognitiva e culturale delle reazioni alle notizie merita ulteriore attenzione nello studio della disinformazione.
 
-## Relazioni Non Lineari
+## Relazioni Debolmente Non Lineari
 
-La notevole superiorità del Random Forest rispetto alla regressione logistica suggerisce che le relazioni tra caratteristiche linguistiche e veridicità sono intrinsecamente non lineari. Questo può essere spiegato considerando che:
+La moderata superiorità del Random Forest rispetto alla regressione logistica suggerisce che esistono relazioni non lineari tra caratteristiche linguistiche e veridicità, ma queste sono relativamente deboli. Questo può essere spiegato considerando che:
 
-1. La reazione degli utenti alle notizie è un fenomeno complesso influenzato da molteplici fattori, difficilmente catturabile attraverso relazioni lineari semplici
+1. La reazione degli utenti alle notizie è un fenomeno complesso influenzato da molteplici fattori, ma il segnale linguistico preso isolatamente ha un potere predittivo limitato
 
-2. Esistono probabilmente soglie e interazioni tra feature che non possono essere modellate linearmente, come interazioni tra sentiment e complessità linguistica
+2. Esistono probabilmente soglie e interazioni tra feature che non possono essere modellate linearmente, ma l'effetto di queste interazioni è relativamente contenuto
 
-3. La combinazione di feature diverse (es. sentiment + complessità linguistica) può produrre pattern riconoscibili solo da modelli non lineari
+3. La combinazione di feature diverse (es. stance + sentiment + complessità linguistica) fornisce un modesto miglioramento predittivo rispetto all'utilizzo di singole dimensioni
 
-Questa non linearità è un'importante lezione metodologica: gli approcci lineari tradizionali potrebbero sottostimare significativamente le relazioni esistenti tra caratteristiche linguistiche e veridicità, portando a conclusioni potenzialmente fuorvianti sulla debolezza di queste associazioni.
+Questa limitata non linearità suggerisce una lezione metodologica importante: sebbene gli approcci non lineari possano catturare relazioni più complesse, il potere predittivo intrinseco delle caratteristiche linguistiche rispetto alla veridicità è comunque relativamente modesto, indipendentemente dal tipo di modello utilizzato.
 
 ## Rilevanza Pratica
 
