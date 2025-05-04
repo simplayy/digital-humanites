@@ -28,26 +28,26 @@ Tuttavia, tutti gli effect size sono risultati trascurabili (<0.1), indicando ch
 
 ### 2. Moderata Superiorità dei Modelli Non Lineari
 
-Il confronto tra regressione logistica e Random Forest, dopo la rimozione degli identificatori (thread_id e tweet_id), ha mostrato una moderata superiorità dei modelli non lineari:
-- Random Forest: AUC 0.5769
+Il confronto tra regressione logistica e Random Forest, basato esclusivamente su feature puramente linguistiche, ha mostrato una moderata superiorità dei modelli non lineari:
+- Random Forest: AUC 0.5774
 - Regressione logistica: AUC 0.542
-- Incremento: +0.0349
+- Incremento: +0.0354
 
-Questo modesto miglioramento suggerisce che esistono relazioni non lineari tra caratteristiche linguistiche e veridicità, ma sono più deboli di quanto inizialmente stimato. I modelli non lineari mantengono un vantaggio nell'identificare queste relazioni, ma la differenza è più contenuta quando l'analisi si basa esclusivamente sulle feature linguistiche.
+Questo modesto miglioramento suggerisce che esistono relazioni non lineari tra caratteristiche linguistiche e veridicità, ma sono relativamente deboli. I modelli non lineari mantengono un vantaggio nell'identificare queste relazioni, ma la differenza è contenuta quando l'analisi si basa esclusivamente sulle feature linguistiche.
 
-### 3. Importanza dello Stance e delle Feature di Leggibilità
+### 3. Importanza dello Stance e delle Feature di Sentiment
 
-L'analisi dei diversi set di feature, dopo la rimozione degli identificatori, conferma che le feature di leggibilità hanno un maggior potere predittivo rispetto alle pure feature di sentiment, ma con differenze più contenute:
+L'analisi dei diversi set di feature conferma che le feature di leggibilità hanno un maggior potere predittivo rispetto alle pure feature di sentiment, ma con differenze contenute:
 - readability_only: AUC 0.5713
 - sentiment_only: AUC 0.5590
 
-Lo `stance_score` è emerso come la feature più importante nell'analisi incrementale, seguito dalle feature di sentiment. Questo suggerisce che l'atteggiamento espresso nei commenti (stance) e la componente emotiva del linguaggio (sentiment) sono predittori importanti, insieme alle caratteristiche di leggibilità.
+Nell'analisi incrementale, le feature di sentiment hanno mostrato i contributi più significativi (`sentiment_polarity` +0.0117, `sentiment_subjectivity` +0.0107), seguite dalle misure di leggibilità come `flesch_reading_ease` (+0.0093) e `long_words_ratio` (+0.0074). Questo suggerisce che la componente emotiva del linguaggio e la complessità linguistica sono indicatori rilevanti della veridicità delle notizie.
 
 ### 4. Limitato Potere Predittivo delle Feature Linguistiche
 
 L'analisi ha evidenziato un limitato potere predittivo delle sole feature linguistiche per la determinazione della veridicità delle notizie:
-- La performance del Random Forest raggiunge un AUC di 0.5769
-- Il modello mantiene un modesto vantaggio (+0.0349) rispetto alla regressione logistica
+- La performance del Random Forest raggiunge un AUC di 0.5774
+- Il modello mantiene un modesto vantaggio (+0.0354) rispetto alla regressione logistica
 - Le feature linguistiche offrono un miglioramento limitato rispetto a una classificazione casuale
 
 Questi risultati indicano che le caratteristiche linguistiche dei commenti hanno un valore predittivo reale ma limitato. L'analisi fornisce una valutazione realistica della relazione tra pattern linguistici e veridicità delle notizie, suggerendo che per una predizione più accurata sarebbero necessarie anche altre fonti di informazione.
@@ -82,7 +82,7 @@ Alla luce dei risultati ottenuti, possiamo ora fornire risposte sintetiche alle 
 
 ### Q5: I modelli non lineari catturano relazioni più forti tra feature linguistiche e veridicità rispetto ai modelli lineari?
 
-**Risposta**: Sì, ma con una differenza più contenuta di quanto inizialmente stimato. Dopo la rimozione degli identificatori, il Random Forest (AUC 0.5769) supera modestamente la regressione logistica (AUC 0.542), suggerendo che esistono relazioni non lineari tra pattern linguistici e veridicità, ma queste sono più deboli quando si considerano esclusivamente le feature linguistiche.
+**Risposta**: Sì, ma con una differenza contenuta. Con l'utilizzo esclusivo di feature puramente linguistiche, il Random Forest (AUC 0.5774) supera modestamente la regressione logistica (AUC 0.542), suggerendo che esistono relazioni non lineari tra pattern linguistici e veridicità, ma queste sono relativamente deboli quando si considerano esclusivamente le caratteristiche linguistiche dei commenti.
 
 ## Contributo alla Letteratura
 
@@ -96,9 +96,9 @@ A differenza di molti studi che si concentrano sulle caratteristiche intrinseche
 
 Abbiamo integrato l'analisi del sentiment con misure di leggibilità e acculturazione, dimostrando che questa combinazione offre un potere predittivo superiore rispetto all'analisi di singole dimensioni isolate. Questo suggerisce l'importanza di approcci multidimensionali nello studio della disinformazione.
 
-### 3. Identificazione dell'Importanza della Complessità Linguistica
+### 3. Importanza di Sentiment e Complessità Linguistica
 
-L'emergere del `culture_score` come predittore chiave suggerisce che la dimensione cognitiva e culturale delle reazioni alle notizie è potenzialmente più informativa rispetto alla pura dimensione emotiva. Questo allinea il nostro studio con la letteratura sul pensiero critico e l'alfabetizzazione mediatica.
+L'emergere delle feature di sentiment e delle misure di leggibilità come predittori chiave suggerisce che sia la dimensione emotiva che quella cognitiva delle reazioni alle notizie sono informative per la valutazione della veridicità. Questo allinea il nostro studio con la letteratura sul ruolo delle emozioni e del pensiero critico nella valutazione dell'informazione.
 
 ### 4. Dimostrazione dell'Importanza dei Modelli Non Lineari
 
@@ -116,9 +116,9 @@ I risultati del nostro studio hanno diverse implicazioni teoriche rilevanti:
 
 I nostri risultati suggeriscono che la relazione tra sentiment e veridicità è più sfumata e complessa di quanto suggerito in precedenza. Le differenze emotive nelle reazioni possono essere un segnale, ma certamente non un indicatore forte o affidabile della veridicità di una notizia.
 
-### 2. Importanza della Dimensione Cognitiva
+### 2. Importanza sia della Dimensione Emotiva che Cognitiva
 
-L'emergere del `culture_score` come predittore chiave suggerisce che la dimensione cognitiva delle reazioni (complessità linguistica, ricchezza del vocabolario, formalità) potrebbe essere più informativa della dimensione puramente emotiva. Questo si allinea con teorie che enfatizzano il ruolo del pensiero critico e della riflessione nella resistenza alla disinformazione.
+L'importanza delle feature di sentiment insieme a quelle di leggibilità suggerisce che sia la dimensione emotiva che quella cognitiva delle reazioni (complessità linguistica, ricchezza del vocabolario, formalità) offrono informazioni complementari sulla veridicità delle notizie. Questo si allinea con teorie che enfatizzano l'interazione tra processi emotivi e cognitivi nella valutazione dell'informazione e nella resistenza alla disinformazione.
 
 ### 3. Non Linearità dei Fenomeni Informativi Sociali
 
@@ -199,8 +199,8 @@ Queste direzioni promettono di approfondire la comprensione della complessa rela
 
 ## Riflessione Finale
 
-In conclusione, questo studio ha dimostrato che esistono differenze statisticamente significative, sebbene di limitata entità pratica, nei pattern linguistici tra commenti a notizie vere e false. Questi pattern sono meglio catturati da modelli non lineari e includono non solo dimensioni emotive (sentiment) ma anche cognitive (complessità linguistica e acculturazione).
+In conclusione, questo studio ha dimostrato che esistono differenze statisticamente significative, sebbene di limitata entità pratica, nei pattern linguistici tra commenti a notizie vere e false. Questi pattern sono meglio catturati da modelli non lineari e includono sia dimensioni emotive (sentiment) che cognitive (complessità linguistica e acculturazione).
 
-Il risultato più interessante è l'emergere del `culture_score` come predittore chiave, suggerendo che il livello di acculturazione e complessità linguistica nei commenti potrebbe essere un indicatore più affidabile della qualità dell'informazione rispetto alle pure reazioni emotive. Questo suggerisce l'importanza di approcci multidimensionali nello studio e nel contrasto della disinformazione.
+Un risultato rilevante è l'emergere dell'importanza sia delle feature di sentiment che delle misure di leggibilità come predittori complementari, suggerendo che l'integrazione tra dimensione emotiva e cognitiva nei commenti offre indicatori più affidabili sulla qualità dell'informazione. Questo evidenzia l'importanza di approcci multidimensionali nello studio e nel contrasto della disinformazione.
 
 Nonostante le limitazioni metodologiche e i problemi di generalizzabilità identificati, i risultati offrono spunti promettenti per future ricerche e applicazioni pratiche nel campo dell'identificazione delle fake news e dell'educazione ai media. La complessità delle relazioni identificate sottolinea la necessità di approcci sofisticati e multidimensionali per comprendere e contrastare efficacemente la disinformazione online.
