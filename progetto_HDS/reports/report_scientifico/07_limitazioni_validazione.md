@@ -212,19 +212,19 @@ Questi accorgimenti permettono ad altri ricercatori di riprodurre l'analisi e ve
 
 Un aspetto importante nella valutazione di qualsiasi sistema di rilevamento, inclusi quelli per le fake news, è il bilanciamento tra sensibilità (capacità di identificare correttamente le notizie false) e specificità (capacità di non classificare erroneamente notizie vere come false).
 
-Nel nostro caso, il modello Random Forest ha mostrato:
-- Alta precision (0.946): bassa probabilità di falsi positivi
-- Alto recall (0.996): alta capacità di identificare correttamente le notizie vere
+Nel nostro caso, il modello Random Forest basato su feature puramente linguistiche ha mostrato:
+- Alta precision (0.9347): bassa probabilità di falsi positivi
+- Buon recall (0.9147): discreta capacità di identificare correttamente le notizie vere
 
-Questo bilanciamento favorevole è in parte dovuto allo sbilanciamento del dataset e potrebbe non riflettersi in applicazioni reali con distribuzione diversa. In contesti pratici, il trade-off tra sensibilità e specificità dovrebbe essere calibrato in base al costo relativo dei falsi positivi rispetto ai falsi negativi.
+Questo bilanciamento è in parte dovuto allo sbilanciamento del dataset e potrebbe non riflettersi in applicazioni reali con distribuzione diversa. In contesti pratici, il trade-off tra sensibilità e specificità dovrebbe essere calibrato in base al costo relativo dei falsi positivi rispetto ai falsi negativi.
 
 ## Riflessioni Finali sulla Validità
 
 Nonostante le limitazioni discusse, riteniamo che il nostro studio fornisca insight validi e utili sulla relazione tra pattern linguistici nei commenti e veridicità delle notizie. I risultati sono particolarmente robusti rispetto a:
 
-1. La superiorità dei modelli non lineari rispetto ai modelli lineari
-2. Il maggior valore predittivo delle feature di leggibilità rispetto alle pure feature di sentiment
-3. L'importanza del `culture_score` come indicatore del livello di acculturazione e complessità linguistica
+1. La moderata superiorità dei modelli non lineari rispetto ai modelli lineari
+2. L'importanza delle feature di sentiment e stance come principali predittori linguistici
+3. Il contributo significativo delle feature di leggibilità e del `culture_score` come indicatori del livello di acculturazione
 
 Questi pattern sono stati confermati attraverso diverse analisi e tecniche di validazione, suggerendo che, sebbene con limiti di generalizzabilità, rappresentano relazioni reali e interpretabili nel contesto studiato.
 
