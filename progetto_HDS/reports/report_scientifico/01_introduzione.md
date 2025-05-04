@@ -10,9 +10,6 @@ Il presente studio si inserisce in questo filone di ricerca, adottando un approc
 
 La disinformazione online si è evoluta significativamente negli ultimi anni, diventando sempre più sofisticata nei contenuti e nelle strategie di diffusione. Come evidenziato da Vosoughi et al. (2018) in uno studio pubblicato su Science, le notizie false si diffondono più velocemente, più ampiamente e più in profondità rispetto alle notizie vere, grazie a meccanismi di engagement che sfruttano bias cognitivi e trigger emotivi.
 
-![Diffusione di notizie sui social media](../../results/figures/sentiment_veracity_summary.png)
-*Figura 1.1: Rappresentazione della relazione tra sentiment e veridicità delle notizie nel dataset PHEME.*
-
 Tradizionalmente, l'identificazione delle fake news si è basata su:
 
 1. **Approcci basati sul contenuto**: analisi del testo della notizia, del suo stile linguistico, della sua struttura
